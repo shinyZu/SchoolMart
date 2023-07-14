@@ -21,7 +21,6 @@ const categorySchema = new mongoose.Schema({
 });
 
 categorySchema.pre("deleteOne", async function (next) {
-  console.log("--------a-----------");
   console.log(this._conditions.category_id);
   const categoryId = this._conditions.category_id;
 
@@ -30,16 +29,12 @@ categorySchema.pre("deleteOne", async function (next) {
     .model("Stationery")
     .find({ category_id: categoryId });
 
-  console.log("--------b-----------");
-
   if (products.length > 0) {
-    console.log("--------c-----------");
     return next(
       new Error("Cannot delete categories associated with products.")
     );
   }
 
-  console.log("--------d-----------");
   next();
 });
 

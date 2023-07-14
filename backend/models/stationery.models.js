@@ -32,6 +32,12 @@ const stationerySchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+
+  // category: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Category",
+  // },
+  // category: [{ type: Schema.Types.ObjectId, ref: "Category" }],
 });
 
 module.exports = mongoose.model("Stationery", stationerySchema);

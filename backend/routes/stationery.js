@@ -81,6 +81,38 @@ router.post("/", cors(), authenticateAdminToken, async (req, res) => {
   }
 });
 
+// Update Stationery
+// Authorized only for Admin
+router.put("/:id", cors(), authenticateAdminToken, async (req, res) => {
+  try {
+    const body = req.body;
+    const stationeryExist = await Stationery.findOne({
+      st_code: req.params.id,
+    });
+
+    if (stationeryExist == null) {
+      return res
+        .status(404)
+        .send({ status: 404, message: "Category not found." });
+    }
+    stationeryExist.st_name = body.st_name;
+    stationeryExist.description = body.description;
+    stationeryExist.unit_price = body.unit_price;
+    stationeryExist.qty_on_hand = body.qty_on_hand;
+    stationeryExist.category_id = body.category_id;
+
+    // Update the stationery in the database
+    const updatedStationery = await stationeryExist.save();
+    return res.send({
+      status: 200,
+      user: updatedStationery,
+      message: "Stationery updated successfully!",
+    });
+  } catch (err) {
+    return res.status(400).send({ status: 400, message: err.message });
+  }
+});
+
 // Delete Stationery
 // Authorized only for Admin
 router.delete("/:id", cors(), authenticateAdminToken, async (req, res) => {
