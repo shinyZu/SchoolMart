@@ -1,13 +1,16 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const { auth, refreshToken } = require("../middleware/authenticate");
 
 const app = express();
 var cors = require("cors");
 const router = express.Router();
 
-// Generating Token
-router.post("/user/generateToken", async (req, res) => {
+const User = require("../models/user.models");
+
+// Generate Token - test
+router.post("/generateToken", cors(), async (req, res) => {
   // Validate User Here - if a user exists in the db with the given credentials
   console.log(req.body.username);
 
@@ -33,7 +36,7 @@ router.post("/user/generateToken", async (req, res) => {
   res.json({ token: bearerToken });
 });
 
-// Validating Token
+// Validate Token - test
 const validateToken = router.get(
   "/user/validateToken",
   cors(),
@@ -76,5 +79,32 @@ const validateToken = router.get(
   }
 );
 
+// Refresh token - in use
+router.post("/refresh", cors(), async (req, res) => {
+  const { email, refresh_token } = req.body;
+  const userExist = await User.findOne({ email: email });
+
+  const isValid = refreshToken(email, refresh_token);
+  if (!isValid) {
+    res.status(401).json({
+      status: 401,
+      error: "Refresh token has expired,try login again.",
+    });
+    // TODO ----- Add code here to auto logout user
+  }
+
+  let jwtSecretKey = process.env.JWT_SECRET_KEY;
+
+  let data = {
+    time: Date(),
+    userId: userExist.user_id,
+    username: email,
+    password: userExist.password,
+  };
+
+  const access_token = jwt.sign(data, jwtSecretKey, {
+    expiresIn: "2m",
+  });
+  return res.status(200).json({ status: 200, access_token });
+});
 module.exports = router;
-// module.exports = validateToken;

@@ -1,17 +1,20 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { auth } = require("../middleware/authenticate");
+const {
+  authenticateToken,
+  refreshToken,
+} = require("../middleware/authenticate");
 
 const app = express();
-var cors = require("cors");
+const cors = require("cors");
 const router = express.Router();
 // app.use(express.json());
 
 const User = require("../models/user.models");
 
-// Register User
-router.post("/register", async (req, res) => {
+// Register User - in user
+router.post("/register", cors(), async (req, res) => {
   const body = req.body;
 
   try {
@@ -64,57 +67,9 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// // Login User & generate JWT token
-// router.post("/login", async (req, res) => {
-//   const userExist = await User.findOne({ email: req.body.username });
-
-//   if (!userExist)
-//     return res.status(400).send({ status: 400, message: "Invalid email." });
-
-//   const validPassword = await bcrypt.compare(
-//     req.body.password,
-//     userExist.password
-//   );
-
-//   if (!validPassword)
-//     return res.status(400).send({ status: 400, message: "Invalid password." });
-
-//   //create and assign a token
-//   let jwtSecretKey = process.env.JWT_SECRET_KEY;
-
-//   let data = {
-//     time: Date(),
-//     userId: userExist.user_id,
-//     username: req.body.username,
-//     password: userExist.password,
-//   };
-
-//   const token = jwt.sign(data, jwtSecretKey);
-
-//   // Format the token as a Bearer token
-//   const bearerToken = `Bearer ${token}`;
-
-//   res.send({
-//     status: 200,
-//     message: "User signed in successfully!",
-//     userId: userExist.user_id,
-//     token: bearerToken,
-//   });
-// });
-
 // Get all users
-router.get("/getAll", cors(), auth, async (req, res) => {
+router.get("/getAll", cors(), authenticateToken, async (req, res) => {
   try {
-    console.log("getAll");
-    // let tokenVerified = validateToken(req.headers.authorization);
-
-    // if (tokenVerified) {
-    //   const users = await User.find();
-    //   return res.status(200).json({ status: 200, data: users });
-    // } else {
-    //   return res.status(403).send({ status: 403, message: "Forbidden error." });
-    // }
-
     const users = await User.find();
     return res.status(200).json({ status: 200, data: users });
   } catch (error) {
@@ -123,9 +78,8 @@ router.get("/getAll", cors(), auth, async (req, res) => {
 });
 
 // Search user by Id
-router.get("/:id", async (req, res) => {
+router.get("/:id", cors(), authenticateToken, async (req, res) => {
   try {
-    // const user = await User.findById(req.params.id);
     const user = await User.findOne({ user_id: req.params.id });
     if (user == null) {
       res.status(404).send({ status: 404, message: "User not found." });
@@ -139,27 +93,5 @@ router.get("/:id", async (req, res) => {
     res.status(400).send({ status: 400, message: err.message });
   }
 });
-
-const validateToken = (authHeader) => {
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Invalid token format." });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  if (!token) {
-    return res.status(401).json({ message: "No token provided." });
-  }
-
-  let jwtSecretKey = process.env.JWT_SECRET_KEY;
-
-  const verified = jwt.verify(token, jwtSecretKey);
-
-  if (verified) {
-    return true;
-  } else {
-    return res.status(401).send(error);
-  }
-};
 
 module.exports = router;
