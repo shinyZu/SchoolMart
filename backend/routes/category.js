@@ -38,20 +38,23 @@ router.post("/", cors(), authenticateAdminToken, async (req, res) => {
     }
 
     // Get the last inserted category_code from the database
-    const lastCategoryCode = await Category.findOne(
+    const lastCategory = await Category.findOne(
       {},
       {},
-      { sort: { category_code: -1 } }
+      { sort: { category_id: -1 } }
     );
-    let nextCategoryCode = 1;
+    let nextCategoryId = 1;
 
-    if (lastCategoryCode) {
-      nextCategoryCode = lastCategoryCode.category_code + 1;
+    console.log("lastCategory: " + lastCategory);
+
+    if (lastCategory) {
+      nextCategoryId = lastCategory.category_id + 1;
     }
+    console.log("nextCategoryId: " + nextCategoryId);
 
     // Create a new category instance
     const newCategory = new Category({
-      category_code: nextCategoryCode,
+      category_id: nextCategoryId,
       category: body.category,
     });
 
@@ -63,32 +66,36 @@ router.post("/", cors(), authenticateAdminToken, async (req, res) => {
       message: "New category saved successfully!",
     });
   } catch (err) {
-    res.status(400).send(err.message);
+    return res.status(400).send({ status: 400, message: err.message });
   }
 });
 
 // Update Category
 // Authorized only for Admin
 router.put("/:id", cors(), authenticateAdminToken, async (req, res) => {
-  const body = req.body;
-  const categoryExist = await Category.findOne({
-    category_code: req.params.id,
-  });
+  try {
+    const body = req.body;
+    const categoryExist = await Category.findOne({
+      category_id: req.params.id,
+    });
 
-  if (categoryExist == null) {
-    return res
-      .status(404)
-      .send({ status: 404, message: "Category not found." });
+    if (categoryExist == null) {
+      return res
+        .status(404)
+        .send({ status: 404, message: "Category not found." });
+    }
+    categoryExist.category = body.category;
+
+    // Update the category in the database
+    const updatedCategory = await categoryExist.save();
+    return res.send({
+      status: 200,
+      user: updatedCategory,
+      message: "Category updated successfully!",
+    });
+  } catch (err) {
+    return res.status(400).send({ status: 400, message: err.message });
   }
-  categoryExist.category = body.category;
-
-  // Update the category in the database
-  const updatedCategory = await categoryExist.save();
-  return res.send({
-    status: 200,
-    user: updatedCategory,
-    message: "Category updated successfully!",
-  });
 });
 
 // Delete Category
@@ -96,15 +103,14 @@ router.put("/:id", cors(), authenticateAdminToken, async (req, res) => {
 router.delete("/:id", cors(), authenticateAdminToken, async (req, res) => {
   try {
     const categoryExist = await Category.findOne({
-      category_code: req.params.id,
+      category_id: req.params.id,
     });
-    console.log("categoryExist: " + categoryExist);
     if (categoryExist == null) {
       return res
         .status(404)
         .send({ status: 404, message: "Category not found." });
     }
-    let deletedCategory = await categoryExist.deleteOne(categoryExist);
+    let deletedCategory = await Category.deleteOne(categoryExist);
 
     return res.send({
       status: 200,

@@ -1,0 +1,11 @@
+show dbs
+use schoolmart
+show colloections
+db.getCollectionInfos()
+db.getCollectionInfos({name:"users"})
+db.getCollectionInfos({name:"categories"})
+db.users.find()
+db.categories.find()
+db.categories.find().pretty()
+db.getCollection("categories").getIndexes()
+db.getCollection("categories").dropIndexes()
