@@ -23,6 +23,27 @@ router.get("/getAll", cors(), authenticateAdminToken, async (req, res) => {
   }
 });
 
+// Search category by Id
+// Authorized only for Admins
+router.get("/admin/:id", cors(), authenticateAdminToken, async (req, res) => {
+  try {
+    const categoryExist = await Category.findOne({
+      category_id: req.params.id,
+    });
+    if (categoryExist == null) {
+      return res
+        .status(404)
+        .send({ status: 404, message: "Category not found." });
+    }
+    return res.send({
+      status: 200,
+      data: categoryExist,
+    });
+  } catch (err) {
+    return res.status(400).send({ status: 400, message: err.message });
+  }
+});
+
 // Save category
 // Authorized only for Admin
 router.post("/", cors(), authenticateAdminToken, async (req, res) => {

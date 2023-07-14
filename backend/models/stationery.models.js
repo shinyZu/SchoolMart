@@ -18,6 +18,16 @@ const stationerySchema = new mongoose.Schema({
     required: true,
   },
 
+  image_name: {
+    type: String,
+    // required: true,
+  },
+
+  image_url: {
+    type: String,
+    // required: true,
+  },
+
   unit_price: {
     type: Number, // can store both integers and decimal numbers
     required: true,
