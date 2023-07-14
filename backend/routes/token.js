@@ -1,7 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { auth, refreshToken } = require("../middleware/authenticate");
+const { refreshToken } = require("../middleware/auth");
 
 const app = express();
 var cors = require("cors");
@@ -86,7 +86,7 @@ router.post("/refresh", cors(), async (req, res) => {
 
   const isValid = refreshToken(email, refresh_token);
   if (!isValid) {
-    res.status(401).json({
+    return res.status(401).json({
       status: 401,
       error: "Refresh token has expired,try login again.",
     });
@@ -98,12 +98,13 @@ router.post("/refresh", cors(), async (req, res) => {
   let data = {
     time: Date(),
     userId: userExist.user_id,
-    username: email,
+    username: req.body.username,
     password: userExist.password,
+    user_role: userExist.user_role,
   };
 
   const access_token = jwt.sign(data, jwtSecretKey, {
-    expiresIn: "2m",
+    expiresIn: "1800s",
   });
   return res.status(200).json({ status: 200, access_token });
 });

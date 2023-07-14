@@ -1,6 +1,10 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const {
+  authenticateAdminToken,
+  authenticateCustomerToken,
+} = require("../middleware/auth");
 
 const app = express();
 const cors = require("cors");
@@ -10,13 +14,13 @@ const router = express.Router();
 const Login = require("../models/login.models");
 const User = require("../models/user.models");
 
-// Get all signed in users
-router.get("/", cors(), async (req, res) => {
+// Get all signed in users - Admin
+router.get("/", cors(), authenticateAdminToken, async (req, res) => {
   try {
     const loggedUsers = await Login.find();
     return res.status(200).json({ status: 200, data: loggedUsers });
   } catch (error) {
-    res.status(500).send(error);
+    return res.status(500).send(error);
   }
 });
 
@@ -52,10 +56,11 @@ router.post("/", cors(), async (req, res) => {
     userId: userExist.user_id,
     username: req.body.username,
     password: userExist.password,
+    user_role: userExist.user_role,
   };
 
-  const accessToken = jwt.sign(data, jwtSecretKey, { expiresIn: "2m" });
-  const refreshToken = jwt.sign(data, jwtRefreshKey, { expiresIn: "10m" });
+  const accessToken = jwt.sign(data, jwtSecretKey, { expiresIn: "1800s" });
+  const refreshToken = jwt.sign(data, jwtRefreshKey, { expiresIn: "3600s" });
 
   // Format the tokens as Bearer token
   const bearer_accessToken = `Bearer ${accessToken}`;
@@ -74,8 +79,8 @@ router.post("/", cors(), async (req, res) => {
     message: "User signed in successfully!",
     user_id: userExist.user_id,
     access_token: bearer_accessToken,
-    // expires_in: 1800 / 60 + " min",
-    expires_in: "2m",
+    expires_in: 1800 / 60 + " min",
+    // expires_in: "2m",
     refresh_token: bearer_refreshToken,
   });
 });
@@ -95,7 +100,7 @@ router.delete("/logout/:email", cors(), async (req, res) => {
       data: deletedUser,
     });
   } catch (err) {
-    res.status(400).send({ status: 400, message: err.message });
+    return res.status(400).send({ status: 400, message: err.message });
   }
 });
 
