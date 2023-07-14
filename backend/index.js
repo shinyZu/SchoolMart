@@ -2,6 +2,8 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors"); // to handle CORS issue
+const jwt = require("jsonwebtoken");
+
 const app = express(); // to start a new Express application
 app.use(cors());
 
@@ -12,6 +14,7 @@ connection.establishConnection; // invoke the method to establish connection wit
 
 const baseURL = "/schoolmart/api/v1/";
 
+const token = require("./routes/token");
 const login = require("./routes/login");
 const user = require("./routes/user");
 const stationery = require("./routes/stationery");
@@ -20,6 +23,7 @@ const orders = require("./routes/orders");
 const orderDetails = require("./routes/orderDetail");
 const billingDetail = require("./routes/billingDetail");
 
+app.use(`${baseURL}token`, token);
 app.use(`${baseURL}login`, login);
 app.use(`${baseURL}user`, user);
 app.use(`${baseURL}stationery`, stationery);

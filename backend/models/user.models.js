@@ -24,14 +24,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    validate: {
-      validator: function (val) {
-        return /[a-z0-9]{8}/.test(val);
-      },
-      message: (val) => "Invalid Password!",
-    },
-    // minLength: [8, "Password should be at least 8 characters"],
+    // validate: {
+    //   validator: function (val) {
+    //     return /[a-z0-9]{8}/.test(val);
+    //   },
+    //   message: (val) => "Invalid Password!",
+    // },
     // pattern: "^[a-z0-9]{8}$",
+    minLength: [8, "Password should be at least 8 characters"],
+    maxlength: 1024,
   },
 
   address: {
