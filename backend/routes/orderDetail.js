@@ -6,11 +6,11 @@ const router = express.Router();
 
 const OrderDetails = require("../models/orderdetail.models");
 
-router.get("/", cors(), async (req, res) => {
+// Get all order details - Customer
+router.get("/getAll", cors(), async (req, res) => {
   try {
-    // const users = await User.find();
-    // res.json(users);
-    return res.status(200).send("OrderDetails API working!");
+    const orderDetails = await OrderDetails.find();
+    return res.status(200).json({ status: 200, data: orderDetails });
   } catch (error) {
     res.status(500).send(error);
   }

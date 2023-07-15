@@ -60,4 +60,18 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+userSchema.pre("deleteOne", async function (next) {
+  console.log(this._conditions.user_id);
+  const userId = this._conditions.user_id;
+
+  // Check if any orders are associated with the user
+  const orders = await mongoose.model("Orders").find({ user_id: userId });
+
+  if (orders.length > 0) {
+    return next(new Error("Cannot delete users associated with orders."));
+  }
+
+  next();
+});
+
 module.exports = mongoose.model("User", userSchema);
