@@ -63,14 +63,16 @@ router.get("/getAll", cors(), async (req, res) => {
 // Authorized only for Admins
 router.get("/admin/:id", cors(), authenticateAdminToken, async (req, res) => {
   try {
-    const stationeryExist = await Stationery.findOne({
-      st_code: req.params.id,
-    });
-    if (stationeryExist == null) {
-      return res
-        .status(404)
-        .send({ status: 404, message: "Stationery not found." });
-    }
+    // const stationeryExist = await Stationery.findOne({
+    //   st_code: req.params.id,
+    // });
+    // if (stationeryExist == null) {
+    //   return res
+    //     .status(404)
+    //     .send({ status: 404, message: "Stationery not found." });
+    // }
+
+    const stationeryExist = await checkStationeryExist(req.params.id, res);
     return res.send({
       status: 200,
       data: stationeryExist,
@@ -142,14 +144,16 @@ router.post("/", cors(), authenticateAdminToken, async (req, res) => {
 // Get Image By Id
 router.get("/image/:id", cors(), async (req, res) => {
   try {
-    const stationeryExist = await Stationery.findOne({
-      st_code: req.params.id,
-    });
-    if (stationeryExist == null) {
-      return res
-        .status(404)
-        .send({ status: 404, message: "Stationery not found." });
-    }
+    // const stationeryExist = await Stationery.findOne({
+    //   st_code: req.params.id,
+    // });
+    // if (stationeryExist == null) {
+    //   return res
+    //     .status(404)
+    //     .send({ status: 404, message: "Stationery not found." });
+    // }
+
+    const stationeryExist = await checkStationeryExist(req.params.id, res);
 
     const stationeries = await Stationery.find();
 
@@ -234,15 +238,17 @@ router.put(
   authenticateAdminToken,
   async (req, res) => {
     try {
-      const stationeryExist = await Stationery.findOne({
-        st_code: req.params.id,
-      });
+      // const stationeryExist = await Stationery.findOne({
+      //   st_code: req.params.id,
+      // });
 
-      if (!stationeryExist) {
-        return res
-          .status(404)
-          .send({ status: 404, message: "Stationery not found." });
-      }
+      // if (!stationeryExist) {
+      //   return res
+      //     .status(404)
+      //     .send({ status: 404, message: "Stationery not found." });
+      // }
+
+      const stationeryExist = await checkStationeryExist(req.params.id);
 
       // resize image
       const buffer = await sharp(req.file.buffer)
@@ -286,20 +292,23 @@ router.put(
   }
 );
 
-// Update Stationery in DB
+// Update Stationery only (no img) in DB
 // Authorized only for Admin
 router.put("/:id", cors(), authenticateAdminToken, async (req, res) => {
   try {
     const body = req.body;
-    const stationeryExist = await Stationery.findOne({
-      st_code: req.params.id,
-    });
+    // const stationeryExist = await Stationery.findOne({
+    //   st_code: req.params.id,
+    // });
 
-    if (stationeryExist == null) {
-      return res
-        .status(404)
-        .send({ status: 404, message: "Stationery not found." });
-    }
+    // if (stationeryExist == null) {
+    //   return res
+    //     .status(404)
+    //     .send({ status: 404, message: "Stationery not found." });
+    // }
+
+    const stationeryExist = await checkStationeryExist(req.params.id, res);
+
     stationeryExist.st_name = body.st_name;
     stationeryExist.description = body.description;
     stationeryExist.unit_price = body.unit_price;
@@ -318,6 +327,41 @@ router.put("/:id", cors(), authenticateAdminToken, async (req, res) => {
   }
 });
 
+// Update QtyOnHand -Admin
+router.put(
+  "/qty/:id/:qty",
+  cors(),
+  authenticateAdminToken,
+  async (req, res) => {
+    try {
+      const body = req.body;
+      // const stationeryExist = await Stationery.findOne({
+      //   st_code: req.params.id,
+      // });
+
+      // if (!stationeryExist) {
+      //   return res
+      //     .status(404)
+      //     .send({ status: 404, message: "Stationery not found." });
+      // }
+
+      const stationeryExist = await checkStationeryExist(req.params.id);
+
+      stationeryExist.qty_on_hand = req.params.qty;
+
+      // Update the stationery qty in the database
+      const updatedStationery = await stationeryExist.save();
+      return res.send({
+        status: 200,
+        user: updatedStationery,
+        message: "Quantity updated successfully!",
+      });
+    } catch (err) {
+      return res.status(400).send({ status: 400, message: err.message });
+    }
+  }
+);
+
 // Update Both Image in S3 & Stationery in DB
 router.put(
   "/updatewithimage/:id",
@@ -326,15 +370,17 @@ router.put(
   authenticateAdminToken,
   async (req, res) => {
     try {
-      const stationeryExist = await Stationery.findOne({
-        st_code: req.params.id,
-      });
+      // const stationeryExist = await Stationery.findOne({
+      //   st_code: req.params.id,
+      // });
 
-      if (stationeryExist == null) {
-        return res
-          .status(404)
-          .send({ status: 404, message: "Stationery not found." });
-      }
+      // if (stationeryExist == null) {
+      //   return res
+      //     .status(404)
+      //     .send({ status: 404, message: "Stationery not found." });
+      // }
+
+      const stationeryExist = await checkStationeryExist(req.params.id, res);
 
       // resize image
       const buffer = await sharp(req.file.buffer)
@@ -342,13 +388,15 @@ router.put(
         .toBuffer();
 
       // create delete command to delete image from s3 before updating
-      const delete_params = {
-        Bucket: bucketName,
-        Key: stationeryExist.image_name,
-      };
+      // const delete_params = {
+      //   Bucket: bucketName,
+      //   Key: stationeryExist.image_name,
+      // };
 
-      const delete_command = new DeleteObjectCommand(delete_params);
-      await s3.send(delete_command);
+      // const delete_command = new DeleteObjectCommand(delete_params);
+      // await s3.send(delete_command);
+
+      deleteImage(stationeryExist.image_name);
 
       // create put command
       const put_params = {
@@ -397,24 +445,28 @@ router.put(
 // Authorized only for Admin
 router.delete("/:id", cors(), authenticateAdminToken, async (req, res) => {
   try {
-    const stationeryExist = await Stationery.findOne({
-      st_code: req.params.id,
-    });
-    if (stationeryExist == null) {
-      return res
-        .status(404)
-        .send({ status: 404, message: "Stationery not found." });
-    }
+    // const stationeryExist = await Stationery.findOne({
+    //   st_code: req.params.id,
+    // });
+    // if (stationeryExist == null) {
+    //   return res
+    //     .status(404)
+    //     .send({ status: 404, message: "Stationery not found." });
+    // }
 
-    // delete image from s3 bucket
-    const delete_params = {
-      Bucket: bucketName,
-      Key: stationeryExist.image_name,
-    };
+    const stationeryExist = await checkStationeryExist(req.params.id, res);
 
-    const delete_command = new DeleteObjectCommand(delete_params);
-    await s3.send(delete_command);
+    // // delete image from s3 bucket
+    // const delete_params = {
+    //   Bucket: bucketName,
+    //   Key: stationeryExist.image_name,
+    // };
 
+    // const delete_command = new DeleteObjectCommand(delete_params);
+    // await s3.send(delete_command);
+    deleteImage(stationeryExist.image_name);
+
+    // delete image from DB
     let deletedStationery = await Stationery.deleteOne(stationeryExist);
 
     return res.send({
@@ -435,24 +487,28 @@ router.delete(
   authenticateAdminToken,
   async (req, res) => {
     try {
-      const stationeryExist = await Stationery.findOne({
-        st_code: req.params.id,
-      });
+      // const stationeryExist = await Stationery.findOne({
+      //   st_code: req.params.id,
+      // });
 
-      if (stationeryExist == null) {
-        return res
-          .status(404)
-          .send({ status: 404, message: "Stationery not found." });
-      }
+      // if (stationeryExist == null) {
+      //   return res
+      //     .status(404)
+      //     .send({ status: 404, message: "Stationery not found." });
+      // }
 
-      // delete image from s3 bucket
-      const delete_params = {
-        Bucket: bucketName,
-        Key: stationeryExist.image_name,
-      };
+      const stationeryExist = await checkStationeryExist(req.params.id, res);
 
-      const delete_command = new DeleteObjectCommand(delete_params);
-      await s3.send(delete_command);
+      // // delete image from s3 bucket
+      // const delete_params = {
+      //   Bucket: bucketName,
+      //   Key: stationeryExist.image_name,
+      // };
+
+      // const delete_command = new DeleteObjectCommand(delete_params);
+      // await s3.send(delete_command);
+
+      deleteImage(stationeryExist.image_name);
 
       // Update the stationery in the database
       stationeryExist.image_name = null;
@@ -527,11 +583,36 @@ const saveProductDetailsToDB = async (body, res, imageName) => {
     res.send({
       status: 201,
       category: savedStationery,
-      message: "New stationery saved successfully!",
+      message: "Stationery saved successfully!",
     });
   } catch (err) {
     return res.status(400).send({ status: 400, message: err.message });
   }
+};
+
+const checkStationeryExist = async (id, res) => {
+  const stationeryExist = await Stationery.findOne({
+    st_code: id,
+  });
+
+  if (!stationeryExist) {
+    return res
+      .status(404)
+      .send({ status: 404, message: "Stationery not found." });
+  } else {
+    return stationeryExist;
+  }
+};
+
+const deleteImage = async (imageName) => {
+  // delete image from s3 bucket
+  const delete_params = {
+    Bucket: bucketName,
+    Key: imageName,
+  };
+
+  const delete_command = new DeleteObjectCommand(delete_params);
+  await s3.send(delete_command);
 };
 
 module.exports = router;
