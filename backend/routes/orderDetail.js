@@ -19,7 +19,8 @@ router.get("/getAll", cors(), authenticateAdminToken, async (req, res) => {
     const orderDetails = await OrderDetails.find();
     return res.status(200).json({ status: 200, data: orderDetails });
   } catch (error) {
-    res.status(500).send(error);
+    // res.status(500).send(error);
+    return res.status(500).send({ status: 500, message: error.message });
   }
 });
 
@@ -45,7 +46,8 @@ router.get(
 
       return res.status(200).json({ status: 200, data: orderDetails });
     } catch (error) {
-      res.status(500).send(error);
+      // res.status(500).send(error);
+      return res.status(500).send({ status: 500, message: error.message });
     }
   }
 );
@@ -78,7 +80,8 @@ router.get(
 
       return res.status(200).json({ status: 200, data: orderDetails });
     } catch (error) {
-      res.status(500).send(error);
+      // res.status(500).send(error);
+      return res.status(500).send({ status: 500, message: error.message });
     }
   }
 );

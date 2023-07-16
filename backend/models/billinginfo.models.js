@@ -46,7 +46,6 @@ const billingInfoSchema = new mongoose.Schema({
   phone_no: {
     type: Number,
     required: true,
-    unique: true,
     validate: {
       validator: function (val) {
         return val.toString().length === 9;
@@ -55,6 +54,7 @@ const billingInfoSchema = new mongoose.Schema({
     },
   },
 
+  // Payment Details
   card_payment: {
     type: Boolean,
     required: true,
@@ -64,6 +64,31 @@ const billingInfoSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+
+  card_no: {
+    type: Number,
+    unique: true,
+    validate: {
+      validator: function (val) {
+        return val.toString().length === 16;
+      },
+      message: "Invalid Card Number!",
+    },
+  },
+
+  card_holder_name: {
+    type: String,
+  },
+
+  card_expire_date: {
+    type: Date,
+  },
+
+  card_cvv: {
+    type: Number,
+  },
+
+  // ------------------------
 
   billing_status: {
     type: String,
@@ -75,7 +100,7 @@ const billingInfoSchema = new mongoose.Schema({
     required: true,
   },
 
-  order_id: {
+  user_id: {
     type: Number,
     required: true,
   },
