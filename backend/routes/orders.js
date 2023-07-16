@@ -2,6 +2,7 @@ const express = require("express");
 const {
   authenticateAdminToken,
   authenticateCustomerToken,
+  verifyToken,
 } = require("../middleware/auth");
 
 const app = express();
@@ -40,11 +41,48 @@ router.get("/admin/:id", cors(), authenticateAdminToken, async (req, res) => {
   }
 });
 
+// Search order by Id - Customer
+router.get(
+  "/customer/:orderId",
+  cors(),
+  authenticateCustomerToken,
+  async (req, res) => {
+    try {
+      const verified = verifyToken(req.headers.authorization, res);
+
+      const orderFound = await Orders.findOne({
+        order_id: req.params.orderId,
+        user_id: verified.userId,
+      });
+
+      if (!orderFound) {
+        return res
+          .status(404)
+          .send({ status: 404, message: "Order not found." });
+      }
+
+      return res.send({
+        status: 200,
+        data: orderFound,
+      });
+    } catch (err) {
+      return res.status(400).send({ status: 400, message: err.message });
+    }
+  }
+);
+
 // Place Order - Customer
+// Saves both order & orderDetails
 router.post("/", cors(), authenticateCustomerToken, async (req, res) => {
   const body = req.body;
 
   try {
+    const verified = verifyToken(req.headers.authorization, res);
+
+    if (verified.userId != body.user_id) {
+      return res.status(403).send({ status: 403, message: "Access denied." });
+    }
+
     // Get the last inserted category_code from the database
     const lastOrder = await Orders.findOne({}, {}, { sort: { order_id: -1 } });
     let nextOrderId = 1;
@@ -91,13 +129,21 @@ router.post("/", cors(), authenticateCustomerToken, async (req, res) => {
 });
 
 // Update Order - Customer
+// Updates both order & orderDetails
 router.put("/:id", cors(), authenticateCustomerToken, async (req, res) => {
   try {
     const body = req.body;
+    const verified = verifyToken(req.headers.authorization, res);
+
+    if (verified.userId != body.user_id) {
+      return res.status(403).send({ status: 403, message: "Access denied." });
+    }
+
     const req_order_details = req.body.order_details;
 
     const orderExist = await checkOrderExist(req.params.id, res);
     const orderDetailsExist = await checkOrderDetailExist(req.params.id, res);
+    // console.log(orderDetailsExist);
 
     // Set new order data
     orderExist.order_date = body.order_date;
@@ -105,18 +151,19 @@ router.put("/:id", cors(), authenticateCustomerToken, async (req, res) => {
     orderExist.order_status = body.order_status;
     orderExist.user_id = body.user_id;
 
-    // Set new order detail data
-    // if (orderDetailsExist.length > 0) {
-    //   for (let od of orderDetailsExist) {
-    //     for (let rod of req_order_details) {
-    //       od.st_code = rod.st_code;
-    //       od.order_qty = rod.order_qty;
+    // Consider that after placing the order it cannot delete items from the ordered list or add new items to the same list.
+    // can only update orderQty
 
-    //       // Update the order detail in the database
-    //       await orderDetailsExist.save();
-    //     }
-    //   }
-    // }
+    // Set new order detail data
+    if (orderDetailsExist.length > 0) {
+      for (let i = 0; i < orderDetailsExist.length; i++) {
+        orderDetailsExist[i].st_code = req_order_details[i].st_code;
+        orderDetailsExist[i].order_qty = req_order_details[i].order_qty;
+
+        // Update the order detail in the database
+        await orderDetailsExist[i].save();
+      }
+    }
 
     // Update the order in the database
     const updatedOrder = await orderExist.save();
@@ -132,9 +179,16 @@ router.put("/:id", cors(), authenticateCustomerToken, async (req, res) => {
 });
 
 // Delete Order - Customer
+// Deletes both order & orderDetails
 router.delete("/:id", cors(), authenticateCustomerToken, async (req, res) => {
   try {
     const orderExist = await checkOrderExist(req.params.id, res);
+
+    const verified = verifyToken(req.headers.authorization, res);
+
+    if (verified.userId != orderExist.user_id) {
+      return res.status(403).send({ status: 403, message: "Access denied." });
+    }
 
     let deletedOrder = await Orders.deleteOne(orderExist);
 
@@ -161,7 +215,7 @@ const checkOrderExist = async (id, res) => {
 };
 
 const checkOrderDetailExist = async (id, res) => {
-  const orderDetailExist = await OrderDetails.findOne({
+  const orderDetailExist = await OrderDetails.find({
     order_id: id,
   });
 

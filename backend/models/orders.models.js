@@ -51,15 +51,15 @@ orderSchema.pre("deleteOne", async function (next) {
   next();
 });
 
-orderSchema.pre("save", async function (next) {
-  console.log("pre save......");
-  try {
-    // console.log(req.body);
+// orderSchema.pre("save", async function (next) {
+//   console.log("pre save......");
+//   try {
+//     // console.log(req.body);
 
-    next();
-  } catch (err) {
-    return next(new Error(err.message));
-  }
-});
+//     next();
+//   } catch (err) {
+//     return next(new Error(err.message));
+//   }
+// });
 
 module.exports = mongoose.model("Orders", orderSchema);

@@ -117,4 +117,5 @@ module.exports = {
   authenticateAdminToken,
   authenticateCustomerToken,
   refreshToken,
+  verifyToken,
 };
