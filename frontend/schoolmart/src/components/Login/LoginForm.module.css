@@ -1,0 +1,48 @@
+/* .login_container {
+  border: 6px solid blue;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 4px;
+} */
+
+.glass_container {
+  padding: 50px;
+  /* margin-top: 220px; */
+  background: rgba(255, 255, 255, 0.19);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(11.8px);
+  -webkit-backdrop-filter: blur(11.8px);
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 95%;
+  padding: 8px;
+  border: 0px solid #ccc;
+  border-radius: 4px;
+  color: #34495e !important;
+}
+
+button {
+  /* background-color: #4caf50; */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* button:hover {
+    background-color: #45a049;
+  } */
