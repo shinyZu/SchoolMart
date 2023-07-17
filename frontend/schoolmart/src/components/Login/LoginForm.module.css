@@ -32,6 +32,7 @@ input[type="password"] {
   border: 0px solid #ccc;
   border-radius: 4px;
   color: #34495e !important;
+  font-family: "Acme", sans-serif !important;
 }
 
 button {

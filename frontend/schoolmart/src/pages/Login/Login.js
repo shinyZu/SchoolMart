@@ -1,7 +1,9 @@
 import React from "react";
-import LoginForm from "../../components/Login/LoginForm";
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
+
+import LoginForm from "../../components/Login/LoginForm";
+import RegisterForm from "../../components/Register/RegisterForm";
 
 // const Login = ({ onLogin }) => {
 const Login = (props) => {
@@ -9,6 +11,7 @@ const Login = (props) => {
   return (
     <div className={classes.login_container_1}>
       <LoginForm onLogin={onLogin} />
+      {/* <RegisterForm onLogin={onLogin} /> */}
     </div>
   );
 };
