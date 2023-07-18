@@ -1,4 +1,13 @@
-import * as React from "react";
+import { React, useState, useEffect } from "react";
+import { Routes, Route, useNavigate, Link, NavLink } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import HomeIcon from "@mui/icons-material/Home";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ContactIcon from "@mui/icons-material/PermContactCalendar";
+import StoreIcon from "@mui/icons-material/Store";
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,12 +24,26 @@ import AdbIcon from "@mui/icons-material/Adb";
 import profile_pic from "../../assets/images/male_profile.jpg";
 import logo from "../../assets/images/logo_5.png";
 
+import { styleSheet } from "./styles";
+import { withStyles } from "@mui/styles";
+
 const pages = ["Home", "Shop", "About Us", "Contact Us", "Cart"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-const Navbar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+const Navbar = (props) => {
+  const { classes } = props;
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [isLogged, setIsLoggedUser] = useState(true);
+  const [value, setValue] = useState("");
+
+  useEffect(() => {
+    if (isLogged) {
+      settings[3] = "Logout";
+    } else {
+      settings[3] = "Login";
+    }
+  });
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -35,6 +58,16 @@ const Navbar = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  function changePage(e) {
+    setValue(e.target.innerText);
+  }
+
+  const navLinkStyle = ({ isActive }) => {
+    return {
+      color: isActive ? "#D25380" : "normal",
+    };
   };
 
   return (
@@ -121,7 +154,88 @@ const Navbar = () => {
           >
             LOGO
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            <Tabs
+              value={value}
+              onChange={changePage}
+              className={classes.nav__tabs}
+            >
+              {/* <Link to="/home" className={classes.nav__text}>
+                <Tab
+                  icon={<HomeIcon />}
+                  className={classes.nav__text}
+                  label="Home"
+                />
+              </Link> */}
+
+              <NavLink
+                smooth
+                to="/home"
+                className={classes.nav__text}
+                style={navLinkStyle}
+              >
+                <Tab
+                  icon={<HomeIcon />}
+                  className={classes.nav__text}
+                  label="Home"
+                />
+              </NavLink>
+
+              <NavLink
+                smooth
+                to="/shop"
+                className={classes.nav__text}
+                style={navLinkStyle}
+              >
+                <Tab
+                  icon={<StoreIcon />}
+                  className={classes.nav__text}
+                  label="Shop"
+                />
+              </NavLink>
+
+              <NavLink
+                smooth
+                to="/about"
+                className={classes.nav__text}
+                style={navLinkStyle}
+              >
+                <Tab
+                  icon={<LightbulbIcon />}
+                  className={classes.nav__text}
+                  label="About Us"
+                />
+              </NavLink>
+
+              <NavLink
+                smooth
+                to="/contact"
+                className={classes.nav__text}
+                style={navLinkStyle}
+              >
+                <Tab
+                  icon={<ContactIcon />}
+                  className={classes.nav__text}
+                  label="Contact Us"
+                />
+              </NavLink>
+
+              <NavLink
+                smooth
+                to="/cart"
+                className={classes.nav__text}
+                style={navLinkStyle}
+              >
+                <Tab
+                  icon={<ShoppingCartIcon />}
+                  className={classes.nav__text}
+                  label="Cart"
+                />
+              </NavLink>
+            </Tabs>
+          </Box>
+          {/* <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
@@ -131,40 +245,49 @@ const Navbar = () => {
                 {page}
               </Button>
             ))}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={profile_pic} />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+          </Box> */}
+          {isLogged ? (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src={profile_pic} />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          ) : (
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: "white", display: "block" }}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+              Login
+            </Button>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
   );
 };
-export default Navbar;
+// export default Navbar;
+export default withStyles(styleSheet)(Navbar);

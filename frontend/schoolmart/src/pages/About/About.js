@@ -5,7 +5,7 @@ import Header from "../../components/Header/Header";
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
 
-const Home = (props) => {
+const About = (props) => {
   const { classes } = props;
   return (
     <div id="home">
@@ -14,4 +14,4 @@ const Home = (props) => {
   );
 };
 
-export default withStyles(styleSheet)(Home);
+export default withStyles(styleSheet)(About);
