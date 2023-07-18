@@ -58,3 +58,25 @@ input[type="text"]:not(#f_login):not(#f_pwd) {
 .css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input {
   font-family: "Acme", sans-serif !important;
 }
+
+/* Navbar bg-color */
+.css-hip9hq-MuiPaper-root-MuiAppBar-root {
+  background-color: rgba(204, 204, 204, 0) !important;
+  /* background-color: #e7cbcb !important; */
+  /* background-color: #99627a !important; */
+}
+
+.css-m5x0z-MuiTypography-root {
+  color: rgb(0, 0, 0) !important;
+}
+
+/* Navbar button text color */
+.css-1q39md6-MuiButtonBase-root-MuiButton-root {
+  color: rgb(0, 0, 0) !important;
+  font-family: "Acme", sans-serif !important;
+}
+
+/* Navbar settings menu button text color */
+.css-1uwgr7b-MuiTypography-root {
+  font-family: "Acme", sans-serif !important;
+}
