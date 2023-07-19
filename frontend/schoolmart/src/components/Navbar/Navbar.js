@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { Routes, Route, useNavigate, Link, NavLink } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
+
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import HomeIcon from "@mui/icons-material/Home";
@@ -21,11 +22,15 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+
 import profile_pic from "../../assets/images/male_profile.jpg";
-import logo from "../../assets/images/logo_5.png";
+import logo from "../../assets/images/logo_7.png";
 
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
+
+const footer_bg_texture =
+  "https://www.transparenttextures.com/patterns/nistri.png";
 
 const pages = ["Home", "Shop", "About Us", "Contact Us", "Cart"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -71,7 +76,10 @@ const Navbar = (props) => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      style={{ backgroundImage: `url(${footer_bg_texture})` }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}

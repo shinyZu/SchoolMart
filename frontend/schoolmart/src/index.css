@@ -23,7 +23,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 15px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar:hover {
@@ -31,15 +31,16 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #63a4c5;
+  background-color: #643843;
+  border-radius: 20px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #39518d;
+  background-color: #e7cbcb;
 }
 
 ::-webkit-scrollbar-corner {
-  background-color: #205a76;
+  background-color: #643843;
 }
 
 /* .font__family {
@@ -78,5 +79,18 @@ input[type="text"]:not(#f_login):not(#f_pwd) {
 
 /* Navbar settings menu button text color */
 .css-1uwgr7b-MuiTypography-root {
+  font-family: "Acme", sans-serif !important;
+}
+
+/* Home Title */
+.css-gepadz-MuiTypography-root {
+  font-family: "Acme", sans-serif !important;
+}
+
+.css-1idn90j-MuiGrid-root {
+  text-align: justify;
+}
+
+.css-2ulfj5-MuiTypography-root {
   font-family: "Acme", sans-serif !important;
 }

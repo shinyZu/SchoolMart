@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
-import { styleSheet } from "./button_styles";
+import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
 
 const MyButton = (props) => {
@@ -12,6 +12,7 @@ const MyButton = (props) => {
         variant={props.variant}
         onClick={props.onClick}
         style={props.style}
+        className={props.className}
       >
         {props.label}
       </Button>
