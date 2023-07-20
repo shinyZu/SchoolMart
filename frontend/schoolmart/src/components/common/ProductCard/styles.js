@@ -1,6 +1,7 @@
 import category_bg from "../../../assets/images/Home/Category/ct_pens.jpg";
 const footer_bg_texture =
   "https://www.transparenttextures.com/patterns/clean-textile.png";
+
 export const styleSheet = {
   card: {
     // border: "2px solid black",
