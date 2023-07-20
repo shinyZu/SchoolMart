@@ -59,6 +59,10 @@ export const styleSheet = {
   container_minus: {
     // border: "2px solid blue",
     background: "#99627A",
+
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
 
   container_qty: {
@@ -68,6 +72,9 @@ export const styleSheet = {
   container_plus: {
     // border: "2px solid blue",
     background: "#99627A",
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
 
   txt_minus_plus: {

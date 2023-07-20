@@ -128,6 +128,9 @@ const ProductDetails = (props) => {
                   className={classes.container_minus}
                   display="flex"
                   justifyContent="center"
+                  onClick={(e) => {
+                    console.log("qty -");
+                  }}
                 >
                   <Typography variant="h8" className={classes.txt_minus_plus}>
                     -
@@ -158,6 +161,9 @@ const ProductDetails = (props) => {
                   className={classes.container_plus}
                   display="flex"
                   justifyContent="center"
+                  onClick={(e) => {
+                    console.log("qty +");
+                  }}
                 >
                   <Typography variant="h8" className={classes.txt_minus_plus}>
                     +
