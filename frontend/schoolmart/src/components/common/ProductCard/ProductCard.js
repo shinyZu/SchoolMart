@@ -14,7 +14,7 @@ const ProductCard = (props) => {
     <>
       <Grid
         container
-        xl={2.5}
+        xl={props.cardWidth}
         lg={2.5}
         md={2.5}
         sm={6}

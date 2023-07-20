@@ -8,10 +8,11 @@ const footer_bg_texture =
 export const styleSheet = {
   box_container: {
     // border: "2px solid green",
-    maxWidth: "1530px",
+    // maxWidth: "1536px",
+    maxWidth: "1300px",
     margin: "auto",
     marginTop: "5px",
-    // marginBottom: "10vh",
+    height: "auto",
   },
 
   //   --------First Container - Titlr & Tagline---------------------
@@ -100,7 +101,7 @@ export const styleSheet = {
 
   second_container: {
     // border: "2px solid red",
-    marginTop: "10vh",
+    marginTop: "5vh",
   },
 
   container_2_0: {
@@ -139,7 +140,7 @@ export const styleSheet = {
   //   --------Third Container - New Arrival---------------------
   third_container: {
     // border: "2px solid red",
-    marginTop: "10vh",
+    marginTop: "5vh",
   },
 
   container_3_0: {

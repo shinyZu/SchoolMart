@@ -1,8 +1,10 @@
 import category_bg from "../../../assets/images/Home/Category/ct_pens.jpg";
+const footer_bg_texture =
+  "https://www.transparenttextures.com/patterns/clean-textile.png";
 export const styleSheet = {
   card: {
     // border: "2px solid black",
-    boxShadow: "4px 8px 10px rgba(0, 0, 0, 0.3)",
+    // boxShadow: "4px 8px 10px rgba(0, 0, 0, 0.3)",
 
     "&:hover": {
       cursor: "pointer",
@@ -23,10 +25,11 @@ export const styleSheet = {
     // border: "2px solid red",
     height: "10vh !important",
     padding: "10px",
+    backgroundImage: `url(${footer_bg_texture})`,
   },
 
   txt_prod_ctg: {
-    fontSize: "0.8em",
+    fontSize: "0.8rem",
     color: "#535c68",
     marginBottom: "5px !important",
   },

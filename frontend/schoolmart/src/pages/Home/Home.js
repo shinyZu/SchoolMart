@@ -47,6 +47,18 @@ const newArrivals = [
     productName: "Product 1",
     price: "00.00",
   },
+  {
+    img: "",
+    category: "Category 1",
+    productName: "Product 1",
+    price: "00.00",
+  },
+  {
+    img: "",
+    category: "Category 1",
+    productName: "Product 1",
+    price: "00.00",
+  },
 ];
 
 const Home = (props) => {
@@ -71,7 +83,7 @@ const Home = (props) => {
             <Grid container className={classes.container_1}>
               {/* ----Left Container ---------- */}
 
-              <Grid item xs={5} className={classes.container_1_left}>
+              <Grid item xs={6} className={classes.container_1_left}>
                 <Grid item xs={12} className={classes.container_1_left_1}>
                   <Typography variant="h3" className={classes.txt_title}>
                     Your One-Stop Shop For All Your School Needs....
@@ -108,7 +120,7 @@ const Home = (props) => {
 
               {/* ----Right Container ---------- */}
 
-              <Grid container item xs={6} className={classes.container_1_right}>
+              <Grid container item xs={5} className={classes.container_1_right}>
                 <Grid
                   item
                   xs={12}
@@ -212,7 +224,7 @@ const Home = (props) => {
                 // item
                 container
                 rowGap={3}
-                columnGap={1}
+                columnGap={5}
                 xl={12}
                 lg={12}
                 md={12}
@@ -220,7 +232,8 @@ const Home = (props) => {
                 xs={12}
                 className={classes.card_container_2}
                 display="flex"
-                justifyContent="space-between"
+                // justifyContent="space-between"
+                justifyContent="center"
               >
                 {/* -------Product Card------------ */}
                 {newArrivals.map((product, index) => {
@@ -230,19 +243,19 @@ const Home = (props) => {
                         key={index}
                         product={product}
                         onClick={(e) => {
-                          navigate("/shop");
+                          navigate("/product-details");
                         }}
+                        cardWidth={3}
                       />
                     </>
                   );
                 })}
               </Grid>
-
-              {/* ------------- Footer -------------- */}
-              <Footer />
             </Grid>
           </Grid>
         </Box>
+        {/* ------------- Footer -------------- */}
+        <Footer />
       </div>
     </>
   );

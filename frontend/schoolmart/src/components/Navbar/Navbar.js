@@ -78,9 +78,13 @@ const Navbar = (props) => {
   return (
     <AppBar
       position="static"
-      style={{ backgroundImage: `url(${footer_bg_texture})` }}
+      style={{
+        backgroundImage: `url(${footer_bg_texture})`,
+        width: "68%",
+        margin: "auto",
+      }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="x3">
         <Toolbar disableGutters>
           {/* <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
           <Avatar

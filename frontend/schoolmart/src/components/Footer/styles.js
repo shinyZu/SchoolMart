@@ -7,6 +7,8 @@ export const styleSheet = {
     // border: "2px solid red",
     marginTop: "10vh",
     backgroundImage: `url(${footer_bg_texture})`,
+    width: "68% !important",
+    margin: "auto",
   },
 
   footer_container_1: {
@@ -16,6 +18,7 @@ export const styleSheet = {
 
   icon: {
     cursor: "pointer",
+    color: "#D25380",
   },
 
   footer_container_2: {
