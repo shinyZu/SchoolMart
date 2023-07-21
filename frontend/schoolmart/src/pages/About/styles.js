@@ -5,6 +5,8 @@ import about_us_img_3 from "../../assets/images/About/3.jpg";
 import about_us_img_4 from "../../assets/images/About/4.jpg";
 import about_us_img_5 from "../../assets/images/About/5.jpg";
 import about_us_img_6 from "../../assets/images/About/6.jpg";
+const pubic_url =
+  "https://drive.google.com/uc?id=1zLS4gAxVr2UjxQIF7FzBIKAIdiQR1WyH";
 
 export const styleSheet = {
   box_container: {
