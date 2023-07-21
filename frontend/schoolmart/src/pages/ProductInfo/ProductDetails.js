@@ -124,7 +124,7 @@ const ProductDetails = (props) => {
               display="flex"
               alignItems="flex-end"
             >
-              <Link to="/shop">
+              <Link to="/cart">
                 <MyButton
                   label="Add To Cart"
                   size="small"

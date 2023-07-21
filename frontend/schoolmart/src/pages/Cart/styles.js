@@ -86,6 +86,7 @@ export const styleSheet = {
 
   proceed_btn_container: {
     // border: "2px solid blue",
+    height: "8vh",
     marginTop: "2vh !important",
   },
 

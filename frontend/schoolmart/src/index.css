@@ -104,3 +104,8 @@ input[type="text"]:not(#f_login):not(#f_pwd) {
 .MuiAutocomplete-popper-root {
   font-family: "Acme", sans-serif !important;
 }
+
+/* checkbox label */
+.css-j204z7-MuiFormControlLabel-root .MuiFormControlLabel-label {
+  font-family: "Acme", sans-serif !important;
+}

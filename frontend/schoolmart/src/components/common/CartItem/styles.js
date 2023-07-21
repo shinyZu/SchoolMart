@@ -38,11 +38,13 @@ export const styleSheet = {
   tbl_item_delete_container: {
     // border: "2px solid black",
   },
+
   txt_item_values: {
     color: "#643843 !important",
   },
 
   btn_cancel: {
+    color: "#643843 !important",
     "&:hover": {
       cursor: "pointer",
     },

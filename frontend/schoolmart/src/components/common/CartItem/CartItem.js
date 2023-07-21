@@ -100,7 +100,7 @@ const CartItem = (props) => {
           alignItems="center"
         >
           <Typography variant="h7" className={classes.txt_item_values}>
-            LKR {item.subtotal}
+            LKR {item.price * item.qty}
           </Typography>
         </Grid>
 

@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
-import CancelIcon from "@mui/icons-material/Cancel";
-
 import Header from "../../components/Header/Header";
 import QtyChanger from "../../components/common/QtyChanger/QtyChanger";
 import CartItem from "../../components/common/CartItem/CartItem";
+import CartTotals from "../../components/common/CartTotals/CartTotals";
 import MyTextField from "../../components/common/MyTextField/MyTextField";
 import MyButton from "../../components/common/MyButton/MyButton";
 import Footer from "../../components/Footer/Footer";
@@ -28,8 +27,8 @@ const cartItems = [
     img_url: "https://drive.google.com/uc?id=1pE7g9RUBB27Gu9l46bnFBkwvaKBhP_D9",
     productName: "Product 02",
     price: 100.0,
-    qty: 2,
-    subtotal: 200.0,
+    qty: 3,
+    subtotal: 300.0,
   },
   {
     img_url: "https://drive.google.com/uc?id=195Fima7KXJJuN0X0vf2fCIU6gSQwEvsK",
@@ -43,6 +42,16 @@ const cartItems = [
 const Cart = (props) => {
   const { classes } = props;
   const [couponValue, setCouponValue] = useState(0.0);
+  const [finalSubtotal, setFinalSubTotal] = useState(0);
+
+  useEffect(() => {
+    let final_subtotal = 0;
+    for (let item of cartItems) {
+      final_subtotal += item.subtotal;
+      console.log(final_subtotal);
+      setFinalSubTotal(final_subtotal);
+    }
+  }, [finalSubtotal]);
 
   return (
     <div id="home">
@@ -154,7 +163,9 @@ const Cart = (props) => {
                 type="text"
                 id="coupon"
                 value={couponValue}
-                onChange={(e) => setCouponValue(e.target.value)}
+                onChange={(e) => {
+                  setCouponValue(e.target.value);
+                }}
                 style={{ width: "100%", paddingTop: "5px" }}
               />
 
@@ -166,6 +177,9 @@ const Cart = (props) => {
                 variant="outlined"
                 type="button"
                 className={classes.btn_apply_coupon}
+                onClick={(e) => {
+                  console.log("Coupon Applied");
+                }}
               />
             </Grid>
 
@@ -195,96 +209,12 @@ const Cart = (props) => {
                 </Typography>
               </Grid>
 
-              <Grid
-                container
-                xl={12}
-                lg={12}
-                md={12}
-                sm={12}
-                xs={12}
-                className={classes.final_prices_container}
-                display="flex"
-              >
-                <Grid
-                  container
-                  xl={12}
-                  lg={12}
-                  md={12}
-                  sm={12}
-                  xs={12}
-                  className={classes.subtotal_container}
-                  display="flex"
-                  justifyContent="space-between"
-                >
-                  <Typography variant="h7" className={classes.cart_total_title}>
-                    Subtotal
-                  </Typography>
-
-                  <Typography variant="h7" className={classes.cart_total_title}>
-                    LKR 1880
-                  </Typography>
-                </Grid>
-
-                <Grid
-                  container
-                  xl={12}
-                  lg={12}
-                  md={12}
-                  sm={12}
-                  xs={12}
-                  className={classes.coupon_container}
-                  display="flex"
-                  justifyContent="space-between"
-                >
-                  <Typography variant="h7" className={classes.cart_total_title}>
-                    Coupon
-                  </Typography>
-
-                  <Typography variant="h7" className={classes.cart_total_title}>
-                    LKR 500
-                  </Typography>
-                </Grid>
-
-                <Grid
-                  container
-                  xl={12}
-                  lg={12}
-                  md={12}
-                  sm={12}
-                  xs={12}
-                  className={classes.shipping_container}
-                  display="flex"
-                  justifyContent="space-between"
-                >
-                  <Typography variant="h7" className={classes.cart_total_title}>
-                    Shipping
-                  </Typography>
-
-                  <Typography variant="h7" className={classes.cart_total_title}>
-                    LKR 0.00
-                  </Typography>
-                </Grid>
-
-                <Grid
-                  container
-                  xl={12}
-                  lg={12}
-                  md={12}
-                  sm={12}
-                  xs={12}
-                  className={classes.total_cost_container}
-                  display="flex"
-                  justifyContent="space-between"
-                >
-                  <Typography variant="h6" className={classes.cart_total_title}>
-                    Total
-                  </Typography>
-
-                  <Typography variant="h6" className={classes.cart_total_title}>
-                    LKR 1380.00
-                  </Typography>
-                </Grid>
-              </Grid>
+              <CartTotals
+                subtotal={finalSubtotal}
+                coupon={couponValue}
+                shipping={0.0}
+                discount={0.0}
+              />
 
               <Grid
                 item
@@ -295,14 +225,19 @@ const Cart = (props) => {
                 xs={12}
                 className={classes.proceed_btn_container}
               >
-                <Link to="/cart.checkout">
+                <Link
+                  to="/cart/checkout"
+                  state={{
+                    coupon: couponValue,
+                  }}
+                >
                   <MyButton
                     label="PROCEED TO CHECKOUT"
                     size="large"
                     variant="outlined"
                     type="button"
                     className={classes.btn_proceed_checkout}
-                    style={{ width: "100%" }}
+                    style={{ width: "100%", height: "90%" }}
                   />
                 </Link>
               </Grid>
