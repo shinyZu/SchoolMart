@@ -15,7 +15,7 @@ export const styleSheet = {
     "&:hover": {
       cursor: "pointer",
       boxShadow: "4px 8px 10px rgba(0, 0, 0, 0.7)",
-      transition: "all 1s ease",
+      transition: "all 0.5s ease",
     },
   },
 
