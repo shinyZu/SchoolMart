@@ -13,6 +13,7 @@ const MyButton = (props) => {
         onClick={props.onClick}
         style={props.style}
         className={props.className}
+        // fullWidth={props.fullWidth}
       >
         {props.label}
       </Button>

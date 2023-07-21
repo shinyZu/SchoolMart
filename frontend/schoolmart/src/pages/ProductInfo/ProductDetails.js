@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
+import QtyChanger from "../../components/common/QtyChanger/QtyChanger";
 import MyButton from "../../components/common/MyButton/MyButton";
 import ProductCard from "../../components/common/ProductCard/ProductCard";
 
@@ -109,67 +110,8 @@ const ProductDetails = (props) => {
                 copiosae legendos at vix ad putent delectus delicata usu.
               </p>
 
-              <Grid
-                container
-                xl={3}
-                lg={3}
-                md={3}
-                sm={12}
-                xs={12}
-                className={classes.container_right_1_0}
-              >
-                <Grid
-                  item
-                  xl={4}
-                  lg={4}
-                  md={4}
-                  sm={12}
-                  xs={12}
-                  className={classes.container_minus}
-                  display="flex"
-                  justifyContent="center"
-                  onClick={(e) => {
-                    console.log("qty -");
-                  }}
-                >
-                  <Typography variant="h8" className={classes.txt_minus_plus}>
-                    -
-                  </Typography>
-                </Grid>
-                <Grid
-                  item
-                  xl={4}
-                  lg={4}
-                  md={4}
-                  sm={12}
-                  xs={12}
-                  className={classes.container_qty}
-                  display="flex"
-                  justifyContent="center"
-                >
-                  <Typography variant="h8" className={classes.txt_qty}>
-                    1
-                  </Typography>
-                </Grid>
-                <Grid
-                  item
-                  xl={4}
-                  lg={4}
-                  md={4}
-                  sm={12}
-                  xs={12}
-                  className={classes.container_plus}
-                  display="flex"
-                  justifyContent="center"
-                  onClick={(e) => {
-                    console.log("qty +");
-                  }}
-                >
-                  <Typography variant="h8" className={classes.txt_minus_plus}>
-                    +
-                  </Typography>
-                </Grid>
-              </Grid>
+              {/* ---------Qty Changer----------------- */}
+              <QtyChanger />
             </Grid>
             <Grid
               item

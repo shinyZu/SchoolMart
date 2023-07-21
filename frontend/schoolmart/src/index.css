@@ -91,7 +91,13 @@ input[type="text"]:not(#f_login):not(#f_pwd) {
   text-align: justify;
 }
 
+/* h6 */
 .css-2ulfj5-MuiTypography-root {
+  font-family: "Acme", sans-serif !important;
+}
+
+/* h5 */
+.css-ag7rrr-MuiTypography-root {
   font-family: "Acme", sans-serif !important;
 }
 

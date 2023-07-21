@@ -51,44 +51,9 @@ export const styleSheet = {
     margin: "2vh 0",
   },
 
-  container_right_1_0: {
-    // border: "2px solid red",
-    // padding: "0px 10px",
-  },
+  // ----------Qty Changer------------
 
-  container_minus: {
-    // border: "2px solid blue",
-    background: "#99627A",
-
-    "&:hover": {
-      cursor: "pointer",
-    },
-  },
-
-  container_qty: {
-    border: "1px solid #99627A",
-  },
-
-  container_plus: {
-    // border: "2px solid blue",
-    background: "#99627A",
-    "&:hover": {
-      cursor: "pointer",
-    },
-  },
-
-  txt_minus_plus: {
-    fontSize: "1.5rem",
-    margin: "auto",
-    color: "white",
-  },
-
-  txt_qty: {
-    fontSize: "1.3rem",
-    margin: "auto",
-  },
-
-  //   ------- Add to Cart button
+  //   ------- Add to Cart button --------
 
   container_right_2: {
     // border: "2px solid blue",
