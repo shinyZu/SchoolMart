@@ -1,6 +1,6 @@
 import React from "react";
 
-import Navbar from "../Navbar/Navbar";
+import CustomerNavbar from "../Navbar/CustomerNavbar";
 
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
@@ -9,7 +9,7 @@ const Header = (props) => {
   const { classes } = props;
   return (
     <div id="header">
-      <Navbar />
+      <CustomerNavbar />
     </div>
   );
 };

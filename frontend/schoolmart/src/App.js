@@ -16,6 +16,7 @@ import Contact from "./pages/Contact/Contact";
 import Cart from "./pages/Cart/Cart";
 import Checkout from "./pages/Checkout/Checkout";
 import ProductDetails from "./pages/ProductInfo/ProductDetails";
+import AdminPanel from "./pages/AdminPanel/AdminPanel";
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -41,6 +42,7 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/cart/checkout" element={<Checkout />} />
         <Route path="/product-details" element={<ProductDetails />} />
+        <Route path="/admin" element={<AdminPanel />} />
 
         <Route
           path="/login"

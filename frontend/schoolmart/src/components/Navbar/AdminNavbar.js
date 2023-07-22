@@ -36,7 +36,7 @@ const footer_bg_texture =
 const pages = ["Home", "Shop", "About Us", "Contact Us", "Cart"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-const Navbar = (props) => {
+const AdminNavbar = (props) => {
   const { classes } = props;
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -173,92 +173,9 @@ const Navbar = (props) => {
               value={value}
               onChange={changePage}
               className={classes.nav__tabs}
-            >
-              {/* <Link to="/home" className={classes.nav__text}>
-                <Tab
-                  icon={<HomeIcon />}
-                  className={classes.nav__text}
-                  label="Home"
-                />
-              </Link> */}
-
-              <NavLink
-                smooth
-                to="/home"
-                className={classes.nav__text}
-                style={navLinkStyle}
-              >
-                <Tab
-                  icon={<HomeIcon />}
-                  className={classes.nav__text}
-                  label="Home"
-                />
-              </NavLink>
-
-              <NavLink
-                smooth
-                to="/shop"
-                className={classes.nav__text}
-                style={navLinkStyle}
-              >
-                <Tab
-                  icon={<StoreIcon />}
-                  className={classes.nav__text}
-                  label="Shop"
-                />
-              </NavLink>
-
-              <NavLink
-                smooth
-                to="/about"
-                className={classes.nav__text}
-                style={navLinkStyle}
-              >
-                <Tab
-                  icon={<LightbulbIcon />}
-                  className={classes.nav__text}
-                  label="About Us"
-                />
-              </NavLink>
-
-              <NavLink
-                smooth
-                to="/contact"
-                className={classes.nav__text}
-                style={navLinkStyle}
-              >
-                <Tab
-                  icon={<ContactIcon />}
-                  className={classes.nav__text}
-                  label="Contact Us"
-                />
-              </NavLink>
-
-              <NavLink
-                smooth
-                to="/cart"
-                className={classes.nav__text}
-                style={navLinkStyle}
-              >
-                <Tab
-                  icon={<ShoppingCartIcon />}
-                  className={classes.nav__text}
-                  label="Cart"
-                />
-              </NavLink>
-            </Tabs>
+            ></Tabs>
           </Box>
-          {/* <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box> */}
+
           {isLogged ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
@@ -303,4 +220,4 @@ const Navbar = (props) => {
   );
 };
 // export default Navbar;
-export default withStyles(styleSheet)(Navbar);
+export default withStyles(styleSheet)(AdminNavbar);

@@ -15,6 +15,8 @@ import Footer from "../../components/Footer/Footer";
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
 
+import StationeryService from "../../services/StationeryService";
+
 const sortTypes = ["Default", "Acending", "Descending"];
 const categories = [
   "Writing Instruments",
@@ -70,6 +72,13 @@ const Shop = (props) => {
   const [isBindersSelected, setIsBindersSelected] = useState(false);
   const [isMathSelected, setIsMathSelected] = useState(false);
 
+  const [stationeryList, setStationeryList] = useState([]);
+
+  useEffect(() => {
+    console.log("--------------1-------------");
+    getAllStationery();
+  }, []);
+
   useEffect(() => {
     if (isAllSelected) {
       setIsWritingSelected(false);
@@ -109,6 +118,16 @@ const Shop = (props) => {
 
   const handleDelete = () => {
     console.info("You clicked the delete icon.");
+  };
+
+  // -------------Services -------------
+  const getAllStationery = async () => {
+    let res = await StationeryService.getAll();
+
+    if (res.status == 200) {
+      console.log(res.data);
+      setStationeryList(res.data);
+    }
   };
 
   return (

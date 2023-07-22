@@ -109,3 +109,29 @@ input[type="text"]:not(#f_login):not(#f_pwd) {
 .css-j204z7-MuiFormControlLabel-root .MuiFormControlLabel-label {
   font-family: "Acme", sans-serif !important;
 }
+
+/* ------Admin Tables -------- */
+
+.css-t89xny-MuiDataGrid-columnHeaderTitle {
+  font-family: "Acme", sans-serif !important;
+}
+
+.css-1b3p38o .header_color {
+  background-color: #c88ea7 !important;
+}
+
+.css-78trlr-MuiButtonBase-root-MuiIconButton-root {
+  color: #643853 !important;
+}
+
+.MuiDataGrid-root .MuiDataGrid-cell:focus-within {
+  outline: none !important;
+}
+
+.css-1pysi21-MuiFormLabel-root-MuiInputLabel-root {
+  color: #95a5a6 !important;
+}
+
+.css-1b3p38o {
+  width: max-content !important;
+}
