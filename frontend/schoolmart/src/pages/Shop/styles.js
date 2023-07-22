@@ -32,21 +32,24 @@ export const styleSheet = {
 
   chip_all_selected: {
     backgroundColor: "#C88EA7 !important",
+    border: "1px solid #AC7088 !important",
     color: "white !important",
     padding: "20px 10px !important",
-    borderRadius: "8px !important",
+    borderRadius: "50px !important",
   },
 
   chip_all_deselected: {
     border: "none !important",
     backgroundColor: "#ebebeb !important",
+    border: "1px solid #ccc !important",
     padding: "20px 10px !important",
-    borderRadius: "8px !important",
+    borderRadius: "50px !important",
   },
 
   chip_selected: {
     backgroundColor: "#C88EA7 !important",
-    borderRadius: "8px !important",
+    border: "1px solid #AC7088 !important",
+    borderRadius: "50px !important",
     color: "white !important",
     padding: "20px 10px !important",
   },
@@ -54,7 +57,8 @@ export const styleSheet = {
   chip_deselected: {
     border: "none !important",
     backgroundColor: "#ebebeb !important",
-    borderRadius: "8px !important",
+    border: "1px solid #ccc !important",
+    borderRadius: "50px !important",
     padding: "20px 10px !important",
   },
 

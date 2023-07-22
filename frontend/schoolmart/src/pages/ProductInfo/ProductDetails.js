@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -43,6 +43,7 @@ const relatedProducts = [
 const ProductDetails = (props) => {
   const { classes } = props;
   const navigate = useNavigate();
+  const [qty, setQty] = useState(1);
 
   return (
     <div id="home">
@@ -111,7 +112,7 @@ const ProductDetails = (props) => {
               </p>
 
               {/* ---------Qty Changer----------------- */}
-              <QtyChanger />
+              <QtyChanger qty={qty} />
             </Grid>
             <Grid
               item

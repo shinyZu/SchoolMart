@@ -44,7 +44,7 @@ export const styleSheet = {
   },
 
   btn_cancel: {
-    color: "#643843 !important",
+    color: "#AC7088 !important",
     "&:hover": {
       cursor: "pointer",
     },

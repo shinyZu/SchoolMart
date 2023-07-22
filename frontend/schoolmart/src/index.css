@@ -31,7 +31,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #643843;
+  background-color: #99627a;
   border-radius: 20px;
 }
 
@@ -40,7 +40,7 @@ body {
 }
 
 ::-webkit-scrollbar-corner {
-  background-color: #643843;
+  background-color: #99627a;
 }
 
 /* .font__family {
@@ -114,14 +114,16 @@ input[type="text"]:not(#f_login):not(#f_pwd) {
 
 .css-t89xny-MuiDataGrid-columnHeaderTitle {
   font-family: "Acme", sans-serif !important;
+  color: "black";
 }
 
 .css-1b3p38o .header_color {
-  background-color: #c88ea7 !important;
+  /* background-color: #c88ea7 !important; */
+  /* color: "black"; */
 }
 
 .css-78trlr-MuiButtonBase-root-MuiIconButton-root {
-  color: #643853 !important;
+  color: #99627a !important;
 }
 
 .MuiDataGrid-root .MuiDataGrid-cell:focus-within {
@@ -134,4 +136,21 @@ input[type="text"]:not(#f_login):not(#f_pwd) {
 
 .css-1b3p38o {
   width: max-content !important;
+}
+
+.css-1kwdphh-MuiDataGrid-virtualScrollerContent {
+  font-family: "Acme", sans-serif !important;
+  color: #643843 !important;
+}
+
+.css-rtrcn9-MuiTablePagination-root .MuiTablePagination-selectLabel {
+  font-family: "Acme", sans-serif !important;
+}
+
+.css-194a1fa-MuiSelect-select-MuiInputBase-input.MuiSelect-select {
+  font-family: "Acme", sans-serif !important;
+}
+
+.css-levciy-MuiTablePagination-displayedRows {
+  font-family: "Acme", sans-serif !important;
 }

@@ -17,7 +17,7 @@ export const styleSheet = {
   },
 
   txt_title: {
-    color: "#643843 !important",
+    color: "#99627A !important",
   },
 
   details_container: {
@@ -103,15 +103,13 @@ export const styleSheet = {
   },
 
   btn_save_card: {
-    border: "1px #99627A !important",
-    // backgroundColor: "#643843 !important",
-    backgroundColor: "#99627A !important",
+    border: "1px #AC7088 !important",
+    backgroundColor: "#AC7088 !important",
     color: "white !important",
     fontFamily: '"Acme", sans-serif !important',
-    // marginTop: "10px",
     "&:hover": {
       cursor: "pointer",
-      backgroundColor: "#643843 !important",
+      backgroundColor: "#99627A !important",
     },
     padding: "10px 60px !important",
   },
@@ -147,15 +145,14 @@ export const styleSheet = {
   },
 
   btn_place_order: {
-    border: "1px #99627A !important",
-    // backgroundColor: "#643843 !important",
-    backgroundColor: "#99627A !important",
+    border: "1px #AC7088 !important",
+    backgroundColor: "#AC7088 !important",
     color: "white !important",
     fontFamily: '"Acme", sans-serif !important',
     marginTop: "10px",
     "&:hover": {
       cursor: "pointer",
-      backgroundColor: "#643843 !important",
+      backgroundColor: "#99627A !important",
     },
     padding: "10px 60px !important",
   },

@@ -22,7 +22,8 @@ export const styleSheet = {
   },
 
   txt_title: {
-    color: "#643843 !important",
+    // color: "#643843 !important",
+    color: "#99627A !important",
   },
 
   cart_container: {
@@ -63,14 +64,13 @@ export const styleSheet = {
 
   btn_apply_coupon: {
     border: "1px #99627A !important",
-    // backgroundColor: "#643843 !important",
-    backgroundColor: "#99627A !important",
+    backgroundColor: "#AC7088 !important",
     color: "white !important",
     fontFamily: '"Acme", sans-serif !important',
     marginTop: "10px",
     "&:hover": {
       cursor: "pointer",
-      backgroundColor: "#643843 !important",
+      backgroundColor: "#99627A !important",
     },
     padding: "10px 60px !important",
   },
@@ -91,7 +91,7 @@ export const styleSheet = {
   },
 
   cart_total_title: {
-    color: "#643843 !important",
+    color: "#99627A !important",
     // height: "fit-content !important",
   },
 
@@ -117,14 +117,13 @@ export const styleSheet = {
 
   btn_proceed_checkout: {
     border: "1px #99627A !important",
-    // backgroundColor: "#643843 !important",
-    backgroundColor: "#99627A !important",
+    backgroundColor: "#AC7088 !important",
     color: "white !important",
     fontFamily: '"Acme", sans-serif !important',
     marginTop: "10px",
     "&:hover": {
       cursor: "pointer",
-      backgroundColor: "#643843 !important",
+      backgroundColor: "#99627A !important",
     },
     padding: "10px 60px !important",
   },

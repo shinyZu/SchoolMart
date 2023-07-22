@@ -60,15 +60,14 @@ export const styleSheet = {
   },
 
   btn_add_to_cart: {
-    border: "1px #99627A !important",
-    // backgroundColor: "#643843 !important",
-    backgroundColor: "#99627A !important",
+    border: "1px #AC7088 !important",
+    backgroundColor: "#AC7088 !important",
     color: "white !important",
     fontFamily: '"Acme", sans-serif !important',
     marginTop: "10px",
     "&:hover": {
       cursor: "pointer",
-      backgroundColor: "#643843 !important",
+      backgroundColor: "#99627A !important",
     },
     padding: "10px 60px !important",
   },

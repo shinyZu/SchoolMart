@@ -37,7 +37,7 @@ export const styleSheet = {
   },
 
   category_title: {
-    color: "#643843 !important",
+    color: "#99627A !important",
   },
 
   category_fields_container: {
@@ -53,13 +53,13 @@ export const styleSheet = {
   },
 
   btn_save: {
-    border: "1px #99627A !important",
-    backgroundColor: "#99627A !important",
+    border: "1px #AC7088 !important",
+    backgroundColor: "#DEB6AB !important",
     color: "white !important",
     fontFamily: '"Acme", sans-serif !important',
     "&:hover": {
       cursor: "pointer",
-      backgroundColor: "#643843 !important",
+      backgroundColor: "#DBA39A !important",
     },
     padding: "10px 60px !important",
   },
@@ -80,7 +80,7 @@ export const styleSheet = {
   },
 
   product_title: {
-    color: "#643843 !important",
+    color: "#99627A !important",
   },
 
   product_fields_container: {

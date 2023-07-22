@@ -25,7 +25,7 @@ import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import AdbIcon from "@mui/icons-material/Adb";
 
 import profile_pic from "../../assets/images/male_profile.jpg";
-import logo from "../../assets/images/logo_7.png";
+import logo from "../../assets/images/logo_4.png";
 
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
@@ -80,7 +80,7 @@ const AdminNavbar = (props) => {
     <AppBar
       position="static"
       style={{
-        backgroundImage: `url(${footer_bg_texture})`,
+        // backgroundImage: `url(${footer_bg_texture})`,
         width: "68%",
         margin: "auto",
       }}
@@ -102,10 +102,11 @@ const AdminNavbar = (props) => {
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
+              fontFamily: "ACme",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              // color: "inherit",
+              color: "#AC7088",
               textDecoration: "none",
             }}
           >

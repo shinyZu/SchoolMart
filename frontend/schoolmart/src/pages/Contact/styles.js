@@ -17,7 +17,7 @@ export const styleSheet = {
   },
 
   main_title: {
-    color: "#643843 !important",
+    color: "#99627A !important",
   },
 
   contact_container: {

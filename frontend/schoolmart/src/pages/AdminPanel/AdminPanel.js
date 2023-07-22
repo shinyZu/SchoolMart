@@ -27,15 +27,15 @@ import upload_bg from "../../assets/images/bg_login_1.jpg";
 
 const categoryData = [
   {
-    category_code: 1,
+    category_id: 1,
     category_name: "Writing",
   },
   {
-    category_code: 2,
+    category_id: 2,
     category_name: "Books",
   },
   {
-    category_code: 3,
+    category_id: 3,
     category_name: "Art Supplies",
   },
 ];
@@ -167,7 +167,7 @@ const AdminPanel = (props) => {
     {
       field: "category_name",
       headerName: "Category Name",
-      width: 240,
+      width: 248,
       headerClassName: "header_color",
       headerAlign: "center",
       align: "Center",
@@ -426,7 +426,7 @@ const AdminPanel = (props) => {
                 tableColumns={tbl_category_columns}
                 tableData={categoryData.map((category, index) => ({
                   id: index,
-                  category_code: category.category_code,
+                  category_id: category.category_id,
                   category_name: category.category_name,
                 }))}
                 // getRowId={(row) => row.reg_no}
@@ -643,7 +643,7 @@ const AdminPanel = (props) => {
                     variant="outlined"
                     type="text"
                     id="u_price"
-                    placeholder="Unit Price"
+                    placeholder="Unit Price (Rs)"
                     value={newProductFormData.unit_price}
                     onChange={(e) => {
                       setNewProductFormData({

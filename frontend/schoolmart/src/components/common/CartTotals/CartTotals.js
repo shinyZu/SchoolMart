@@ -117,11 +117,11 @@ const CartTotals = (props) => {
           display="flex"
           justifyContent="space-between"
         >
-          <Typography variant="h6" className={classes.cart_total_title}>
+          <Typography variant="h5" className={classes.cart_total_title}>
             Total
           </Typography>
 
-          <Typography variant="h6" className={classes.cart_total_title}>
+          <Typography variant="h5" className={classes.cart_total_title}>
             LKR{" "}
             {props.subtotal + props.shipping - props.coupon - props.discount}
           </Typography>

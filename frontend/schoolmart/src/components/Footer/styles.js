@@ -19,6 +19,7 @@ export const styleSheet = {
   icon: {
     cursor: "pointer",
     color: "#D25380",
+    // color: "#AC7088",
   },
 
   footer_container_2: {
@@ -28,5 +29,6 @@ export const styleSheet = {
 
   footer_text: {
     color: "#535c68",
+    // color: "#AC7088",
   },
 };

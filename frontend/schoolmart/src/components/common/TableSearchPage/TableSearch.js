@@ -30,7 +30,7 @@ function TableSearch(props) {
           // border: 2,
 
           "& .header_color": {
-            backgroundColor: "#4a619b",
+            backgroundColor: "#C88EA7",
             color: "white",
           },
         }}

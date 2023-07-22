@@ -6,7 +6,7 @@ export const styleSheet = {
 
   container_minus: {
     // border: "2px solid blue",
-    background: "#99627A",
+    background: "#AC7088",
 
     "&:hover": {
       cursor: "pointer",
@@ -19,7 +19,7 @@ export const styleSheet = {
 
   container_plus: {
     // border: "2px solid blue",
-    background: "#99627A",
+    background: "#AC7088",
     "&:hover": {
       cursor: "pointer",
     },

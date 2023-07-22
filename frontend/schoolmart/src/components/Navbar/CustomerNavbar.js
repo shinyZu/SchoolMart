@@ -25,7 +25,7 @@ import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import AdbIcon from "@mui/icons-material/Adb";
 
 import profile_pic from "../../assets/images/male_profile.jpg";
-import logo from "../../assets/images/logo_7.png";
+import logo from "../../assets/images/logo_4.png";
 
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
@@ -102,10 +102,11 @@ const CustomerNavbar = (props) => {
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
+              fontFamily: "Acme",
+              fontWeight: 800,
               letterSpacing: ".3rem",
-              color: "inherit",
+              // color: "inherit",
+              color: "#AC7088",
               textDecoration: "none",
             }}
           >

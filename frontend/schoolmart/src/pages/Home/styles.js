@@ -55,7 +55,7 @@ export const styleSheet = {
   },
 
   txt_title: {
-    color: "#643843 !important",
+    color: "#99627A !important",
   },
 
   txt_title_description: {
@@ -83,16 +83,17 @@ export const styleSheet = {
     padding: "20px 0px 0px 50px",
   },
 
-  shop_now__btn: {
+  btn_shop_now: {
     border: "1px #99627A !important",
     // backgroundColor: "#643843 !important",
-    backgroundColor: "#99627A !important",
+    // backgroundColor: "#99627A !important",
+    backgroundColor: "#AC7088 !important",
     color: "white !important",
     fontFamily: '"Acme", sans-serif !important',
     marginTop: "10px",
     "&:hover": {
       cursor: "pointer",
-      backgroundColor: "#643843 !important",
+      backgroundColor: "#99627A !important",
     },
     padding: "10px 60px !important",
   },

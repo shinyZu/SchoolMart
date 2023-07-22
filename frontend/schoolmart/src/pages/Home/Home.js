@@ -112,7 +112,7 @@ const Home = (props) => {
                       size="small"
                       variant="outlined"
                       type="button"
-                      className={classes.shop_now__btn}
+                      className={classes.btn_shop_now}
                     />
                   </Link>
                 </Grid>

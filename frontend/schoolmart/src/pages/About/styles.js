@@ -63,7 +63,7 @@ export const styleSheet = {
   },
 
   txt_title: {
-    color: "#643843 !important",
+    color: "#99627A !important",
   },
 
   para_1: {
