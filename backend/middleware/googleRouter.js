@@ -22,7 +22,7 @@ const auth = new google.auth.GoogleAuth({
 const drive = google.drive({ version: "v3", auth });
 
 const uploadFile = async (fileObject) => {
-  //   console.log(fileObject);
+  console.log(fileObject);
   const bufferStream = new stream.PassThrough();
   bufferStream.end(fileObject.buffer);
 

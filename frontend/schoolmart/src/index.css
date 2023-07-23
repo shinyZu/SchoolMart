@@ -154,3 +154,11 @@ input[type="text"]:not(#f_login):not(#f_pwd) {
 .css-levciy-MuiTablePagination-displayedRows {
   font-family: "Acme", sans-serif !important;
 }
+
+/* Confirm Dialog */
+
+.MuiTypography-h6,
+.MuiTypography-subtitle2,
+.css-1e6y48t-MuiButtonBase-root-MuiButton-root {
+  font-family: "Acme", sans-serif !important;
+}

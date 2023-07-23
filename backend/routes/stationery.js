@@ -302,25 +302,32 @@ router.put(
   }
 );
 
-// Update Stationery only (no img) in DB
+// Update Stationery only (no img) in DB - in use
 // Authorized only for Admin
 router.put("/:id", cors(), authenticateAdminToken, async (req, res) => {
   try {
     const body = req.body;
     const stationeryExist = await checkStationeryExist(req.params.id, res);
+    if (!stationeryExist) {
+      return res
+        .status(404)
+        .json({ status: 404, message: "Product not found." });
+    }
 
     stationeryExist.st_name = body.st_name;
     stationeryExist.description = body.description;
+    // stationeryExist.image_name = body.image_name;
+    // stationeryExist.image_url = body.image_url;
     stationeryExist.unit_price = body.unit_price;
     stationeryExist.qty_on_hand = body.qty_on_hand;
     stationeryExist.category_id = body.category_id;
 
     // Update the stationery in the database
     const updatedStationery = await stationeryExist.save();
-    return res.send({
+    return res.status(200).send({
       status: 200,
       user: updatedStationery,
-      message: "Stationery updated successfully!",
+      message: "Product updated successfully!",
     });
   } catch (err) {
     return res.status(400).send({ status: 400, message: err.message });
@@ -471,7 +478,7 @@ const saveProductDetailsToDB = async (body, res, imageName) => {
     if (stationeryExist) {
       return res
         .status(400)
-        .json({ status: 400, message: "Similar stationery already exists." });
+        .json({ status: 400, message: "Similar product already exists." });
     }
 
     // Get the last inserted st_code from the database
@@ -521,7 +528,7 @@ const saveProductDetailsToDB = async (body, res, imageName) => {
     res.send({
       status: 201,
       category: savedStationery,
-      message: "Stationery saved successfully!",
+      message: "Product saved successfully!",
     });
   } catch (err) {
     return res.status(400).send({ status: 400, message: err.message });
@@ -588,7 +595,7 @@ router.post(
   "/drive/url/prod",
   cors(),
   googleUpload.single("product_image"),
-  // authenticateAdminToken,
+  authenticateAdminToken,
   async (req, res) => {
     try {
       const { body, file } = req;
@@ -600,7 +607,7 @@ router.post(
       if (stationeryExist) {
         return res
           .status(400)
-          .json({ status: 400, message: "Similar stationery already exists." });
+          .json({ status: 400, message: "Similar product already exists." });
       }
 
       // Upload file to drive
@@ -673,7 +680,7 @@ const saveProductToDB = async (body, res, imageName, fileId) => {
 
     // Save the stationery to the database
     const savedStationery = await newStationery.save();
-    res.send({
+    res.status(201).send({
       status: 201,
       data: savedStationery,
       message: "Stationery saved successfully!",
@@ -762,7 +769,7 @@ router.put(
         del_response = await deleteFile(current_fileId);
 
         if (!del_response && del_response.status == 204) {
-          return res.send({
+          return res.status(200).send({
             status: 200,
             data: {
               file_id: upload_response.data.id,
@@ -771,7 +778,7 @@ router.put(
           });
         }
       } else if (current_url == "") {
-        return res.send({
+        return res.status(200).send({
           status: 200,
           data: {
             file_id: upload_response.data.id,
@@ -780,7 +787,7 @@ router.put(
         });
       }
       // else {
-      return res.send({
+      return res.status(200).send({
         status: 200,
         data: {
           file_id: upload_response.data.id,

@@ -39,7 +39,7 @@ function TableSearch(props) {
           rows={props.tableData}
           columns={props.tableColumns}
           pageSize={5}
-          rowsPerPageOptions={[5]}
+          rowsPerPageOptions={[3]}
           // checkboxSelection
         />
       </Box>

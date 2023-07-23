@@ -53,13 +53,25 @@ export const styleSheet = {
   },
 
   btn_save: {
-    border: "1px #AC7088 !important",
-    backgroundColor: "#DEB6AB !important",
+    border: "1px #16a085 !important",
+    backgroundColor: "#16a085 !important",
     color: "white !important",
     fontFamily: '"Acme", sans-serif !important',
     "&:hover": {
       cursor: "pointer",
-      backgroundColor: "#DBA39A !important",
+      backgroundColor: "#108069 !important",
+    },
+    padding: "10px 60px !important",
+  },
+
+  btn_update: {
+    border: "1px #2980b9 !important",
+    backgroundColor: "#2980b9 !important",
+    color: "white !important",
+    fontFamily: '"Acme", sans-serif !important',
+    "&:hover": {
+      cursor: "pointer",
+      backgroundColor: "#216b9c !important",
     },
     padding: "10px 60px !important",
   },
@@ -119,7 +131,7 @@ export const styleSheet = {
 
   image_upload_container: {
     // border: "2px solid black",
-    // height: "40vh",
+    height: "40vh",
     marginTop: "0px !important",
   },
 

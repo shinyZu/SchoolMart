@@ -56,6 +56,66 @@ class StationeryService {
     });
     return await promise;
   };
+
+  // WITH image
+  saveProductWithImage = async (data) => {
+    const promise = new Promise((resolve, reject) => {
+      axios
+        .post("stationery/drive/url/prod", data, {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          return resolve(res);
+        })
+        .catch((er) => {
+          return resolve(er);
+        });
+    });
+    return await promise;
+  };
+
+  // Update only product
+  updateProduct = async (data, id) => {
+    const promise = new Promise((resolve, reject) => {
+      axios
+        .put("stationery/" + id, data, {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+            // "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          return resolve(res);
+        })
+        .catch((er) => {
+          return resolve(er);
+        });
+    });
+    return await promise;
+  };
+
+  // Update only image
+  updateImage = async (st_code, data) => {
+    const promise = new Promise((resolve, reject) => {
+      axios
+        .put("stationery/drive/url/db/" + st_code, data, {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          return resolve(res);
+        })
+        .catch((er) => {
+          return resolve(er);
+        });
+    });
+    return await promise;
+  };
 }
 
 export default new StationeryService();
