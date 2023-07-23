@@ -885,7 +885,7 @@ const AdminPanel = (props) => {
                     placeholder="Category Code"
                     value={categoryId}
                     disabled
-                    oonChange={(e) => {
+                    onChange={(e) => {
                       setNewCategoryFormData({
                         ...newCategoryFormData,
                         category_id: categoryId,

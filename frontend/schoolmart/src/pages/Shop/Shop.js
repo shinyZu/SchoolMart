@@ -16,49 +16,9 @@ import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
 
 import StationeryService from "../../services/StationeryService";
+import CategoryService from "../../services/CategoryService";
 
 const sortTypes = ["Default", "Acending", "Descending"];
-const categories = [
-  "Writing Instruments",
-  "Paper & Books",
-  "Art Supplies",
-  "Adhesives & Fastners",
-  "Folders & Binders",
-  "Math & Geometry",
-];
-
-const products = [
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-];
 
 const Shop = (props) => {
   const { classes } = props;
@@ -71,12 +31,25 @@ const Shop = (props) => {
   const [isAdhesiveSelected, setIsAdhesiveSelected] = useState(false);
   const [isBindersSelected, setIsBindersSelected] = useState(false);
   const [isMathSelected, setIsMathSelected] = useState(false);
+  const [selectedChip, setSelectedChip] = useState([]);
 
+  // An array to store the dynamic states for each instance of MyCategoryChip component
+  const [dynamicStates, setDynamicStates] = useState([
+    "State Value 1",
+    "State Value 2",
+    // Add more initial states as needed
+  ]);
+
+  const [categories, setCategories] = useState([]);
   const [stationeryList, setStationeryList] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState("");
 
   useEffect(() => {
-    console.log("--------------1-------------");
     getAllStationery();
+  }, []);
+
+  useEffect(() => {
+    getAllCategories();
   }, []);
 
   useEffect(() => {
@@ -112,6 +85,15 @@ const Shop = (props) => {
     isMathSelected,
   ]);
 
+  // A function to update the dynamic state based on the index
+  const updateDynamicState = (index, newState) => {
+    setDynamicStates((prevStates) => {
+      const newStates = [...prevStates];
+      newStates[index] = newState;
+      return newStates;
+    });
+  };
+
   const handleClick = () => {
     console.info("You clicked the Chip.");
   };
@@ -121,13 +103,84 @@ const Shop = (props) => {
   };
 
   // -------------Services -------------
-  const getAllStationery = async () => {
-    let res = await StationeryService.getAll();
+  const getAllCategories = async () => {
+    console.log("Get all categories");
+    let res = await CategoryService.getAll();
 
     if (res.status == 200) {
-      console.log(res.data);
-      setStationeryList(res.data);
+      if (res.data.data != []) {
+        console.log(res.data.data);
+        setCategories([]);
+        res.data.data.map((category, index) => {
+          setCategories((prev) => {
+            return [
+              ...prev,
+              {
+                categoryId: category.category_id,
+                categoryTitle: category.category,
+              },
+            ];
+          });
+        });
+      }
     }
+  };
+
+  const getAllStationery = async () => {
+    console.log("Get all stationery");
+    let res = await StationeryService.getAll();
+
+    if (res.status === 200) {
+      let allProducts = res.data.data;
+
+      setStationeryList([]);
+      allProducts.map((product, index) => {
+        categories.map((category, index) => {
+          if (category.categoryId === product.category_id) {
+            setStationeryList((prev) => {
+              return [
+                ...prev,
+                {
+                  category_id: product.category_id,
+                  category: category.categoryTitle,
+                  st_name: product.st_name,
+                  unit_price: product.unit_price,
+                  image_url: product.image_url,
+                },
+              ];
+            });
+          }
+        });
+      });
+    }
+  };
+
+  const filterProducts = async () => {
+    console.log("Get all related products");
+    // console.log(productData.product.category_id);
+    let res = await StationeryService.getAllProductsByCategoryId(1);
+
+    let productsByCategory = res.data.data;
+
+    setFilteredProducts([]);
+    productsByCategory.map((product, index) => {
+      categories.map((category, index) => {
+        if (category.categoryId === product.category_id) {
+          setFilteredProducts((prev) => {
+            return [
+              ...prev,
+              {
+                category: category.categoryTitle,
+                st_name: product.st_name,
+                unit_price: product.unit_price,
+                image_url: product.image_url,
+              },
+            ];
+          });
+        }
+      });
+    });
+    console.log(filteredProducts);
   };
 
   return (
@@ -211,18 +264,47 @@ const Shop = (props) => {
               display="flex"
               justifyContent="space-between"
             >
-              <MyCategoryChip
+              {/* -------Category Chips------------ */}
+              {categories.map((category, index) => {
+                while (index < categories.length) {
+                  return (
+                    <>
+                      <MyCategoryChip
+                        key={index}
+                        label={category.categoryTitle}
+                        css_selected={classes.chip_selected}
+                        css_deselected={classes.chip_deselected}
+                        // setStateProp={(newState) => updateDynamicState(index, newState)}
+                        setStateProp={() => {
+                          console.log("dynamic states");
+                        }}
+                        onClick={(e) => {
+                          setIsAllSelected(false);
+                          console.log("dynamic states");
+                          // setSelectedChip((prev) => {
+                          //   return [
+                          //     ...prev,
+                          //     {
+                          //       index: index,
+                          //       category: category.categoryTitle,
+
+                          //     },
+                          //   ];
+                          // });
+                        }}
+                      />
+                    </>
+                  );
+                }
+              })}
+
+              {/* <MyCategoryChip
                 label="Writing Equipment"
                 css_selected={classes.chip_selected}
                 css_deselected={classes.chip_deselected}
                 isSelected={isWritingSelected}
                 onClick={(e) => {
                   setIsWritingSelected(!isWritingSelected);
-                  // if (isWritingSelected) {
-                  //   setIsAllSelected(isWritingSelected);
-                  // } else {
-                  //   setIsAllSelected(!isAllSelected);
-                  // }
                   setIsAllSelected(false);
                 }}
               />
@@ -280,7 +362,7 @@ const Shop = (props) => {
                   setIsMathSelected(!isMathSelected);
                   setIsAllSelected(false);
                 }}
-              />
+              /> */}
             </Grid>
           </Grid>
 
@@ -310,14 +392,16 @@ const Shop = (props) => {
               justifyContent="space-between"
             >
               {/* -------Product Card------------ */}
-              {products.map((product, index) => {
+              {stationeryList.map((product, index) => {
                 return (
                   <>
                     <ProductCard
                       key={index}
                       product={product}
                       onClick={(e) => {
-                        navigate("/product-details");
+                        navigate("/product-details", {
+                          state: { product: product },
+                        });
                       }}
                       cardWidth={2.5}
                     />

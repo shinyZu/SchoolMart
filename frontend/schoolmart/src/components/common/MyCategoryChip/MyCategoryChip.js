@@ -16,6 +16,7 @@ const MyCategoryChip = (props) => {
         <Chip
           label={props.label}
           className={props.css_selected}
+          setStateProp={props.setStateProp}
           onClick={props.onClick}
         />
       ) : (

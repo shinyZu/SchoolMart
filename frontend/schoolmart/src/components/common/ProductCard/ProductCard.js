@@ -50,7 +50,7 @@ const ProductCard = (props) => {
             {st_name}
           </Typography>
           <Typography variant="h7" className={classes.txt_prod_price}>
-            LKR {unit_price}
+            LKR {unit_price}.00
           </Typography>
         </Grid>
       </Grid>

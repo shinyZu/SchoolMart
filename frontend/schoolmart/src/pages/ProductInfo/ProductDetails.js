@@ -173,7 +173,7 @@ const ProductDetails = (props) => {
                 {productData.product.st_name}
               </Typography>
               <Typography variant="h7" className={classes.txt_prod_price}>
-                LKR {productData.product.unit_price}
+                LKR {productData.product.unit_price}.00
               </Typography>
               <p className={classes.container_right_1_para}>
                 Lorem ipsum dolor sit amet et delectus accommodare his consul
