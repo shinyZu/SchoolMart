@@ -13,8 +13,7 @@ const router = express.Router();
 const Category = require("../models/category.models");
 
 // Get all categories - in use
-// Authorized only for Admin
-router.get("/getAll", cors(), authenticateAdminToken, async (req, res) => {
+router.get("/getAll", cors(), async (req, res) => {
   try {
     const categories = await Category.find();
     return res.status(200).json({ status: 200, data: categories });
@@ -143,7 +142,7 @@ router.put("/:id", cors(), authenticateAdminToken, async (req, res) => {
   }
 });
 
-// Delete Category
+// Delete Category - in use
 // Authorized only for Admin
 router.delete("/:id", cors(), authenticateAdminToken, async (req, res) => {
   try {

@@ -16,54 +16,6 @@ import { withStyles } from "@mui/styles";
 import CategoryService from "../../services/CategoryService";
 import StationeryService from "../../services/StationeryService";
 
-// const categories = [
-//   "Writing Instruments",
-//   "Paper & Books",
-//   "Art Supplies",
-//   "Adhesives & Fastners",
-//   "Folders & Binders",
-//   "Math & Geometry",
-// ];
-
-// const newArrivals = [
-//   {
-//     img: "",
-//     category: "Category 1",
-//     productName: "Product 1",
-//     price: "00.00",
-//   },
-//   {
-//     img: "",
-//     category: "Category 1",
-//     productName: "Product 1",
-//     price: "00.00",
-//   },
-//   {
-//     img: "",
-//     category: "Category 1",
-//     productName: "Product 1",
-//     price: "00.00",
-//   },
-//   {
-//     img: "",
-//     category: "Category 1",
-//     productName: "Product 1",
-//     price: "00.00",
-//   },
-//   {
-//     img: "",
-//     category: "Category 1",
-//     productName: "Product 1",
-//     price: "00.00",
-//   },
-//   {
-//     img: "",
-//     category: "Category 1",
-//     productName: "Product 1",
-//     price: "00.00",
-//   },
-// ];
-
 const Home = (props) => {
   const { classes } = props;
   const navigate = useNavigate();
@@ -74,9 +26,6 @@ const Home = (props) => {
 
   useEffect(() => {
     getAllCategories();
-    // if (categories.length != 0) {
-    //   getNewArrivals();
-    // }
   }, []);
 
   useEffect(() => {
@@ -104,10 +53,8 @@ const Home = (props) => {
             ];
           });
         });
-        // getNewArrivals();
       }
     }
-    // console.log(categories);
   };
 
   const getNewArrivals = async () => {
@@ -117,41 +64,15 @@ const Home = (props) => {
     if (res.status == 200) {
       let lastSixProducts = res.data.data;
 
-      // if (lastSixProducts != []) {
-      //   for (const product of lastSixProducts) {
-
-      //     const foundCategory = categories.find(
-      //       (category) => category.categoryId == product.category_id
-      //     );
-
-      //     console.log(foundCategory.categoryTitle);
-      //     setNewArrivals((prev) => {
-      //       return [
-      //         ...prev,
-      //         {
-      //           // category: categoryTitle,
-      //           category: foundCategory.categoryTitle,
-      //           // category: product.st_code,
-      //           st_name: product.st_name,
-      //           unit_price: product.unit_price,
-      //           image_url: product.image_url,
-      //         },
-      //       ];
-      //     });
-      //   }
-      // }
-
+      setNewArrivals([]);
       lastSixProducts.map((product, index) => {
-        // console.log(categories);
-        // const foundCategory = categories.find(
-        //   (category) => category.categoryId == product.category_id
-        // );
         categories.map((category, index) => {
           if (category.categoryId === product.category_id) {
             setNewArrivals((prev) => {
               return [
                 ...prev,
                 {
+                  category_id: product.category_id,
                   category: category.categoryTitle,
                   st_name: product.st_name,
                   unit_price: product.unit_price,
@@ -344,7 +265,9 @@ const Home = (props) => {
                           key={index}
                           product={product}
                           onClick={(e) => {
-                            navigate("/product-details", product);
+                            navigate("/product-details", {
+                              state: { product: product },
+                            });
                           }}
                           cardWidth={3}
                         />

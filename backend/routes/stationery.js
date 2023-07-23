@@ -72,6 +72,27 @@ router.get("/getAll", cors(), async (req, res) => {
   }
 });
 
+// Get all stationery by a given category Id - in use
+router.get("/bycategory/:id", cors(), async (req, res) => {
+  try {
+    const categoryExist = await Category.findOne({
+      category_id: req.params.id,
+    });
+    if (categoryExist == null) {
+      return res
+        .status(404)
+        .send({ status: 404, message: "Category not found." });
+    }
+
+    const stationeries = await Stationery.find({
+      category_id: req.params.id,
+    });
+    return res.status(200).json({ status: 200, data: stationeries });
+  } catch (err) {
+    return res.status(400).send({ status: 400, message: err.message });
+  }
+});
+
 // Get next stationery id - in use
 router.get("/next/id", cors(), authenticateAdminToken, async (req, res) => {
   try {

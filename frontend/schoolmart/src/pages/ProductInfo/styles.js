@@ -16,7 +16,7 @@ export const styleSheet = {
 
   container_left: {
     // border: "2px solid blue",
-    backgroundImage: `url(${category_bg})`,
+    // backgroundImage: `url(${category_bg})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     // padding: "18vh 0",
@@ -57,6 +57,7 @@ export const styleSheet = {
 
   container_right_2: {
     // border: "2px solid blue",
+    padding: "10px",
   },
 
   btn_add_to_cart: {

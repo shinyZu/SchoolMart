@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -13,37 +13,109 @@ import ProductCard from "../../components/common/ProductCard/ProductCard";
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
 
-const relatedProducts = [
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-];
+import CategoryService from "../../services/CategoryService";
+import StationeryService from "../../services/StationeryService";
+
+// const relatedProducts = [
+//   {
+//     img: "",
+//     category: "Category 1",
+//     productName: "Product 1",
+//     price: "00.00",
+//   },
+//   {
+//     img: "",
+//     category: "Category 1",
+//     productName: "Product 1",
+//     price: "00.00",
+//   },
+//   {
+//     img: "",
+//     category: "Category 1",
+//     productName: "Product 1",
+//     price: "00.00",
+//   },
+//   {
+//     img: "",
+//     category: "Category 1",
+//     productName: "Product 1",
+//     price: "00.00",
+//   },
+// ];
 
 const ProductDetails = (props) => {
   const { classes } = props;
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const productData = location.state;
+
   const [qty, setQty] = useState(1);
+  const [categories, setCategories] = useState([]);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+
+  useEffect(() => {
+    getAllCategories();
+  }, []);
+
+  useEffect(() => {
+    if (categories != []) {
+      getAllRelatedProducts();
+    }
+  }, [categories]);
+
+  const getAllCategories = async () => {
+    console.log("Get all categories");
+    let res = await CategoryService.getAll();
+
+    if (res.status == 200) {
+      if (res.data.data != []) {
+        console.log(res.data.data);
+        setCategories([]);
+        res.data.data.map((category, index) => {
+          setCategories((prev) => {
+            return [
+              ...prev,
+              {
+                categoryId: category.category_id,
+                categoryTitle: category.category,
+              },
+            ];
+          });
+        });
+      }
+    }
+  };
+
+  const getAllRelatedProducts = async () => {
+    console.log("Get all related products");
+    console.log(productData.product.category_id);
+    let res = await StationeryService.getAllProductsByCategoryId(
+      productData.product.category_id
+    );
+
+    let productsByCategory = res.data.data;
+
+    setRelatedProducts([]);
+    productsByCategory.map((product, index) => {
+      categories.map((category, index) => {
+        if (category.categoryId === product.category_id) {
+          setRelatedProducts((prev) => {
+            return [
+              ...prev,
+              {
+                category: category.categoryTitle,
+                st_name: product.st_name,
+                unit_price: product.unit_price,
+                image_url: product.image_url,
+              },
+            ];
+          });
+        }
+      });
+    });
+    console.log(relatedProducts);
+  };
 
   return (
     <div id="home">
@@ -69,6 +141,7 @@ const ProductDetails = (props) => {
             md={5.6}
             sm={12}
             xs={12}
+            style={{ backgroundImage: `url(${productData.product.image_url})` }}
             className={classes.container_left}
           ></Grid>
           <Grid
@@ -94,13 +167,13 @@ const ProductDetails = (props) => {
               // alignItems="baseline"
             >
               <Typography variant="h8" className={classes.txt_prod_ctg}>
-                Category
+                {productData.product.category}
               </Typography>
               <Typography variant="h7" className={classes.txt_prod_name}>
-                Product Name
+                {productData.product.st_name}
               </Typography>
               <Typography variant="h7" className={classes.txt_prod_price}>
-                LKR 00.00
+                LKR {productData.product.unit_price}
               </Typography>
               <p className={classes.container_right_1_para}>
                 Lorem ipsum dolor sit amet et delectus accommodare his consul
@@ -191,18 +264,20 @@ const ProductDetails = (props) => {
             >
               {/* -------Product Card------------ */}
               {relatedProducts.map((product, index) => {
-                return (
-                  <>
-                    <ProductCard
-                      key={index}
-                      product={product}
-                      onClick={(e) => {
-                        navigate("/product-details");
-                      }}
-                      cardWidth={2.5}
-                    />
-                  </>
-                );
+                while (index < relatedProducts.length) {
+                  return (
+                    <>
+                      <ProductCard
+                        key={index}
+                        product={product}
+                        onClick={(e) => {
+                          navigate("/product-details");
+                        }}
+                        cardWidth={2.5}
+                      />
+                    </>
+                  );
+                }
               })}
             </Grid>
           </Grid>
