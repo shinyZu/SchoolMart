@@ -38,8 +38,12 @@ function TableSearch(props) {
         <MyTable
           rows={props.tableData}
           columns={props.tableColumns}
-          pageSize={5}
-          rowsPerPageOptions={[3]}
+          rowsPerPageOptions={[5]}
+          // pageSize={5}
+          // pageSizeOptions={[4, 8, 12]}
+          // autoPageSize={true}
+          // rowsPerPageOptions={[5, 10, 20]}
+
           // checkboxSelection
         />
       </Box>

@@ -12,7 +12,7 @@ const router = express.Router();
 
 const Category = require("../models/category.models");
 
-// Get all categories
+// Get all categories - in use
 // Authorized only for Admin
 router.get("/getAll", cors(), authenticateAdminToken, async (req, res) => {
   try {
@@ -20,6 +20,30 @@ router.get("/getAll", cors(), authenticateAdminToken, async (req, res) => {
     return res.status(200).json({ status: 200, data: categories });
   } catch (error) {
     return res.status(500).send({ status: 500, messge: error });
+  }
+});
+
+// Get next category id - in use
+router.get("/next/id", cors(), authenticateAdminToken, async (req, res) => {
+  try {
+    // Get the last inserted st_code from the database
+    const lastCode = await Category.findOne(
+      {},
+      {},
+      { sort: { category_id: -1 } }
+    );
+    let nextCode = 1;
+
+    if (lastCode) {
+      nextCode = lastCode.category_id + 1;
+    }
+
+    res.send({
+      status: 200,
+      data: { next_id: nextCode },
+    });
+  } catch (error) {
+    res.status(500).send(error);
   }
 });
 
@@ -44,7 +68,7 @@ router.get("/admin/:id", cors(), authenticateAdminToken, async (req, res) => {
   }
 });
 
-// Save category
+// Save category - in use
 // Authorized only for Admin
 router.post("/", cors(), authenticateAdminToken, async (req, res) => {
   const body = req.body;
@@ -81,17 +105,17 @@ router.post("/", cors(), authenticateAdminToken, async (req, res) => {
 
     // Save the category to the database
     const savedCategory = await newCategory.save();
-    res.send({
+    res.status(201).send({
       status: 201,
-      category: savedCategory,
-      message: "New category saved successfully!",
+      data: savedCategory,
+      message: "Category saved successfully!",
     });
   } catch (err) {
     return res.status(400).send({ status: 400, message: err.message });
   }
 });
 
-// Update Category
+// Update Category - in use
 // Authorized only for Admin
 router.put("/:id", cors(), authenticateAdminToken, async (req, res) => {
   try {
@@ -109,7 +133,7 @@ router.put("/:id", cors(), authenticateAdminToken, async (req, res) => {
 
     // Update the category in the database
     const updatedCategory = await categoryExist.save();
-    return res.send({
+    return res.status(200).send({
       status: 200,
       user: updatedCategory,
       message: "Category updated successfully!",
@@ -133,7 +157,7 @@ router.delete("/:id", cors(), authenticateAdminToken, async (req, res) => {
     }
     let deletedCategory = await Category.deleteOne(categoryExist);
 
-    return res.send({
+    return res.status(200).send({
       status: 200,
       message: "Category deleted successfully!",
       data: deletedCategory,

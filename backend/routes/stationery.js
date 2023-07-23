@@ -722,7 +722,7 @@ router.put(
   "/drive/url/db/:st_code",
   cors(),
   upload.single("product_image"),
-  // authenticateAdminToken,
+  authenticateAdminToken,
   async (req, res) => {
     try {
       const stationeryExist = await checkStationeryExist(req.params.st_code);
@@ -827,7 +827,7 @@ router.delete("/drive/image/:id", async (req, res) => {
   }
 });
 
-// Delete Stationery (with image in drive)- Admin
+// Delete Stationery (with image in drive)- Admin - in use
 router.delete(
   "/drive/:id",
   cors(),

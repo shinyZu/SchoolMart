@@ -47,9 +47,17 @@ const AdminPanel = (props) => {
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoiU3VuIEp1bCAyMyAyMDIzIDEwOjM3OjAwIEdNVCswNTMwIChJbmRpYSBTdGFuZGFyZCBUaW1lKSIsInVzZXJJZCI6MiwidXNlcm5hbWUiOiJqb2huQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJDg1cGV6ckFlZXoudDIxVFkxNnpTR3VXb3lPbmJvd2RUbnlRZG5RamdpTmt3SThXM1hsREZXIiwidXNlcl9yb2xlIjoiQWRtaW4iLCJpYXQiOjE2OTAwODg4MjAsImV4cCI6MTY5MDA5MDYyMH0.w6TSvCEUPo0_ryDE-ScMzAXYtazHgNisB_MRqGun9j4"
   );
 
-  const [categoryCode, setCategoryCode] = useState("");
-  const [categoryName, setCategoryName] = useState("");
-  const [productCode, setProductCode] = useState(0);
+  const [categoryCode, setCategoryCode] = useState(""); // used in for drop down
+  const [categoryName, setCategoryName] = useState(""); // used in for drop down
+  const [productCode, setProductCode] = useState(0); // used in for drop down
+
+  const [categoryId, setCategoryId] = useState(0); // used in category form
+  const [categoryTitle, setCategoryTitle] = useState(""); // used in category form
+
+  const [newCategoryFormData, setNewCategoryFormData] = useState({
+    category_id: "",
+    category: "",
+  });
 
   const [newProductFormData, setNewProductFormData] = useState({
     st_code: "",
@@ -70,6 +78,11 @@ const AdminPanel = (props) => {
 
   const [btnProps, setBtnProps] = useState({
     btnLabel: "Add Product",
+    // btnColor: "#1abc9c",
+  });
+
+  const [btnCategoryProps, setBtnCategoryProps] = useState({
+    btnLabel: "Add Category",
     // btnColor: "#1abc9c",
   });
 
@@ -113,7 +126,10 @@ const AdminPanel = (props) => {
                   onClick={() => {
                     console.log("clicked row : " + cellValues.id);
                     console.log(categoryData[cellValues.id]);
-                    // loadDataToFields(cellValues.id, categoryData[cellValues.id]);
+                    loadCategoryDataToFields(
+                      cellValues.id,
+                      categoryData[cellValues.id]
+                    );
                   }}
                 />
               </IconButton>
@@ -125,7 +141,7 @@ const AdminPanel = (props) => {
                   // fontSize="large"
                   onClick={() => {
                     console.log("clicked row : " + cellValues.id);
-                    // deleteCar(categoryData[cellValues.id]);
+                    deleteCategory(categoryData[cellValues.id]);
                   }}
                 />
               </IconButton>
@@ -260,6 +276,7 @@ const AdminPanel = (props) => {
     getAllCategories();
     getAllProducts();
     getNextProductId();
+    getNextCategoryId();
   }, []);
 
   const getAllCategories = async () => {
@@ -290,6 +307,20 @@ const AdminPanel = (props) => {
     console.log(categoryDropDown);
   };
 
+  const getAllProducts = async () => {
+    console.log("Get all stationery");
+    let res = await StationeryService.getAll();
+
+    if (res.data.status == 200) {
+      if (res.data.data != []) {
+        console.log(res.data.data);
+        setProductData(() => {
+          return [...res.data.data];
+        });
+      }
+    }
+  };
+
   const getNextProductId = async () => {
     console.log("--------2------------");
     console.log("Get next stationery id");
@@ -302,19 +333,13 @@ const AdminPanel = (props) => {
     }
   };
 
-  const getAllProducts = async () => {
-    console.log("Get all stationery");
-    let res = await StationeryService.getAll();
+  const getNextCategoryId = async () => {
+    console.log("Get next category id");
+    let res = await CategoryService.getNextId();
 
-    if (res.data.status == 200) {
-      if (res.data.data != []) {
-        console.log(res.data.data);
-        setProductData(() => {
-          return [...res.data.data];
-        });
-
-        // getNextProductId();
-      }
+    if (res.status === 200) {
+      console.log("next category id: " + res.data.data.next_id);
+      setCategoryId(res.data.data.next_id);
     }
   };
 
@@ -349,6 +374,19 @@ const AdminPanel = (props) => {
     }
   };
 
+  const loadCategoryDataToFields = async (rowId, category) => {
+    console.log(category);
+    setBtnCategoryProps({ btnLabel: "Update Category" });
+
+    setNewCategoryFormData({
+      category_id: category.category,
+      category: category.category,
+    });
+
+    setCategoryId(category.category_id);
+    // setCategoryTitle(category.categoryTitle);
+  };
+
   const clearProductForm = () => {
     console.log("--------1------------");
     getNextProductId();
@@ -369,6 +407,17 @@ const AdminPanel = (props) => {
     setBtnProps({ btnLabel: "Add Product" });
   };
 
+  const clearCategoryForm = () => {
+    getNextCategoryId();
+
+    setNewCategoryFormData({
+      category_id: "",
+      category: "",
+    });
+
+    setBtnCategoryProps({ btnLabel: "Add Category" });
+  };
+
   const handleMediaUpload = (e) => {
     // handleImageUpload(e);
     const { files } = e.target;
@@ -383,6 +432,139 @@ const AdminPanel = (props) => {
       }
     };
     fileReader.readAsDataURL(files[0]);
+  };
+
+  // ----- Save Category -----------
+  const saveCategory = () => {
+    console.log(newCategoryFormData);
+    if (newCategoryFormData.category != "") {
+      setConfirmDialog({
+        isOpen: true,
+        title: "Are you sure you want to save this Category?",
+        subTitle: "You can't revert this operation",
+        action: "Save",
+        confirmBtnStyle: {
+          backgroundColor: "rgb(26, 188, 156)",
+          color: "white",
+        },
+        onConfirm: () => proceedSaveCategory(),
+      });
+    } else {
+      setOpenAlert({
+        open: true,
+        alert: "Please fill the catgeory name!",
+        severity: "warning",
+        variant: "standard",
+      });
+    }
+  };
+
+  const proceedSaveCategory = async () => {
+    let res = await CategoryService.saveCategory(newCategoryFormData);
+    console.log(res);
+    if (res.status === 201) {
+      setOpenAlert({
+        open: true,
+        alert: res.data.message,
+        severity: "success",
+        variant: "standard",
+      });
+      getAllCategories();
+      clearCategoryForm();
+      setConfirmDialog({ isOpen: false });
+      setBtnCategoryProps({ btnLabel: "Add Category" });
+    } else {
+      setConfirmDialog({ isOpen: false });
+      setOpenAlert({
+        open: true,
+        alert: res.response.data.message,
+        severity: "error",
+        variant: "standard",
+      });
+    }
+  };
+
+  // ----- Update Category -----------
+  const updateCategory = () => {
+    console.log("Updating category");
+    console.log(newCategoryFormData);
+    if (newCategoryFormData.category != "") {
+      setConfirmDialog({
+        isOpen: true,
+        title: "Are you sure you want to update this Category?",
+        subTitle: "You can't revert this operation",
+        confirmBtnStyle: { backgroundColor: "#2980b9", color: "white" },
+        onConfirm: () => proceedUpdateCategory(),
+      });
+    } else {
+      setOpenAlert({
+        open: true,
+        alert: "Please fill the catgeory name!",
+        severity: "warning",
+        variant: "standard",
+      });
+    }
+  };
+
+  const proceedUpdateCategory = async () => {
+    let res = await CategoryService.updateCategory(newCategoryFormData);
+    console.log(res);
+    if (res.status === 200) {
+      setOpenAlert({
+        open: true,
+        alert: res.data.message,
+        severity: "success",
+        variant: "standard",
+      });
+      getAllCategories();
+      clearCategoryForm();
+      setConfirmDialog({ isOpen: false });
+      setBtnCategoryProps({ btnLabel: "Add Category" });
+    } else {
+      setConfirmDialog({ isOpen: false });
+      setOpenAlert({
+        open: true,
+        alert: res.response.data.message,
+        severity: "error",
+        variant: "standard",
+      });
+    }
+  };
+
+  // ----- Delete Category -----------
+  const deleteCategory = (category) => {
+    console.log(category);
+    setConfirmDialog({
+      isOpen: true,
+      title: "Are you sure you want to delete this Category?",
+      subTitle: "You can't revert this operation",
+      confirmBtnStyle: { backgroundColor: "red", color: "white" },
+      action: "Delete",
+      onConfirm: () => proceedDeleteCategory(category.category_id),
+    });
+  };
+
+  const proceedDeleteCategory = async (category_id) => {
+    console.log(category_id);
+    let res = await CategoryService.deleteCategory(category_id);
+    if (res.status === 200) {
+      setOpenAlert({
+        open: true,
+        alert: res.data.message,
+        severity: "success",
+        variant: "standard",
+      });
+      getAllCategories();
+      clearCategoryForm();
+      setConfirmDialog({ isOpen: false });
+    } else {
+      setOpenAlert({
+        open: true,
+        alert: res.response.data.message,
+        severity: "error",
+        variant: "standard",
+      });
+    }
   };
 
   // --------Save Product------------
@@ -710,8 +892,14 @@ const AdminPanel = (props) => {
                     type="text"
                     id="category_id"
                     placeholder="Category Code"
-                    value={categoryCode}
-                    onChange={(e) => setCategoryCode(e.target.value)}
+                    value={categoryId}
+                    disabled
+                    oonChange={(e) => {
+                      setNewCategoryFormData({
+                        ...newCategoryFormData,
+                        category_id: categoryId,
+                      });
+                    }}
                     style={{ width: "100%", paddingTop: "5px" }}
                   />
                 </Grid>
@@ -733,8 +921,14 @@ const AdminPanel = (props) => {
                   type="text"
                   id="ct_name"
                   placeholder="Category Name"
-                  value={categoryName}
-                  onChange={(e) => setCategoryName(e.target.value)}
+                  value={newCategoryFormData.category}
+                  onChange={(e) => {
+                    setNewCategoryFormData({
+                      ...newCategoryFormData,
+                      category_id: categoryId,
+                      category: e.target.value,
+                    });
+                  }}
                   style={{ width: "100%", paddingTop: "5px" }}
                 />
               </Grid>
@@ -749,17 +943,36 @@ const AdminPanel = (props) => {
                 xs={12}
                 className={classes.btn_save_category_container}
                 display="flex"
-                // justifyContent="space-between"
+                justifyContent="space-between"
               >
                 <MyButton
-                  label="Add Category"
+                  label={btnCategoryProps.btnLabel}
                   size="small"
                   variant="outlined"
                   type="button"
-                  className={classes.btn_save}
-                  style={{ width: "100%", height: "90%" }}
+                  className={
+                    btnCategoryProps.btnLabel == "Add Category"
+                      ? classes.btn_save
+                      : classes.btn_update
+                  }
+                  style={{ width: "48%", height: "90%" }}
+                  onClick={
+                    btnCategoryProps.btnLabel == "Add Category"
+                      ? saveCategory
+                      : updateCategory
+                  }
+                />
+
+                <MyButton
+                  label="Clear Form"
+                  size="small"
+                  variant="outlined"
+                  type="button"
+                  className={classes.btn_clear}
+                  style={{ width: "48%", height: "90%" }}
                   onClick={(e) => {
-                    console.log("Saved Category");
+                    console.log("Clearing category form");
+                    clearCategoryForm();
                   }}
                 />
               </Grid>
@@ -830,7 +1043,7 @@ const AdminPanel = (props) => {
                 // justifyContent="space-between"
               >
                 <Typography variant="h5" className={classes.product_title}>
-                  Add New Stationery
+                  Add New Product
                 </Typography>
               </Grid>
 
@@ -1069,14 +1282,6 @@ const AdminPanel = (props) => {
                       : classes.btn_update
                   }
                   style={{ width: "48%", height: "90%" }}
-                  // onClick={(e) => {
-                  //   console.log("Saved Product");
-                  //   // saveProduct();
-                  //   // proceedSaveProduct();
-                  //   // saveProductWithImage();
-                  //   getConfirmationForSaveProduct();
-                  // }}
-
                   onClick={
                     btnProps.btnLabel == "Add Product"
                       ? saveProduct

@@ -22,6 +22,80 @@ class CategoryService {
     });
     return await promise;
   };
+
+  getNextId = async () => {
+    const promise = new Promise((resolve, reject) => {
+      axios
+        .get("category/next/id", {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        })
+        .then((res) => {
+          return resolve(res);
+        })
+        .catch((er) => {
+          return resolve(er);
+        });
+    });
+    return await promise;
+  };
+
+  saveCategory = async (data) => {
+    const promise = new Promise((resolve, reject) => {
+      axios
+        .post("category", data, {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        })
+        .then((res) => {
+          return resolve(res);
+        })
+        .catch((er) => {
+          return resolve(er);
+        });
+    });
+    return await promise;
+  };
+
+  updateCategory = async (data) => {
+    let id = data.category_id;
+    const promise = new Promise((resolve, reject) => {
+      axios
+        .put("category/" + id, data, {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        })
+        .then((res) => {
+          return resolve(res);
+        })
+        .catch((er) => {
+          return resolve(er);
+        });
+    });
+    return await promise;
+  };
+
+  deleteCategory = async (id) => {
+    const promise = new Promise((resolve, reject) => {
+      axios
+        .delete("category/" + id, {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+            // "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          return resolve(res);
+        })
+        .catch((er) => {
+          return resolve(er);
+        });
+    });
+    return await promise;
+  };
 }
 
 export default new CategoryService();

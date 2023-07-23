@@ -43,6 +43,9 @@ body {
   background-color: #99627a;
 }
 
+.MuiDataGrid-scrollArea {
+  background-color: red;
+}
 /* .font__family {
   font-family: "Acme", sans-serif !important;
 } */
