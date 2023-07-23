@@ -12,7 +12,7 @@ function MyTable(props) {
     <DataGrid
       rows={props.rows}
       columns={props.columns}
-      pageSize={props.pageSize}
+      // pageSize={props.pageSize}
       // pageSize={pageSize}
       rowsPerPageOptions={[props.rowsPerPageOptions]}
       checkboxSelection={props.checkboxSelection}
@@ -21,7 +21,7 @@ function MyTable(props) {
       stickyHeader={props.stickyHeader}
       // onPageSizeChange={handlePageSizeChange}
       // pageSizeOptions={props.pageSizeOptions}
-      // autoPageSize={props.autoPageSize}
+      autoPageSize={true}
     />
   );
 }

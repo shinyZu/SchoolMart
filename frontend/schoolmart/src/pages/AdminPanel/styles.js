@@ -30,6 +30,7 @@ export const styleSheet = {
 
   category_main_container_right: {
     // border: "2px solid deeppink",
+    height: "35vh",
   },
 
   category_title_container: {
@@ -144,5 +145,6 @@ export const styleSheet = {
   tbl_product_container: {
     // border: "2px solid blue",
     marginTop: "3vh !important",
+    height: "40vh",
   },
 };
