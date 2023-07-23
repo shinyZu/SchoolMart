@@ -72,7 +72,7 @@ router.get("/getAll", cors(), async (req, res) => {
   }
 });
 
-// Get next stationery id
+// Get next stationery id - in use
 router.get("/next/id", cors(), authenticateAdminToken, async (req, res) => {
   try {
     // Get the last inserted st_code from the database
@@ -90,6 +90,22 @@ router.get("/next/id", cors(), authenticateAdminToken, async (req, res) => {
     res.send({
       status: 200,
       data: { next_id: nextCode },
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// Get new arrvals (last 6 )- in use
+router.get("/new/arrival", cors(), async (req, res) => {
+  try {
+    const lastSixRecords = await Stationery.find({})
+      .sort({ st_code: -1 })
+      .limit(6);
+
+    res.status(200).send({
+      status: 200,
+      data: lastSixRecords,
     });
   } catch (error) {
     res.status(500).send(error);

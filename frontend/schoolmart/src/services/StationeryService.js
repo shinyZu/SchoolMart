@@ -20,6 +20,20 @@ class StationeryService {
     return await promise;
   };
 
+  getNewArrivals = async () => {
+    const promise = new Promise((resolve, reject) => {
+      axios
+        .get("stationery/new/arrival")
+        .then((res) => {
+          return resolve(res);
+        })
+        .catch((er) => {
+          return resolve(er);
+        });
+    });
+    return await promise;
+  };
+
   getNextId = async () => {
     const promise = new Promise((resolve, reject) => {
       axios

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -13,57 +13,157 @@ import Footer from "../../components/Footer/Footer";
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
 
-const categories = [
-  "Writing Instruments",
-  "Paper & Books",
-  "Art Supplies",
-  "Adhesives & Fastners",
-  "Folders & Binders",
-  "Math & Geometry",
-];
+import CategoryService from "../../services/CategoryService";
+import StationeryService from "../../services/StationeryService";
 
-const newArrivals = [
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-  {
-    img: "",
-    category: "Category 1",
-    productName: "Product 1",
-    price: "00.00",
-  },
-];
+// const categories = [
+//   "Writing Instruments",
+//   "Paper & Books",
+//   "Art Supplies",
+//   "Adhesives & Fastners",
+//   "Folders & Binders",
+//   "Math & Geometry",
+// ];
+
+// const newArrivals = [
+//   {
+//     img: "",
+//     category: "Category 1",
+//     productName: "Product 1",
+//     price: "00.00",
+//   },
+//   {
+//     img: "",
+//     category: "Category 1",
+//     productName: "Product 1",
+//     price: "00.00",
+//   },
+//   {
+//     img: "",
+//     category: "Category 1",
+//     productName: "Product 1",
+//     price: "00.00",
+//   },
+//   {
+//     img: "",
+//     category: "Category 1",
+//     productName: "Product 1",
+//     price: "00.00",
+//   },
+//   {
+//     img: "",
+//     category: "Category 1",
+//     productName: "Product 1",
+//     price: "00.00",
+//   },
+//   {
+//     img: "",
+//     category: "Category 1",
+//     productName: "Product 1",
+//     price: "00.00",
+//   },
+// ];
 
 const Home = (props) => {
   const { classes } = props;
   const navigate = useNavigate();
+
+  const [categories, setCategories] = useState([]);
+  const [newArrivals, setNewArrivals] = useState([]);
+  const [categoryTitle, setCategoryTitle] = useState("");
+
+  useEffect(() => {
+    getAllCategories();
+    // if (categories.length != 0) {
+    //   getNewArrivals();
+    // }
+  }, []);
+
+  useEffect(() => {
+    if (categories != []) {
+      getNewArrivals();
+    }
+  }, [categories]);
+
+  const getAllCategories = async () => {
+    console.log("Get all categories");
+    let res = await CategoryService.getAll();
+
+    if (res.status == 200) {
+      if (res.data.data != []) {
+        console.log(res.data.data);
+        setCategories([]);
+        res.data.data.map((category, index) => {
+          setCategories((prev) => {
+            return [
+              ...prev,
+              {
+                categoryId: category.category_id,
+                categoryTitle: category.category,
+              },
+            ];
+          });
+        });
+        // getNewArrivals();
+      }
+    }
+    // console.log(categories);
+  };
+
+  const getNewArrivals = async () => {
+    console.log("Get new arivals");
+    let res = await StationeryService.getNewArrivals();
+
+    if (res.status == 200) {
+      let lastSixProducts = res.data.data;
+
+      // if (lastSixProducts != []) {
+      //   for (const product of lastSixProducts) {
+
+      //     const foundCategory = categories.find(
+      //       (category) => category.categoryId == product.category_id
+      //     );
+
+      //     console.log(foundCategory.categoryTitle);
+      //     setNewArrivals((prev) => {
+      //       return [
+      //         ...prev,
+      //         {
+      //           // category: categoryTitle,
+      //           category: foundCategory.categoryTitle,
+      //           // category: product.st_code,
+      //           st_name: product.st_name,
+      //           unit_price: product.unit_price,
+      //           image_url: product.image_url,
+      //         },
+      //       ];
+      //     });
+      //   }
+      // }
+
+      lastSixProducts.map((product, index) => {
+        // console.log(categories);
+        // const foundCategory = categories.find(
+        //   (category) => category.categoryId == product.category_id
+        // );
+        categories.map((category, index) => {
+          if (category.categoryId === product.category_id) {
+            setNewArrivals((prev) => {
+              return [
+                ...prev,
+                {
+                  category: category.categoryTitle,
+                  st_name: product.st_name,
+                  unit_price: product.unit_price,
+                  image_url: product.image_url,
+                },
+              ];
+            });
+          }
+        });
+      });
+    }
+  };
 
   return (
     <>
@@ -177,7 +277,7 @@ const Home = (props) => {
                       <>
                         <CategoryCard
                           key={index}
-                          title={category}
+                          title={category.categoryTitle}
                           onClick={(e) => {
                             navigate("/shop");
                           }}
@@ -237,18 +337,20 @@ const Home = (props) => {
               >
                 {/* -------Product Card------------ */}
                 {newArrivals.map((product, index) => {
-                  return (
-                    <>
-                      <ProductCard
-                        key={index}
-                        product={product}
-                        onClick={(e) => {
-                          navigate("/product-details");
-                        }}
-                        cardWidth={3}
-                      />
-                    </>
-                  );
+                  while (index < 6) {
+                    return (
+                      <>
+                        <ProductCard
+                          key={index}
+                          product={product}
+                          onClick={(e) => {
+                            navigate("/product-details", product);
+                          }}
+                          cardWidth={3}
+                        />
+                      </>
+                    );
+                  }
                 })}
               </Grid>
             </Grid>

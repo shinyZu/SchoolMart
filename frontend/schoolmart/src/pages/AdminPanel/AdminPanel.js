@@ -32,15 +32,6 @@ import StationeryService from "../../services/StationeryService";
 // import upload_bg from "../../assets/images/bg_login_1.jpg";
 import upload_bg from "../../assets/images/choose_image.jpg";
 
-const categories = [
-  "Writing Instruments",
-  "Paper & Books",
-  "Art Supplies",
-  "Adhesives & Fastners",
-  "Folders & Binders",
-  "Math & Geometry",
-];
-
 const AdminPanel = (props) => {
   const { classes } = props;
   const [token, setToken] = useState(

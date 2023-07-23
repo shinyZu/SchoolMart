@@ -16,7 +16,7 @@ export const styleSheet = {
 
   card_img: {
     // border: "2px solid red",
-    backgroundImage: `url(${category_bg})`,
+    // backgroundImage: `url(${category_bg})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     height: "30vh !important",

@@ -9,7 +9,7 @@ import { withStyles } from "@mui/styles";
 
 const ProductCard = (props) => {
   const { classes } = props;
-  const { category, productName, price } = props.product;
+  const { category, st_name, unit_price, image_url } = props.product;
   return (
     <>
       <Grid
@@ -29,6 +29,7 @@ const ProductCard = (props) => {
           md={12}
           sm={12}
           xs={12}
+          style={{ backgroundImage: `url(${image_url})` }}
           className={classes.card_img}
         ></Grid>
         <Grid
@@ -46,10 +47,10 @@ const ProductCard = (props) => {
             {category}
           </Typography>
           <Typography variant="h7" className={classes.txt_prod_name}>
-            {productName}
+            {st_name}
           </Typography>
           <Typography variant="h7" className={classes.txt_prod_price}>
-            LKR {price}
+            LKR {unit_price}
           </Typography>
         </Grid>
       </Grid>
