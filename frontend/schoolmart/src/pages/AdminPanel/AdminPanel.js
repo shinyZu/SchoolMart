@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -23,65 +23,10 @@ import Footer from "../../components/Footer/Footer";
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
 
+import CategoryService from "../../services/CategoryService";
+import StationeryService from "../../services/StationeryService";
+
 import upload_bg from "../../assets/images/bg_login_1.jpg";
-
-const categoryData = [
-  {
-    category_id: 1,
-    category_name: "Writing",
-  },
-  {
-    category_id: 2,
-    category_name: "Books",
-  },
-  {
-    category_id: 3,
-    category_name: "Art Supplies",
-  },
-];
-
-const productData = [
-  {
-    st_code: 1,
-    st_name: "Product 1",
-    description: "Lorem ipsum 1",
-    image_name: "Pen",
-    image_url: "",
-    unit_price: "180.00",
-    qty_on_hand: "20",
-    category_id: "1",
-  },
-  {
-    st_code: 1,
-    st_name: "Product 1",
-    description: "Lorem ipsum 1",
-    image_name: "Pen",
-    image_url: "",
-    unit_price: "180.00",
-    qty_on_hand: "20",
-    category_id: "1",
-  },
-  {
-    st_code: 1,
-    st_name: "Product 1",
-    description: "Lorem ipsum 1",
-    image_name: "Pen",
-    image_url: "",
-    unit_price: "180.00",
-    qty_on_hand: "20",
-    category_id: "1",
-  },
-  {
-    st_code: 1,
-    st_name: "Product 1",
-    description: "Lorem ipsum 1",
-    image_name: "Pen",
-    image_url: "",
-    unit_price: "180.00",
-    qty_on_hand: "20",
-    category_id: "1",
-  },
-];
 
 const categories = [
   "Writing Instruments",
@@ -94,10 +39,14 @@ const categories = [
 
 const AdminPanel = (props) => {
   const { classes } = props;
+  const [token, setToken] = useState(
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoiU3VuIEp1bCAyMyAyMDIzIDEwOjM3OjAwIEdNVCswNTMwIChJbmRpYSBTdGFuZGFyZCBUaW1lKSIsInVzZXJJZCI6MiwidXNlcm5hbWUiOiJqb2huQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJDg1cGV6ckFlZXoudDIxVFkxNnpTR3VXb3lPbmJvd2RUbnlRZG5RamdpTmt3SThXM1hsREZXIiwidXNlcl9yb2xlIjoiQWRtaW4iLCJpYXQiOjE2OTAwODg4MjAsImV4cCI6MTY5MDA5MDYyMH0.w6TSvCEUPo0_ryDE-ScMzAXYtazHgNisB_MRqGun9j4"
+  );
+
   const [categoryCode, setCategoryCode] = useState("");
   const [categoryName, setCategoryName] = useState("");
-  // const [productCode, setProductCode] = useState("");
-  // const [productName, setProductName] = useState("");
+  const [productCode, setProductCode] = useState(0);
+  // const [nextProductId, setNextProductId] = useState(0);
 
   const [media, setMedia] = useState(upload_bg);
 
@@ -112,8 +61,17 @@ const AdminPanel = (props) => {
     category_id: "",
   });
 
-  // const [categoryData, setCategoryData] = useState([]);
-  // const [productData, setProductData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+  const [productData, setProductData] = useState([]);
+
+  const [categoryDropDown, setCategoryDropDown] = useState([]);
+
+  const [btnProps, setBtnProps] = useState({
+    btnLabel: "Add Product",
+    // btnColor: "#1abc9c",
+  });
+
+  const [isClearClicked, setIsClearClicked] = useState(false);
 
   const tbl_category_columns = [
     {
@@ -189,7 +147,10 @@ const AdminPanel = (props) => {
                   onClick={() => {
                     console.log("clicked row : " + cellValues.id);
                     console.log(productData[cellValues.id]);
-                    // loadDataToFields(cellValues.id, productData[cellValues.id]);
+                    loadProductDataToFields(
+                      cellValues.id,
+                      productData[cellValues.id]
+                    );
                   }}
                 />
               </IconButton>
@@ -268,6 +229,132 @@ const AdminPanel = (props) => {
       align: "Center",
     },
   ];
+
+  useEffect(() => {
+    console.log("useEffect []");
+    getAllCategories();
+    getAllProducts();
+    getNextProductId();
+  }, []);
+
+  const getAllCategories = async () => {
+    console.log("Get all categories");
+    let res = await CategoryService.getAll();
+
+    if (res.status == 200) {
+      if (res.data.data != []) {
+        console.log(res.data.data);
+        setCategoryData(() => {
+          return [...res.data.data];
+        });
+
+        setCategoryDropDown([]);
+        res.data.data.map((category, index) => {
+          setCategoryDropDown((prev) => {
+            return [
+              ...prev,
+              {
+                categoryId: category.category_id,
+                categoryTitle: category.category,
+              },
+            ];
+          });
+        });
+      }
+    }
+    console.log(categoryDropDown);
+  };
+
+  const getNextProductId = async () => {
+    console.log("--------2------------");
+    console.log("Get next stationery id");
+    let res = await StationeryService.getNextId();
+
+    if (res.status === 200) {
+      console.log("next product id: " + res.data.data.next_id);
+      console.log("--------3------------");
+      setProductCode(res.data.data.next_id);
+    }
+  };
+
+  const getAllProducts = async () => {
+    console.log("Get all stationery");
+    let res = await StationeryService.getAll();
+
+    if (res.data.status == 200) {
+      if (res.data.data != []) {
+        console.log(res.data.data);
+        setProductData(() => {
+          return [...res.data.data];
+        });
+
+        // getNextProductId();
+      }
+    }
+  };
+
+  const saveProduct = async () => {
+    console.log("Saving stationery");
+
+    if (newProductFormData.image_url === "") {
+      console.log("Save without image");
+
+      let res = await StationeryService.saveProduct(newProductFormData);
+      console.log(res);
+
+      if (res.status == 201) {
+        console.log("Product is saved");
+        getAllProducts();
+        clearProductForm();
+      } else {
+        console.log(res.response.data.message);
+      }
+    } else {
+      console.log("Save WITH image");
+    }
+  };
+
+  const loadProductDataToFields = async (rowId, product) => {
+    console.log(product);
+    setBtnProps({ btnLabel: "Edit Product" });
+
+    setNewProductFormData({
+      st_code: product.st_code,
+      st_name: product.st_name,
+      description: product.description,
+      // image_name: product.image_name,
+      // image_url: product.image_url,
+      unit_price: product.unit_price,
+      qty_on_hand: product.qty_on_hand,
+      category_id: product.category_id,
+    });
+
+    setProductCode(product.st_code);
+
+    // Find the category name with the category id
+    const ctg = categoryDropDown.find(
+      (category) => category.categoryId === product.category_id
+    );
+    setCategoryName(ctg.categoryTitle);
+  };
+
+  const clearProductForm = () => {
+    console.log("--------1------------");
+    getNextProductId();
+
+    setNewProductFormData({
+      st_code: "",
+      st_name: "",
+      description: "",
+      image_name: "",
+      image_url: "",
+      unit_price: "",
+      qty_on_hand: "",
+      category_id: "",
+    });
+    setCategoryName("");
+    setBtnProps({ btnLabel: "Add Product" });
+  };
 
   return (
     <div id="home">
@@ -427,7 +514,7 @@ const AdminPanel = (props) => {
                 tableData={categoryData.map((category, index) => ({
                   id: index,
                   category_id: category.category_id,
-                  category_name: category.category_name,
+                  category_name: category.category,
                 }))}
                 // getRowId={(row) => row.reg_no}
                 rowsPerPageOptions={5}
@@ -514,11 +601,13 @@ const AdminPanel = (props) => {
                       type="text"
                       id="st_code"
                       placeholder="Product Code"
-                      value={newProductFormData.st_code}
+                      // value={newProductFormData.st_code}
+                      value={productCode}
+                      disabled
                       onChange={(e) => {
                         setNewProductFormData({
                           ...newProductFormData,
-                          st_code: e.target.value,
+                          st_code: productCode,
                         });
                       }}
                       // onChange={(e) => setProductCode(e.target.value)}
@@ -545,6 +634,7 @@ const AdminPanel = (props) => {
                       onChange={(e) => {
                         setNewProductFormData({
                           ...newProductFormData,
+                          st_code: productCode,
                           st_name: e.target.value,
                         });
                       }}
@@ -597,7 +687,9 @@ const AdminPanel = (props) => {
                   // className={classes.category_dropdown}
                   disablePortal
                   id="role"
-                  options={categories}
+                  options={categoryDropDown}
+                  getOptionLabel={(option) => option.categoryTitle}
+                  inputValue={categoryName}
                   sx={{ width: 600 }}
                   renderInput={(params) => (
                     <TextField
@@ -608,13 +700,13 @@ const AdminPanel = (props) => {
                   )}
                   size="small"
                   disabledItemsFocusable
-                  // onChange={(e, v) => {
-                  //   setLoginFormData({
-                  //     ...loginFormData,
-                  //     userStatus: v,
-                  //   });
-                  //   // console.log(loginFormData.userStatus);
-                  // }}
+                  onChange={(e, v) => {
+                    setCategoryName(v.categoryTitle);
+                    setNewProductFormData({
+                      ...newProductFormData,
+                      category_id: v.categoryId,
+                    });
+                  }}
                 />
               </Grid>
 
@@ -685,7 +777,8 @@ const AdminPanel = (props) => {
 
               {/* ------- Add Stationery Button------- */}
               <Grid
-                item
+                container
+                // columnGap={2}
                 xl={12}
                 lg={12}
                 md={12}
@@ -693,17 +786,31 @@ const AdminPanel = (props) => {
                 xs={12}
                 className={classes.btn_save_product_container}
                 display="flex"
-                alignItems="end"
+                justifyContent="space-between"
               >
                 <MyButton
-                  label="Add Product"
+                  label={btnProps.btnLabel}
                   size="small"
                   variant="outlined"
                   type="button"
                   className={classes.btn_save}
-                  style={{ width: "100%", height: "90%" }}
+                  style={{ width: "48%", height: "90%" }}
                   onClick={(e) => {
                     console.log("Saved Product");
+                    saveProduct();
+                  }}
+                />
+
+                <MyButton
+                  label="Clear Form"
+                  size="small"
+                  variant="outlined"
+                  type="button"
+                  className={classes.btn_clear}
+                  style={{ width: "48%", height: "90%" }}
+                  onClick={(e) => {
+                    console.log("Clearing product form");
+                    clearProductForm();
                   }}
                 />
               </Grid>

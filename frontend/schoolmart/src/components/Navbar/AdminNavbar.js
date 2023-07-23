@@ -113,6 +113,25 @@ const AdminNavbar = (props) => {
             SchoolMart
           </Typography>
 
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            // href="/home"
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              fontFamily: "Acme",
+              fontWeight: 800,
+              // letterSpacing: ".3rem",
+              // color: "inherit",
+              color: "#AC7088",
+              textDecoration: "none",
+            }}
+          >
+            Admin Panel
+          </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"

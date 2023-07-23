@@ -59,8 +59,11 @@ router.post("/", cors(), async (req, res) => {
     user_role: userExist.user_role,
   };
 
-  const accessToken = jwt.sign(data, jwtSecretKey, { expiresIn: "1800s" });
-  const refreshToken = jwt.sign(data, jwtRefreshKey, { expiresIn: "3600s" });
+  // const accessToken = jwt.sign(data, jwtSecretKey, { expiresIn: "1800s" });
+  // const refreshToken = jwt.sign(data, jwtRefreshKey, { expiresIn: "3600s" });
+
+  const accessToken = jwt.sign(data, jwtSecretKey);
+  const refreshToken = jwt.sign(data, jwtRefreshKey);
 
   // Format the tokens as Bearer token
   const bearer_accessToken = `Bearer ${accessToken}`;
@@ -79,7 +82,7 @@ router.post("/", cors(), async (req, res) => {
     message: "User signed in successfully!",
     user_id: userExist.user_id,
     access_token: bearer_accessToken,
-    expires_in: 1800 / 60 + " min",
+    // expires_in: 3600 / 60 + " min",
     // expires_in: "2m",
     refresh_token: bearer_refreshToken,
   });

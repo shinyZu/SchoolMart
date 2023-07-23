@@ -72,6 +72,30 @@ router.get("/getAll", cors(), async (req, res) => {
   }
 });
 
+// Get next stationery id
+router.get("/next/id", cors(), authenticateAdminToken, async (req, res) => {
+  try {
+    // Get the last inserted st_code from the database
+    const lastCode = await Stationery.findOne(
+      {},
+      {},
+      { sort: { st_code: -1 } }
+    );
+    let nextCode = 1;
+
+    if (lastCode) {
+      nextCode = lastCode.st_code + 1;
+    }
+
+    res.send({
+      status: 200,
+      data: { next_id: nextCode },
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 // Search stationery by Id
 // Authorized only for Admins
 router.get("/admin/:id", cors(), authenticateAdminToken, async (req, res) => {
@@ -137,12 +161,16 @@ router.post("/", cors(), authenticateAdminToken, async (req, res) => {
 
     // Save the stationery to the database
     const savedStationery = await newStationery.save();
-    res.send({
+    res.status(201).send({
       status: 201,
       category: savedStationery,
       message: "New stationery saved successfully!",
     });
   } catch (err) {
+    // return res.send({
+    //   status: 400,
+    //   message: err.message,
+    // });
     return res.status(400).send({ status: 400, message: err.message });
   }
 });
@@ -830,6 +858,30 @@ router.delete(
     }
   }
 );
+
+// Delete Stationery (without image) - Admin
+router.delete("/only/:id", cors(), authenticateAdminToken, async (req, res) => {
+  try {
+    const stationeryExist = await checkStationeryExist(req.params.id, res);
+
+    if (!stationeryExist) {
+      return res
+        .status(404)
+        .send({ status: 404, message: "Stationery not found." });
+    }
+
+    // delete image from DB
+    let deletedStationery = await Stationery.deleteOne(stationeryExist);
+
+    return res.send({
+      status: 200,
+      message: "Stationery deleted successfully!",
+      data: deletedStationery,
+    });
+  } catch (err) {
+    return res.status(400).send({ status: 400, message: err.message });
+  }
+});
 
 // Generate public URL for drive
 router.get("/generate/public/url/:id", async (req, res) => {

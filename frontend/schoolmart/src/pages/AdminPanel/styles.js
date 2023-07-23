@@ -64,6 +64,18 @@ export const styleSheet = {
     padding: "10px 60px !important",
   },
 
+  btn_clear: {
+    border: "1px #95a5a6 !important",
+    backgroundColor: "#95a5a6 !important",
+    color: "white !important",
+    fontFamily: '"Acme", sans-serif !important',
+    "&:hover": {
+      cursor: "pointer",
+      backgroundColor: "#7f8c8d !important",
+    },
+    padding: "10px 60px !important",
+  },
+
   //   ------- New Product Section ---------------
 
   product_main_container_left: {
