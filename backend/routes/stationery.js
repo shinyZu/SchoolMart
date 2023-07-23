@@ -717,7 +717,7 @@ router.put(
   }
 );
 
-// Upload Image only - post(/drive/url/db) - working
+// Upload Image only - post(/drive/url/db) - in use
 router.put(
   "/drive/url/db/:st_code",
   cors(),
@@ -831,7 +831,8 @@ router.delete("/drive/image/:id", async (req, res) => {
 router.delete(
   "/drive/:id",
   cors(),
-  /* authenticateAdminToken, */ async (req, res) => {
+  authenticateAdminToken,
+  async (req, res) => {
     try {
       const stationeryExist = await checkStationeryExist(req.params.id, res);
 
@@ -855,9 +856,9 @@ router.delete(
       // delete image from DB
       let deletedStationery = await Stationery.deleteOne(stationeryExist);
 
-      return res.send({
+      return res.status(200).send({
         status: 200,
-        message: "Stationery deleted successfully!",
+        message: "Product deleted successfully!",
         data: deletedStationery,
       });
     } catch (err) {

@@ -78,7 +78,6 @@ const AdminPanel = (props) => {
   const [imageFile, setImageFile] = useState([]);
   const [image, setImage] = useState([]);
   const [validImageFile, setValidImageFile] = useState(null);
-  // const validImageFile = null;
   const [fileToUpload, setFileToUpload] = useState([]);
 
   const [media, setMedia] = useState(upload_bg);
@@ -188,7 +187,7 @@ const AdminPanel = (props) => {
                   // fontSize="large"
                   onClick={() => {
                     console.log("clicked row : " + cellValues.id);
-                    // deleteCar(productData[cellValues.id]);
+                    deleteProduct(productData[cellValues.id]);
                   }}
                 />
               </IconButton>
@@ -319,69 +318,6 @@ const AdminPanel = (props) => {
     }
   };
 
-  const saveProduct0 = () => {
-    console.log(fileToUpload);
-    if (fileToUpload.length !== 0) {
-      console.log("files are choosen");
-
-      // setConfirmDialog({
-      //   isOpen: true,
-      //   title: "Are you sure you want to Save this Car ?",
-      //   subTitle: "You can't revert this operation",
-      //   action: "Save",
-      //   confirmBtnStyle: {
-      //     backgroundColor: "rgb(26, 188, 156)",
-      //     color: "white",
-      //   },
-      //   onConfirm: () => proceedSave(),
-      // });
-
-      proceedSaveProduct();
-    } else {
-      // setOpenAlert({
-      //   open: true,
-      //   alert: "Please choose Image Files for " + regFormData.brand,
-      //   severity: "warning",
-      //   variant: "standard",
-      // });
-
-      console.log("Please choose an Image File");
-    }
-  };
-
-  const proceedSaveProduct = async () => {
-    console.log("Saving stationery");
-
-    console.log(newProductFormData);
-
-    // To save without image
-    // if (newProductFormData.product_image == null) {
-    //   console.log("Save without image");
-
-    //   let res = await StationeryService.saveProduct(newProductFormData);
-    //   console.log(res);
-
-    //   if (res.status == 201) {
-    //     console.log("Product is saved");
-    //     getAllProducts();
-    //     clearProductForm();
-    //   } else {
-    //     console.log(res.response.data.message);
-    //   }
-    // } else {
-    //   // To save with image
-    //   console.log("Save WITH image");
-
-    //   let data = new FormData();
-    //   data.append("st_name", newProductFormData.st_name);
-    //   data.append("description", newProductFormData.description);
-    //   data.append("unit_price", newProductFormData.unit_price);
-    //   data.append("qty_on_hand", newProductFormData.qty_on_hand);
-    //   data.append("category_id", newProductFormData.category_id);
-    //   data.append("product_image", newProductFormData.product_image);
-    // }
-  };
-
   const loadProductDataToFields = async (rowId, product) => {
     console.log(product);
     setBtnProps({ btnLabel: "Edit Product" });
@@ -431,36 +367,6 @@ const AdminPanel = (props) => {
     setMedia(upload_bg);
     setFileToUpload([]);
     setBtnProps({ btnLabel: "Add Product" });
-  };
-
-  const handleImageUpload = (e) => {
-    console.log(e);
-    const { files } = e.target;
-    console.log(files[0]);
-
-    // get the selected files one by one & if they are valid add to array "validImageFiles"
-    if (files[0].type.match(imageTypeRegex)) {
-      // validImageFile.push(files[0]);
-      setValidImageFile(files[0]);
-    }
-
-    setFileToUpload(validImageFile);
-
-    console.log(validImageFile);
-    console.log(fileToUpload);
-
-    if (validImageFile != null) {
-      setImageFile(validImageFile);
-      return;
-    } else {
-      console.log(image);
-      setOpenAlert({
-        open: true,
-        alert: "You can upload only (png/jpg/jpeg)",
-        severity: "warning",
-        variant: "standard",
-      });
-    }
   };
 
   const handleMediaUpload = (e) => {
@@ -681,6 +587,42 @@ const AdminPanel = (props) => {
           variant: "standard",
         });
       }
+    }
+  };
+
+  // --------Delete Product -------------
+  const deleteProduct = (product) => {
+    console.log(product);
+    setConfirmDialog({
+      isOpen: true,
+      title: "Are you sure you want to delete this Product?",
+      subTitle: "You can't revert this operation",
+      confirmBtnStyle: { backgroundColor: "red", color: "white" },
+      action: "Delete",
+      onConfirm: () => deleteProductWithImage(product.st_code),
+    });
+  };
+
+  const deleteProductWithImage = async (st_code) => {
+    console.log(st_code);
+    let res = await StationeryService.deleteProduct(st_code);
+    if (res.status === 200) {
+      setOpenAlert({
+        open: true,
+        alert: res.data.message,
+        severity: "success",
+        variant: "standard",
+      });
+      getAllProducts();
+      clearProductForm();
+      setConfirmDialog({ isOpen: false });
+    } else {
+      setOpenAlert({
+        open: true,
+        alert: res.response.data.message,
+        severity: "error",
+        variant: "standard",
+      });
     }
   };
 

@@ -116,6 +116,26 @@ class StationeryService {
     });
     return await promise;
   };
+
+  // Delete product & Image
+  deleteProduct = async (id) => {
+    const promise = new Promise((resolve, reject) => {
+      axios
+        .delete("stationery/drive/" + id, {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+            // "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          return resolve(res);
+        })
+        .catch((er) => {
+          return resolve(er);
+        });
+    });
+    return await promise;
+  };
 }
 
 export default new StationeryService();
