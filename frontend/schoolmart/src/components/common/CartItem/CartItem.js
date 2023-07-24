@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -14,6 +14,15 @@ import img_item_1 from "../../../assets/images/Home/Category/ct_pens.jpg";
 
 const CartItem = (props) => {
   const { classes, item } = props;
+  console.log(item);
+
+  // const [item, setItem] = useState(prod);
+
+  // useEffect(() => {
+  //   console.log(item);
+  //   setItem(prod);
+  // }, []);
+
   return (
     <>
       <Grid
@@ -35,7 +44,7 @@ const CartItem = (props) => {
           sm={1}
           xs={1}
           className={classes.tbl_items_img_container}
-          style={{ backgroundImage: `url(${item.img_url})` }}
+          style={{ backgroundImage: `url(${item.image_url})` }}
         ></Grid>
 
         <Grid
@@ -51,7 +60,7 @@ const CartItem = (props) => {
           alignItems="center"
         >
           <Typography variant="h7" className={classes.txt_item_values}>
-            {item.productName}
+            {item.st_name}
           </Typography>
         </Grid>
 
@@ -68,7 +77,7 @@ const CartItem = (props) => {
           alignItems="center"
         >
           <Typography variant="h7" className={classes.txt_item_values}>
-            LKR {item.price}
+            LKR {item.unit_price}.00
           </Typography>
         </Grid>
 
@@ -100,7 +109,7 @@ const CartItem = (props) => {
           alignItems="center"
         >
           <Typography variant="h7" className={classes.txt_item_values}>
-            LKR {item.price * item.qty}
+            LKR {item.unit_price * item.qty}.00
           </Typography>
         </Grid>
 

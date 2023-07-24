@@ -25,33 +25,34 @@ const Shop = (props) => {
   const { classes } = props;
   const navigate = useNavigate();
 
-  // const [isAllSelected, setIsAllSelected] = useState(true);
-  // const [isWritingSelected, setIsWritingSelected] = useState(false);
-  // const [isBookSelected, setIsBookSelected] = useState(false);
-  // const [isArtSelected, setIsArtSelected] = useState(false);
-  // const [isAdhesiveSelected, setIsAdhesiveSelected] = useState(false);
-  // const [isBindersSelected, setIsBindersSelected] = useState(false);
-  // const [isMathSelected, setIsMathSelected] = useState(false);
-  // const [isSelected, setIsSelected] = useState(false);
-  // const [selectedChipIndex, setSelectedChipIndex] = useState(-1);
-  const [selectedChip, setSelectedChip] = useState(-1);
+  const [selectedChip, setSelectedChip] = useState(0);
+  const [selectedSortType, setSelectedSortType] = useState("Default");
 
   const [categories, setCategories] = useState([]);
   const [stationeryList, setStationeryList] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState("");
 
-  useEffect(() => {
-    getAllStationery();
-  }, []);
+  // useEffect(() => {
+  //   getAllStationery();
+  // });
 
   useEffect(() => {
     getAllCategories();
+    getAllStationery();
   }, []);
+
+  // useEffect(() => {
+  //   getAllStationery();
+  // }, []);
+
+  // useEffect(() => {
+  //   sortProducts();
+  // }, [ selectedSortType]);
 
   useEffect(() => {
     console.log("selectedChip effected............");
     filterProducts(selectedChip);
-  }, [selectedChip]);
+    // sortProducts(selectedChip);
+  }, [stationeryList, selectedChip /* , selectedSortType */]);
 
   // useEffect(() => {
   //   if (isAllSelected) {
@@ -137,6 +138,7 @@ const Shop = (props) => {
                 {
                   category_id: product.category_id,
                   category: category.categoryTitle,
+                  st_code: product.st_code,
                   st_name: product.st_name,
                   unit_price: product.unit_price,
                   image_url: product.image_url,
@@ -155,7 +157,7 @@ const Shop = (props) => {
 
     if (selectedChip == 0) {
       getAllStationery();
-      return;
+      // return;
     }
 
     if (selectedChip > 0) {
@@ -177,6 +179,7 @@ const Shop = (props) => {
                   return [
                     ...prev,
                     {
+                      category_id: product.category_id,
                       category: category.categoryTitle,
                       st_name: product.st_name,
                       unit_price: product.unit_price,
@@ -187,9 +190,71 @@ const Shop = (props) => {
               }
             });
           });
-          console.log(stationeryList);
         }
       });
+    }
+    // sortProducts();
+  };
+
+  const sortProducts = async (selectedChip) => {
+    console.log("sorting produtcs.......");
+    // console.log(stationeryList);
+
+    // let sortedList = [];
+
+    // if (selectedSortType == "Ascending") {
+    //   // Sort in ascending order
+    //   sortedList = stationeryList.sort((a, b) => a.unit_price - b.unit_price);
+    //   // stationeryList.sort((a, b) => a.unit_price - b.unit_price);
+    //   // console.log(sortedList);
+    //   setStationeryList(sortedList);
+    //   return;
+    // }
+
+    // if (selectedSortType == "Descending") {
+    //   // Sort in descending order
+    //   sortedList = stationeryList.sort((a, b) => b.unit_price - a.unit_price);
+    //   // stationeryList.sort((a, b) => b.unit_price - a.unit_price);
+    //   // console.log(sortedList);
+    //   setStationeryList(sortedList);
+    //   return;
+    // }
+
+    if (selectedSortType === "Default") {
+      getAllStationery();
+      return;
+    } else {
+      let res = await StationeryService.sortProducts(
+        selectedSortType.toLowerCase(),
+        selectedChip
+      );
+
+      // console.log(res);
+
+      if (res.status === 200) {
+        let allProducts = res.data.data;
+
+        setStationeryList([]);
+        allProducts.map((product, index) => {
+          categories.map((category, index) => {
+            if (category.categoryId === product.category_id) {
+              setStationeryList((prev) => {
+                return [
+                  ...prev,
+                  {
+                    category_id: product.category_id,
+                    category: category.categoryTitle,
+                    st_code: product.st_code,
+                    st_name: product.st_name,
+                    unit_price: product.unit_price,
+                    image_url: product.image_url,
+                  },
+                ];
+              });
+            }
+          });
+        });
+      }
     }
   };
 
@@ -241,6 +306,7 @@ const Shop = (props) => {
                   setIsAllSelected(!isAllSelected);
                 }}
               /> */}
+
               <Autocomplete
                 className={classes.sort_dropdown}
                 disablePortal
@@ -252,13 +318,10 @@ const Shop = (props) => {
                 )}
                 size="small"
                 disabledItemsFocusable
-                // onChange={(e, v) => {
-                //   setLoginFormData({
-                //     ...loginFormData,
-                //     userStatus: v,
-                //   });
-                //   // console.log(loginFormData.userStatus);
-                // }}
+                onChange={(e, v) => {
+                  console.log(v);
+                  setSelectedSortType(v);
+                }}
               />
             </Grid>
 
@@ -381,6 +444,12 @@ const Shop = (props) => {
               justifyContent="space-between"
             >
               {/* -------Product Card------------ */}
+              {/* {selectedSortType == "Ascending"
+                ? stationeryList.sort((a, b) => a.unit_price - b.unit_price)
+                : selectedSortType == "Descending"
+                ? stationeryList.sort((a, b) => b.unit_price - a.unit_price)
+                : stationeryList} */}
+
               {stationeryList.map((product, index) => {
                 return (
                   <>

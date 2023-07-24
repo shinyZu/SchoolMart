@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -15,36 +15,202 @@ import Footer from "../../components/Footer/Footer";
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
 
-const cartItems = [
-  {
-    img_url: "https://drive.google.com/uc?id=1udcfVrDsgSqJEZnTGhjHxH3NDyd17EAe",
-    productName: "Product 01",
-    price: 180.0,
-    qty: 1,
-    subtotal: 180.0,
-  },
-  {
-    img_url: "https://drive.google.com/uc?id=1pE7g9RUBB27Gu9l46bnFBkwvaKBhP_D9",
-    productName: "Product 02",
-    price: 100.0,
-    qty: 3,
-    subtotal: 300.0,
-  },
-  {
-    img_url: "https://drive.google.com/uc?id=195Fima7KXJJuN0X0vf2fCIU6gSQwEvsK",
-    productName: "Product 03",
-    price: 500.0,
-    qty: 3,
-    subtotal: 1500.0,
-  },
-];
+import StationeryService from "../../services/StationeryService";
+import CategoryService from "../../services/CategoryService";
+
+// const cartItems = [
+//   {
+//     img_url: "https://drive.google.com/uc?id=1udcfVrDsgSqJEZnTGhjHxH3NDyd17EAe",
+//     productName: "Product 01",
+//     price: 180.0,
+//     qty: 1,
+//     subtotal: 180.0,
+//   },
+//   {
+//     img_url: "https://drive.google.com/uc?id=1pE7g9RUBB27Gu9l46bnFBkwvaKBhP_D9",
+//     productName: "Product 02",
+//     price: 100.0,
+//     qty: 3,
+//     subtotal: 300.0,
+//   },
+//   {
+//     img_url: "https://drive.google.com/uc?id=195Fima7KXJJuN0X0vf2fCIU6gSQwEvsK",
+//     productName: "Product 03",
+//     price: 500.0,
+//     qty: 3,
+//     subtotal: 1500.0,
+//   },
+// ];
 
 const Cart = (props) => {
   const { classes } = props;
+  const location = useLocation();
+  let receivedData = location.state;
+
+  // if (receivedData) {
+  //   const { product, wantedQty } = receivedData;
+  //   console.log(product);
+  //   console.log(wantedQty);
+  // }
+
+  // const storedItems = localStorage.getItem("cartProducts");
+
+  const [qty, setQty] = useState(0);
+  const [cartItemData, setCartItemData] = useState({});
+  // const [cartItems, setCartItems] = useState([]);
+
+  const [cartItems, setCartItems] = useState(() => {
+    // Retrieve cart items from localStorage on initial render
+    const savedCartItems = localStorage.getItem("cartProducts");
+    return savedCartItems ? JSON.parse(savedCartItems) : [];
+  });
+
   const [couponValue, setCouponValue] = useState(0.0);
   const [finalSubtotal, setFinalSubTotal] = useState(0);
 
+  const [categories, setCategories] = useState([]);
+  const [stationeryList, setStationeryList] = useState([]);
+
   useEffect(() => {
+    console.log("----------b-------------");
+    getAllCategories();
+    getAllStationery();
+    addToCart();
+    // if (receivedData) {
+    //   setCartItemData(receivedData);
+    // }
+  }, []);
+
+  // useEffect(() => {
+  //   setCartItemData(null);
+  //   addToCart();
+  // }, [cartItemData]);
+
+  // useEffect(() => {
+  //   if (receivedData) {
+  //     let item = receivedData.product;
+  //     let wantedQty = receivedData.wantedQty.qty;
+  //     // setCartItemData(receivedData.product);
+  //     // setQty(wantedQty);
+
+  //     // const storedItems = localStorage.getItem("cartProducts");
+  //     if (storedItems) {
+  //       console.log("got from LS");
+  //       console.log(JSON.parse(storedItems).length == 0);
+  //       addItemToCart(item, wantedQty);
+
+  //       // if (JSON.parse(storedItems).length == 0) {
+  //       //   console.log("currently no items in LS");
+  //       //   addItemToCart(item, wantedQty);
+  //       // } else {
+  //       //   // setCartItems(cartItems);
+  //       //   addItemToCart(item, wantedQty);
+  //       // }
+  //     }
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log(cartItemData);
+  //   console.log(qty);
+  // }, [cartItemData, qty]);
+
+  // useEffect(() => {
+  //   console.log(cartItems);
+
+  //   // if (receivedData) {
+  //   //   console.log("----useEffect 2------");
+  //   //   let item = receivedData.product;
+  //   //   let wantedQty = receivedData.wantedQty.qty;
+  //   //   setCartItemData(receivedData.product);
+  //   //   setQty(wantedQty);
+
+  //   //   let itemToAdd = {
+  //   //     category_id: item.category_id,
+  //   //     category: item.category,
+  //   //     st_code: item.st_code,
+  //   //     st_name: item.st_name,
+  //   //     unit_price: item.unit_price,
+  //   //     image_url: item.image_url,
+  //   //     qty: receivedData.wantedQty.qty,
+  //   //   };
+
+  //   // }
+  //   // addItemToCart(itemToAdd);
+  //   localStorage.setItem("cartProducts", JSON.stringify(cartItems));
+  // }, [cartItems]);
+
+  useEffect(() => {
+    // Save cart items to localStorage whenever cartItems state changes
+    localStorage.setItem("cartProducts", JSON.stringify(cartItems));
+    // setCartItemData(null);
+  }, [cartItemData, cartItems]);
+
+  const addToCart = () => {
+    if (receivedData) {
+      let prod = receivedData.product;
+      let wantedQty = receivedData.wantedQty.qty;
+
+      let newItem = {
+        category_id: prod.category_id,
+        category: prod.category,
+        st_code: prod.st_code,
+        st_name: prod.st_name,
+        unit_price: prod.unit_price,
+        image_url: prod.image_url,
+        qty: wantedQty,
+      };
+      const updatedCart = [...cartItems, newItem];
+      setCartItems(updatedCart);
+      receivedData = null;
+    }
+  };
+
+  const removeFromCart = (itemId) => {
+    const updatedCart = cartItems.filter((item) => item.id !== itemId);
+    setCartItems(updatedCart);
+  };
+
+  // Function to add a new item to the list
+  const addItemToCart = (prod, qty) => {
+    let newItem = {
+      category_id: prod.category_id,
+      category: prod.category,
+      st_code: prod.st_code,
+      st_name: prod.st_name,
+      unit_price: prod.unit_price,
+      image_url: prod.image_url,
+      qty: qty,
+    };
+    // setCartItems((prevItems) => [...prevItems, newItem]);
+
+    setCartItems((prev) => {
+      return [
+        ...prev,
+        {
+          category_id: prod.category_id,
+          category: prod.category,
+          st_code: prod.st_code,
+          st_name: prod.st_name,
+          unit_price: prod.unit_price,
+          image_url: prod.image_url,
+          qty: qty,
+        },
+      ];
+    });
+  };
+
+  // Function to update an existing item in the list
+  const updateItemInCart = (itemId, updatedData) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item.st_code === itemId ? { ...item, ...updatedData } : item
+      )
+    );
+  };
+
+  useEffect(() => {
+    console.log("----------3-------------");
     let final_subtotal = 0;
     for (let item of cartItems) {
       final_subtotal += item.subtotal;
@@ -52,6 +218,93 @@ const Cart = (props) => {
       setFinalSubTotal(final_subtotal);
     }
   }, [finalSubtotal]);
+
+  const addNewItemToCart = (prod, qty) => {
+    console.log(qty);
+    console.log(cartItemData);
+    // setCartItems((prevProducts) => [...prevProducts, ...prod]);
+
+    // setCartItems([]);
+    setCartItems((prev) => {
+      return [
+        ...prev,
+        {
+          category_id: prod.category_id,
+          category: prod.category,
+          st_code: prod.st_code,
+          st_name: prod.st_name,
+          unit_price: prod.unit_price,
+          image_url: prod.image_url,
+          qty: qty,
+        },
+      ];
+    });
+
+    // setCartItems({
+    //   ...cartItems,
+    //   category_id: prod.category_id,
+    //   category: prod.category,
+    //   st_code: prod.st_code,
+    //   st_name: prod.st_name,
+    //   unit_price: prod.unit_price,
+    //   image_url: prod.image_url,
+    //   qty: { qty },
+    // });
+
+    console.log(cartItems);
+  };
+
+  const getAllCategories = async () => {
+    console.log("Get all categories");
+    let res = await CategoryService.getAll();
+
+    if (res.status == 200) {
+      if (res.data.data != []) {
+        // console.log(res.data.data);
+        setCategories([]);
+        res.data.data.map((category, index) => {
+          setCategories((prev) => {
+            return [
+              ...prev,
+              {
+                categoryId: category.category_id,
+                categoryTitle: category.category,
+              },
+            ];
+          });
+        });
+      }
+    }
+  };
+
+  const getAllStationery = async () => {
+    console.log("Get all stationery");
+    let res = await StationeryService.getAll();
+
+    if (res.status === 200) {
+      let allProducts = res.data.data;
+
+      setStationeryList([]);
+      allProducts.map((product, index) => {
+        categories.map((category, index) => {
+          if (category.categoryId === product.category_id) {
+            setStationeryList((prev) => {
+              return [
+                ...prev,
+                {
+                  category_id: product.category_id,
+                  category: category.categoryTitle,
+                  st_name: product.st_name,
+                  unit_price: product.unit_price,
+                  image_url: product.image_url,
+                },
+              ];
+            });
+          }
+        });
+      });
+    }
+  };
 
   return (
     <div id="home">

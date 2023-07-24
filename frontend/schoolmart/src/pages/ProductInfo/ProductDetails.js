@@ -49,20 +49,65 @@ const ProductDetails = (props) => {
 
   const location = useLocation();
   const productData = location.state;
+  const cartItemData = productData.product;
+  console.log(cartItemData);
 
   const [qty, setQty] = useState(1);
   const [categories, setCategories] = useState([]);
   const [relatedProducts, setRelatedProducts] = useState([]);
 
+  // ---------------
+  const [cartItems, setCartItems] = useState([]);
+  // ---------------
+
   useEffect(() => {
     getAllCategories();
   }, []);
+
+  // // --------------------
+  // // Load products from localStorage on component mount
+  // useEffect(() => {
+  //   const cartProducts = localStorage.getItem("cartProducts");
+  //   if (cartProducts) {
+  //     console.log(cartProducts);
+  //     setCartItems(JSON.parse(cartProducts));
+  //   } else {
+  //     // addNewItemToCart(cartItemData);
+  //     localStorage.setItem("cartProducts", JSON.stringify(cartItemData));
+  //   }
+  // }, []);
+
+  // // Update localStorage whenever 'cartItems' state changes
+  // useEffect(() => {
+  //   console.log(cartItems);
+  //   localStorage.setItem("cartProducts", JSON.stringify(cartItems));
+  // }, [cartItems]);
+  // // --------------------
 
   useEffect(() => {
     if (categories != []) {
       getAllRelatedProducts();
     }
   }, [categories]);
+
+  // Function to add new products to the cartItems list
+  // should be called by Add To Cart btn
+  const addNewItemToCart = (cartItemData) => {
+    setCartItems((prev) => {
+      return [
+        ...prev,
+        {
+          category_id: cartItemData.category_id,
+          category: cartItemData.category,
+          st_code: cartItemData.st_code,
+          st_name: cartItemData.st_name,
+          unit_price: cartItemData.unit_price,
+          image_url: cartItemData.image_url,
+          qty: { qty },
+        },
+      ];
+    });
+  };
 
   const getAllCategories = async () => {
     console.log("Get all categories");
@@ -185,7 +230,13 @@ const ProductDetails = (props) => {
               </p>
 
               {/* ---------Qty Changer----------------- */}
-              <QtyChanger qty={qty} />
+              <QtyChanger
+                qty={qty}
+                onClick={(e, v) => {
+                  console.log(v);
+                  setQty(v);
+                }}
+              />
             </Grid>
             <Grid
               item
@@ -198,13 +249,23 @@ const ProductDetails = (props) => {
               display="flex"
               alignItems="flex-end"
             >
-              <Link to="/cart">
+              {/* <Link to="/cart"> */}
+              <Link
+                to="/cart"
+                state={{
+                  product: cartItemData,
+                  wantedQty: { qty },
+                }}
+              >
                 <MyButton
                   label="Add To Cart"
                   size="small"
                   variant="outlined"
                   type="button"
                   className={classes.btn_add_to_cart}
+                  // onClick={() => {
+
+                  // }}
                 />
               </Link>
             </Grid>

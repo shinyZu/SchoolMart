@@ -133,6 +133,47 @@ router.get("/new/arrival", cors(), async (req, res) => {
   }
 });
 
+// Get sorted stationery list - in use
+router.get("/sort/:type/:id", cors(), async (req, res) => {
+  try {
+    const sortType = req.params.type;
+    const categoryId = req.params.id;
+    console.log(sortType);
+    console.log(categoryId);
+    let sortedList = [];
+
+    // Sort all products
+    if (categoryId == 0) {
+      if (sortType === "ascending") {
+        sortedList = await Stationery.find({}).sort({
+          unit_price: 1,
+        });
+      } else if (sortType === "descending") {
+        sortedList = await Stationery.find({}).sort({
+          unit_price: -1,
+        });
+      }
+    } else {
+      if (sortType === "ascending") {
+        sortedList = await Stationery.find({ category_id: categoryId }).sort({
+          unit_price: 1,
+        });
+      } else if (sortType === "descending") {
+        sortedList = await Stationery.find({ category_id: categoryId }).sort({
+          unit_price: -1,
+        });
+      }
+    }
+
+    res.status(200).send({
+      status: 200,
+      data: sortedList,
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 // Search stationery by Id
 // Authorized only for Admins
 router.get("/admin/:id", cors(), authenticateAdminToken, async (req, res) => {

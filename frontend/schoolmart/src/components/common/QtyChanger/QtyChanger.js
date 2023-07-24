@@ -9,6 +9,8 @@ import { withStyles } from "@mui/styles";
 
 const QtyChanger = (props) => {
   const { classes } = props;
+  const [qty, setQty] = useState(props.qty);
+
   return (
     <>
       <Grid
@@ -32,6 +34,12 @@ const QtyChanger = (props) => {
           justifyContent="center"
           onClick={(e) => {
             console.log("qty -");
+            let q = qty - 1;
+            if (q > 0) {
+              setQty(q);
+            }
+            // console.log({ qty });
+            props.onClick(e, q);
           }}
         >
           <Typography variant="h8" className={classes.txt_minus_plus}>
@@ -50,7 +58,7 @@ const QtyChanger = (props) => {
           justifyContent="center"
         >
           <Typography variant="h8" className={classes.txt_qty}>
-            {props.qty}
+            {qty}
           </Typography>
         </Grid>
         <Grid
@@ -63,8 +71,12 @@ const QtyChanger = (props) => {
           className={classes.container_plus}
           display="flex"
           justifyContent="center"
-          onClick={(e) => {
+          onClick={(e, v) => {
             console.log("qty +");
+            let q = qty + 1;
+            setQty(q);
+            // console.log(qty);
+            props.onClick(e, q);
           }}
         >
           <Typography variant="h8" className={classes.txt_minus_plus}>

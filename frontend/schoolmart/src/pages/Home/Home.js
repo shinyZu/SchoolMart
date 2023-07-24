@@ -74,6 +74,7 @@ const Home = (props) => {
                 {
                   category_id: product.category_id,
                   category: category.categoryTitle,
+                  st_code: product.st_code,
                   st_name: product.st_name,
                   unit_price: product.unit_price,
                   image_url: product.image_url,

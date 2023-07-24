@@ -11,8 +11,6 @@ const MyToggleButtonGroup = (props) => {
 
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
-    // console.log(event);
-    // console.log(newAlignment);
   };
 
   return (

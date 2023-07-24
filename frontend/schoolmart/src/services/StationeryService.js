@@ -48,6 +48,20 @@ class StationeryService {
     return await promise;
   };
 
+  sortProducts = async (type, id) => {
+    const promise = new Promise((resolve, reject) => {
+      axios
+        .get(`stationery/sort/${type}/${id} `)
+        .then((res) => {
+          return resolve(res);
+        })
+        .catch((er) => {
+          return resolve(er);
+        });
+    });
+    return await promise;
+  };
+
   getNextId = async () => {
     const promise = new Promise((resolve, reject) => {
       axios
