@@ -42,7 +42,7 @@ const CartTotals = (props) => {
           </Typography>
 
           <Typography variant="h7" className={classes.cart_total_title}>
-            LKR {props.subtotal}
+            LKR {props.subtotal}.00
           </Typography>
         </Grid>
 
@@ -62,7 +62,7 @@ const CartTotals = (props) => {
           </Typography>
 
           <Typography variant="h7" className={classes.cart_total_title}>
-            LKR {props.coupon}
+            LKR {props.coupon}.00
           </Typography>
         </Grid>
 
@@ -82,7 +82,7 @@ const CartTotals = (props) => {
           </Typography>
 
           <Typography variant="h7" className={classes.cart_total_title}>
-            LKR {props.shipping}
+            LKR {props.shipping}.00
           </Typography>
         </Grid>
 
@@ -102,7 +102,7 @@ const CartTotals = (props) => {
           </Typography>
 
           <Typography variant="h7" className={classes.cart_total_title}>
-            LKR {props.discount}
+            LKR {props.discount}.00
           </Typography>
         </Grid>
 

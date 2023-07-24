@@ -72,79 +72,25 @@ const Cart = (props) => {
   const [stationeryList, setStationeryList] = useState([]);
 
   useEffect(() => {
-    console.log("----------b-------------");
     getAllCategories();
     getAllStationery();
     addToCart();
-    // if (receivedData) {
-    //   setCartItemData(receivedData);
-    // }
   }, []);
-
-  // useEffect(() => {
-  //   setCartItemData(null);
-  //   addToCart();
-  // }, [cartItemData]);
-
-  // useEffect(() => {
-  //   if (receivedData) {
-  //     let item = receivedData.product;
-  //     let wantedQty = receivedData.wantedQty.qty;
-  //     // setCartItemData(receivedData.product);
-  //     // setQty(wantedQty);
-
-  //     // const storedItems = localStorage.getItem("cartProducts");
-  //     if (storedItems) {
-  //       console.log("got from LS");
-  //       console.log(JSON.parse(storedItems).length == 0);
-  //       addItemToCart(item, wantedQty);
-
-  //       // if (JSON.parse(storedItems).length == 0) {
-  //       //   console.log("currently no items in LS");
-  //       //   addItemToCart(item, wantedQty);
-  //       // } else {
-  //       //   // setCartItems(cartItems);
-  //       //   addItemToCart(item, wantedQty);
-  //       // }
-  //     }
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log(cartItemData);
-  //   console.log(qty);
-  // }, [cartItemData, qty]);
-
-  // useEffect(() => {
-  //   console.log(cartItems);
-
-  //   // if (receivedData) {
-  //   //   console.log("----useEffect 2------");
-  //   //   let item = receivedData.product;
-  //   //   let wantedQty = receivedData.wantedQty.qty;
-  //   //   setCartItemData(receivedData.product);
-  //   //   setQty(wantedQty);
-
-  //   //   let itemToAdd = {
-  //   //     category_id: item.category_id,
-  //   //     category: item.category,
-  //   //     st_code: item.st_code,
-  //   //     st_name: item.st_name,
-  //   //     unit_price: item.unit_price,
-  //   //     image_url: item.image_url,
-  //   //     qty: receivedData.wantedQty.qty,
-  //   //   };
-
-  //   // }
-  //   // addItemToCart(itemToAdd);
-  //   localStorage.setItem("cartProducts", JSON.stringify(cartItems));
-  // }, [cartItems]);
 
   useEffect(() => {
     // Save cart items to localStorage whenever cartItems state changes
     localStorage.setItem("cartProducts", JSON.stringify(cartItems));
-    // setCartItemData(null);
   }, [cartItemData, cartItems]);
+
+  useEffect(() => {
+    console.log(cartItems);
+    let final_subtotal = 0;
+    for (let item of cartItems) {
+      final_subtotal += item.subtotal;
+      console.log(final_subtotal);
+      setFinalSubTotal(final_subtotal);
+    }
+  }, [finalSubtotal, cartItems]);
 
   const addToCart = () => {
     if (receivedData) {
@@ -159,99 +105,16 @@ const Cart = (props) => {
         unit_price: prod.unit_price,
         image_url: prod.image_url,
         qty: wantedQty,
+        subtotal: prod.unit_price * wantedQty,
       };
       const updatedCart = [...cartItems, newItem];
       setCartItems(updatedCart);
-      receivedData = null;
     }
   };
 
   const removeFromCart = (itemId) => {
     const updatedCart = cartItems.filter((item) => item.id !== itemId);
     setCartItems(updatedCart);
-  };
-
-  // Function to add a new item to the list
-  const addItemToCart = (prod, qty) => {
-    let newItem = {
-      category_id: prod.category_id,
-      category: prod.category,
-      st_code: prod.st_code,
-      st_name: prod.st_name,
-      unit_price: prod.unit_price,
-      image_url: prod.image_url,
-      qty: qty,
-    };
-    // setCartItems((prevItems) => [...prevItems, newItem]);
-
-    setCartItems((prev) => {
-      return [
-        ...prev,
-        {
-          category_id: prod.category_id,
-          category: prod.category,
-          st_code: prod.st_code,
-          st_name: prod.st_name,
-          unit_price: prod.unit_price,
-          image_url: prod.image_url,
-          qty: qty,
-        },
-      ];
-    });
-  };
-
-  // Function to update an existing item in the list
-  const updateItemInCart = (itemId, updatedData) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.st_code === itemId ? { ...item, ...updatedData } : item
-      )
-    );
-  };
-
-  useEffect(() => {
-    console.log("----------3-------------");
-    let final_subtotal = 0;
-    for (let item of cartItems) {
-      final_subtotal += item.subtotal;
-      console.log(final_subtotal);
-      setFinalSubTotal(final_subtotal);
-    }
-  }, [finalSubtotal]);
-
-  const addNewItemToCart = (prod, qty) => {
-    console.log(qty);
-    console.log(cartItemData);
-    // setCartItems((prevProducts) => [...prevProducts, ...prod]);
-
-    // setCartItems([]);
-    setCartItems((prev) => {
-      return [
-        ...prev,
-        {
-          category_id: prod.category_id,
-          category: prod.category,
-          st_code: prod.st_code,
-          st_name: prod.st_name,
-          unit_price: prod.unit_price,
-          image_url: prod.image_url,
-          qty: qty,
-        },
-      ];
-    });
-
-    // setCartItems({
-    //   ...cartItems,
-    //   category_id: prod.category_id,
-    //   category: prod.category,
-    //   st_code: prod.st_code,
-    //   st_name: prod.st_name,
-    //   unit_price: prod.unit_price,
-    //   image_url: prod.image_url,
-    //   qty: { qty },
-    // });
-
-    console.log(cartItems);
   };
 
   const getAllCategories = async () => {
