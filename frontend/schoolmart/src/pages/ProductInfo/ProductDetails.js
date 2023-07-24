@@ -109,6 +109,14 @@ const ProductDetails = (props) => {
     });
   };
 
+  const increaseQty = (v) => {
+    setQty(v);
+  };
+
+  const decreaseQty = (v) => {
+    setQty(v);
+  };
+
   const getAllCategories = async () => {
     console.log("Get all categories");
     let res = await CategoryService.getAll();
@@ -232,10 +240,12 @@ const ProductDetails = (props) => {
               {/* ---------Qty Changer----------------- */}
               <QtyChanger
                 qty={qty}
-                onClick={(e, v) => {
-                  console.log(v);
-                  setQty(v);
-                }}
+                // onClick={(e, v) => {
+                //   console.log(v);
+                //   setQty(v);
+                // }}
+                onIncrease={increaseQty}
+                onDecrease={decreaseQty}
               />
             </Grid>
             <Grid

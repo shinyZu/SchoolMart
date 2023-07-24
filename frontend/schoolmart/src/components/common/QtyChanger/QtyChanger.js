@@ -9,6 +9,7 @@ import { withStyles } from "@mui/styles";
 
 const QtyChanger = (props) => {
   const { classes } = props;
+  console.log(props);
   const [qty, setQty] = useState(props.qty);
 
   return (
@@ -39,7 +40,7 @@ const QtyChanger = (props) => {
               setQty(q);
             }
             // console.log({ qty });
-            props.onClick(e, q);
+            props.onDecrease(q);
           }}
         >
           <Typography variant="h8" className={classes.txt_minus_plus}>
@@ -76,7 +77,7 @@ const QtyChanger = (props) => {
             let q = qty + 1;
             setQty(q);
             // console.log(qty);
-            props.onClick(e, q);
+            props.onIncrease(q);
           }}
         >
           <Typography variant="h8" className={classes.txt_minus_plus}>

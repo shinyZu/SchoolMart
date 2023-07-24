@@ -14,14 +14,18 @@ import img_item_1 from "../../../assets/images/Home/Category/ct_pens.jpg";
 
 const CartItem = (props) => {
   const { classes, item } = props;
-  console.log(item);
 
-  // const [item, setItem] = useState(prod);
+  const [qty, setQty] = useState(item.qty);
 
-  // useEffect(() => {
-  //   console.log(item);
-  //   setItem(prod);
-  // }, []);
+  const increaseQty = (v) => {
+    setQty(v);
+    props.onUpdate(props.index, v);
+  };
+
+  const decreaseQty = (v) => {
+    setQty(v);
+    props.onUpdate(props.index, v);
+  };
 
   return (
     <>
@@ -93,7 +97,12 @@ const CartItem = (props) => {
           justifyContent="center"
           alignItems="center"
         >
-          <QtyChanger qty={item.qty} />
+          <QtyChanger
+            // qty={item.qty}
+            qty={qty}
+            onIncrease={increaseQty}
+            onDecrease={decreaseQty}
+          />
         </Grid>
 
         <Grid
@@ -109,7 +118,8 @@ const CartItem = (props) => {
           alignItems="center"
         >
           <Typography variant="h7" className={classes.txt_item_values}>
-            LKR {item.unit_price * item.qty}.00
+            {/* LKR {item.unit_price * item.qty}.00 */}
+            LKR {item.unit_price * qty}.00
           </Typography>
         </Grid>
 
@@ -127,8 +137,10 @@ const CartItem = (props) => {
         >
           <CancelIcon
             className={classes.btn_cancel}
-            onClick={(e) => {
+            onClick={(e, v) => {
               console.log("Delete clicked");
+              console.log(props.index);
+              props.onDelete(props.index);
             }}
           />
         </Grid>

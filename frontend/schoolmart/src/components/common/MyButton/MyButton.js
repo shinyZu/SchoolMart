@@ -13,7 +13,6 @@ const MyButton = (props) => {
         onClick={props.onClick}
         style={props.style}
         className={props.className}
-        onClick={props.onClick}
       >
         {props.label}
       </Button>
