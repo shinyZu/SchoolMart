@@ -165,3 +165,19 @@ input[type="text"]:not(#f_login):not(#f_pwd) {
 .css-1e6y48t-MuiButtonBase-root-MuiButton-root {
   font-family: "Acme", sans-serif !important;
 }
+
+/* Toggle Button Group */
+
+.css-6x4ptp-MuiButtonBase-root-MuiToggleButton-root {
+  font-family: "Acme", sans-serif !important;
+  border-radius: 50px !important;
+  background-color: #ebebeb !important;
+  border: 1px solid #ccc !important;
+  margin: 10px !important;
+}
+
+.css-6x4ptp-MuiButtonBase-root-MuiToggleButton-root.Mui-selected {
+  background-color: #c88ea7 !important;
+  border: 1px solid #ac7088 !important;
+  color: white !important;
+}

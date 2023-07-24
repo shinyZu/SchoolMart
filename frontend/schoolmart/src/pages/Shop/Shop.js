@@ -8,6 +8,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 
 import Header from "../../components/Header/Header";
+import MyToggleButtonGroup from "../../components/common/ToggleButton/MyToggleButtonGroup";
 import MyCategoryChip from "../../components/common/MyCategoryChip/MyCategoryChip";
 import ProductCard from "../../components/common/ProductCard/ProductCard";
 import Footer from "../../components/Footer/Footer";
@@ -24,21 +25,16 @@ const Shop = (props) => {
   const { classes } = props;
   const navigate = useNavigate();
 
-  const [isAllSelected, setIsAllSelected] = useState(true);
-  const [isWritingSelected, setIsWritingSelected] = useState(false);
-  const [isBookSelected, setIsBookSelected] = useState(false);
-  const [isArtSelected, setIsArtSelected] = useState(false);
-  const [isAdhesiveSelected, setIsAdhesiveSelected] = useState(false);
-  const [isBindersSelected, setIsBindersSelected] = useState(false);
-  const [isMathSelected, setIsMathSelected] = useState(false);
-  const [selectedChip, setSelectedChip] = useState([]);
-
-  // An array to store the dynamic states for each instance of MyCategoryChip component
-  const [dynamicStates, setDynamicStates] = useState([
-    "State Value 1",
-    "State Value 2",
-    // Add more initial states as needed
-  ]);
+  // const [isAllSelected, setIsAllSelected] = useState(true);
+  // const [isWritingSelected, setIsWritingSelected] = useState(false);
+  // const [isBookSelected, setIsBookSelected] = useState(false);
+  // const [isArtSelected, setIsArtSelected] = useState(false);
+  // const [isAdhesiveSelected, setIsAdhesiveSelected] = useState(false);
+  // const [isBindersSelected, setIsBindersSelected] = useState(false);
+  // const [isMathSelected, setIsMathSelected] = useState(false);
+  // const [isSelected, setIsSelected] = useState(false);
+  // const [selectedChipIndex, setSelectedChipIndex] = useState(-1);
+  const [selectedChip, setSelectedChip] = useState(-1);
 
   const [categories, setCategories] = useState([]);
   const [stationeryList, setStationeryList] = useState([]);
@@ -53,46 +49,44 @@ const Shop = (props) => {
   }, []);
 
   useEffect(() => {
-    if (isAllSelected) {
-      setIsWritingSelected(false);
-      setIsBookSelected(false);
-      setIsArtSelected(false);
-      setIsAdhesiveSelected(false);
-      setIsBindersSelected(false);
-      setIsMathSelected(false);
-    }
-  }, [isAllSelected]);
+    console.log("selectedChip effected............");
+    filterProducts(selectedChip);
+  }, [selectedChip]);
 
-  useEffect(() => {
-    if (
-      !isAllSelected &&
-      !isWritingSelected &&
-      !isBookSelected &&
-      !isArtSelected &&
-      !isAdhesiveSelected &&
-      !isBindersSelected &&
-      !isMathSelected
-    ) {
-      setIsAllSelected(true);
-    }
-  }, [
-    isAllSelected,
-    isWritingSelected,
-    isBookSelected,
-    isArtSelected,
-    isAdhesiveSelected,
-    isBindersSelected,
-    isMathSelected,
-  ]);
+  // useEffect(() => {
+  //   if (isAllSelected) {
+  //     setIsWritingSelected(false);
+  //     setIsBookSelected(false);
+  //     setIsArtSelected(false);
+  //     setIsAdhesiveSelected(false);
+  //     setIsBindersSelected(false);
+  //     setIsMathSelected(false);
+  //   }
+  // }, [isAllSelected]);
+
+  // useEffect(() => {
+  //   if (
+  //     !isAllSelected &&
+  //     !isWritingSelected &&
+  //     !isBookSelected &&
+  //     !isArtSelected &&
+  //     !isAdhesiveSelected &&
+  //     !isBindersSelected &&
+  //     !isMathSelected
+  //   ) {
+  //     setIsAllSelected(true);
+  //   }
+  // }, [
+  //   isAllSelected,
+  //   isWritingSelected,
+  //   isBookSelected,
+  //   isArtSelected,
+  //   isAdhesiveSelected,
+  //   isBindersSelected,
+  //   isMathSelected,
+  // ]);
 
   // A function to update the dynamic state based on the index
-  const updateDynamicState = (index, newState) => {
-    setDynamicStates((prevStates) => {
-      const newStates = [...prevStates];
-      newStates[index] = newState;
-      return newStates;
-    });
-  };
 
   const handleClick = () => {
     console.info("You clicked the Chip.");
@@ -157,30 +151,46 @@ const Shop = (props) => {
 
   const filterProducts = async () => {
     console.log("Get all related products");
-    // console.log(productData.product.category_id);
-    let res = await StationeryService.getAllProductsByCategoryId(1);
+    console.log(selectedChip);
 
-    let productsByCategory = res.data.data;
+    if (selectedChip == 0) {
+      getAllStationery();
+      return;
+    }
 
-    setFilteredProducts([]);
-    productsByCategory.map((product, index) => {
-      categories.map((category, index) => {
-        if (category.categoryId === product.category_id) {
-          setFilteredProducts((prev) => {
-            return [
-              ...prev,
-              {
-                category: category.categoryTitle,
-                st_name: product.st_name,
-                unit_price: product.unit_price,
-                image_url: product.image_url,
-              },
-            ];
+    if (selectedChip > 0) {
+      categories.map(async (category, index) => {
+        if (selectedChip === category.categoryId) {
+          console.log(category.categoryId);
+
+          let res = await StationeryService.getAllProductsByCategoryId(
+            category.categoryId
+          );
+
+          let productsByCategory = res.data.data;
+
+          setStationeryList([]);
+          productsByCategory.map((product, index) => {
+            categories.map((category, index) => {
+              if (category.categoryId === product.category_id) {
+                setStationeryList((prev) => {
+                  return [
+                    ...prev,
+                    {
+                      category: category.categoryTitle,
+                      st_name: product.st_name,
+                      unit_price: product.unit_price,
+                      image_url: product.image_url,
+                    },
+                  ];
+                });
+              }
+            });
           });
+          console.log(stationeryList);
         }
       });
-    });
-    console.log(filteredProducts);
+    }
   };
 
   return (
@@ -219,18 +229,18 @@ const Shop = (props) => {
               xs={6}
               className={classes.container_1_0}
               display="flex"
-              justifyContent="space-between"
+              justifyContent="end"
             >
-              <MyCategoryChip
+              {/* <MyCategoryChip
                 label="All"
                 css_selected={classes.chip_all_selected}
                 css_deselected={classes.chip_all_deselected}
-                isSelected={isAllSelected}
+                isAllSelected={isAllSelected}
                 onClick={(e) => {
-                  console.log("writing selected");
+                  console.log("changing all selected");
                   setIsAllSelected(!isAllSelected);
                 }}
-              />
+              /> */}
               <Autocomplete
                 className={classes.sort_dropdown}
                 disablePortal
@@ -265,38 +275,17 @@ const Shop = (props) => {
               justifyContent="space-between"
             >
               {/* -------Category Chips------------ */}
-              {categories.map((category, index) => {
-                while (index < categories.length) {
-                  return (
-                    <>
-                      <MyCategoryChip
-                        key={index}
-                        label={category.categoryTitle}
-                        css_selected={classes.chip_selected}
-                        css_deselected={classes.chip_deselected}
-                        // setStateProp={(newState) => updateDynamicState(index, newState)}
-                        setStateProp={() => {
-                          console.log("dynamic states");
-                        }}
-                        onClick={(e) => {
-                          setIsAllSelected(false);
-                          console.log("dynamic states");
-                          // setSelectedChip((prev) => {
-                          //   return [
-                          //     ...prev,
-                          //     {
-                          //       index: index,
-                          //       category: category.categoryTitle,
 
-                          //     },
-                          //   ];
-                          // });
-                        }}
-                      />
-                    </>
-                  );
-                }
-              })}
+              <MyToggleButtonGroup
+                data={categories}
+                css_selected={classes.chip_selected}
+                css_deselected={classes.chip_deselected}
+                onClick={(e, v) => {
+                  // console.log("in shop");
+                  // console.log(--v);
+                  setSelectedChip(v);
+                }}
+              />
 
               {/* <MyCategoryChip
                 label="Writing Equipment"
