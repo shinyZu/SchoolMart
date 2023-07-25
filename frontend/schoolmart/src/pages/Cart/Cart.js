@@ -18,30 +18,6 @@ import { withStyles } from "@mui/styles";
 import StationeryService from "../../services/StationeryService";
 import CategoryService from "../../services/CategoryService";
 
-// const cartItems = [
-//   {
-//     img_url: "https://drive.google.com/uc?id=1udcfVrDsgSqJEZnTGhjHxH3NDyd17EAe",
-//     productName: "Product 01",
-//     price: 180.0,
-//     qty: 1,
-//     subtotal: 180.0,
-//   },
-//   {
-//     img_url: "https://drive.google.com/uc?id=1pE7g9RUBB27Gu9l46bnFBkwvaKBhP_D9",
-//     productName: "Product 02",
-//     price: 100.0,
-//     qty: 3,
-//     subtotal: 300.0,
-//   },
-//   {
-//     img_url: "https://drive.google.com/uc?id=195Fima7KXJJuN0X0vf2fCIU6gSQwEvsK",
-//     productName: "Product 03",
-//     price: 500.0,
-//     qty: 3,
-//     subtotal: 1500.0,
-//   },
-// ];
-
 const Cart = (props) => {
   const { classes } = props;
   const location = useLocation();
@@ -49,22 +25,14 @@ const Cart = (props) => {
 
   // const [receivedData, setReceivedData] = useState(location.state);
   const [receivedData, setReceivedData] = useState(null);
-
-  // if (receivedData) {
-  //   const { product, wantedQty } = receivedData;
-  //   console.log(product);
-  //   console.log(wantedQty);
-  // }
-
   // const storedItems = localStorage.getItem("cartProducts");
 
   const [qty, setQty] = useState(0);
   const [cartItemData, setCartItemData] = useState({});
-  // const [cartItems, setCartItems] = useState([]);
+  //   const [cartItems, setCartItems] = useState([]);
 
   const [cartItems, setCartItems] = useState(() => {
-    // Retrieve cart items from localStorage on initial render
-    const savedCartItems = localStorage.getItem("cartProducts");
+    const savedCartItems = localStorage.getItem("test");
     return savedCartItems ? JSON.parse(savedCartItems) : [];
   });
 
@@ -76,129 +44,24 @@ const Cart = (props) => {
 
   useEffect(() => {
     console.log("=-------UE-1---------------");
-    // getAllCategories();
-    // getAllStationery();
-    setReceivedData(data);
-  }, []);
+    console.log(cartItems);
+    if (data) {
+      setQty(data.wantedQty.data);
+    }
+    calculateFinalSubTotal();
+  });
 
   useEffect(() => {
     console.log("=-------UE-2---------------");
-    console.log(receivedData);
-    addToCart();
-  }, [receivedData]);
+    console.log("=-qty changed updated total-----");
 
-  useEffect(() => {
-    console.log("=-------UE-3---------------");
-    console.log(cartItems);
-
-    // Save cart items to localStorage whenever cartItems state changes
-    localStorage.setItem("cartProducts", JSON.stringify(cartItems));
-
-    const savedCartItems = localStorage.getItem("cartProducts");
-    calculateFinalSubTotal(savedCartItems);
-  }, [/* cartItemData,  */ cartItems /* , receivedData */]);
-
-  useEffect(() => {
-    console.log("=-------UE-3-4---------------");
+    calculateFinalSubTotal();
     console.log(finalSubtotal);
-
-    const savedCartItems = localStorage.getItem("cartProducts");
-    calculateFinalSubTotal(savedCartItems);
-  }, [finalSubtotal]);
-
-  useEffect(() => {
-    console.log("=-------UE-4---------------");
-    // console.log(finalSubtotal);
-    console.log(qty);
-
-    // const savedCartItems = localStorage.getItem("cartProducts");
-    // calculateFinalSubTotal(savedCartItems);
-    // setReceivedData(null);
-  }, [qty /* , cartItems, qty, receivedData*/]);
-
-  const addToCart = () => {
-    console.log("-------called addToCart------");
-    console.log(receivedData);
-    if (receivedData) {
-      let prod = receivedData.product;
-      let wantedQty = receivedData.wantedQty.qty;
-
-      let newItem = {
-        category_id: prod.category_id,
-        category: prod.category,
-        st_code: prod.st_code,
-        st_name: prod.st_name,
-        unit_price: prod.unit_price,
-        image_url: prod.image_url,
-        qty: wantedQty,
-        // qty: qty,
-        subtotal: prod.unit_price * wantedQty,
-      };
-
-      // const updatedCart = [...cartItems, newItem];
-      // setCartItems(updatedCart);
-      // setQty(wantedQty);
-
-      // Check whether the item is aleady in the cart
-      // let itemExists = checkItemExist(prod, cartItems);
-
-      // if (!itemExists) {
-      //   console.log("item doesnt exists------------");
-      //   const updatedCart = [...cartItems, newItem];
-      //   setCartItems(updatedCart);
-      //   setQty(wantedQty);
-      // } else {
-      //   console.log("item exists------------");
-      //   let itemIndex = -1;
-      //   cartItems.map((ct, index) => {
-      //     if (ct.st_code == prod.st_code) {
-      //       itemIndex = index;
-      //     }
-      //   });
-      //   console.log(itemIndex);
-      //   updateExistingItem(itemIndex, wantedQty);
-
-      // }
-
-      const existingProductIndex = cartItems.findIndex(
-        (item) => item.st_code === prod.st_code
-      );
-      if (existingProductIndex !== -1) {
-        console.log("item exists------------");
-        // If the product already exists in the cart, update its quantity
-        const updatedCartItems = [...cartItems];
-        console.log(wantedQty);
-        console.log(updatedCartItems[existingProductIndex].qty);
-        updatedCartItems[existingProductIndex].qty += wantedQty;
-        // updatedCartItems[existingProductIndex].qty += qty;
-        console.log(updatedCartItems);
-        setCartItems(updatedCartItems);
-        setQty(updatedCartItems[existingProductIndex].qty + wantedQty);
-
-        localStorage.removeItem("cartProducts");
-        localStorage.setItem("cartProducts", JSON.stringify(updatedCartItems));
-        const savedCartItems = localStorage.getItem("cartProducts");
-        // calculateFinalSubTotal(savedCartItems);
-        console.log("item qty updated succesfully in LS------------");
-      } else {
-        console.log("item doesnt exists------------");
-        // If the product doesn't exist in the cart, add it to the list
-        // const newCartItem = { ...prod, qty: wantedQty };
-        // setCartItems((prevCartItems) => [...prevCartItems, newCartItem]);
-        // setQty(wantedQty);
-
-        const updatedCart = [...cartItems, newItem];
-        setCartItems(updatedCart);
-        setQty(wantedQty);
-      }
-    }
-
-    // setReceivedData(null);
-  };
+  }, [qty]);
 
   const calculateFinalSubTotal = () => {
     console.log("=-------calculateFinalSubTotal---------------");
-    const savedCartItems = localStorage.getItem("cartProducts");
+    const savedCartItems = localStorage.getItem("test");
     console.log(JSON.parse(savedCartItems));
     if (JSON.parse(savedCartItems)) {
       let final_subtotal = 0;
@@ -206,21 +69,6 @@ const Cart = (props) => {
         final_subtotal += item.subtotal;
         console.log(final_subtotal);
         setFinalSubTotal(final_subtotal);
-        // setQty(item.qty);
-      }
-    }
-    // setReceivedData(null);
-  };
-
-  const checkItemExist = (item, currentCartItems) => {
-    console.log("=-------checkItemExist---------------");
-    for (const obj of currentCartItems) {
-      if (obj.st_code == item.st_code) {
-        console.log("------------item exists");
-        return true;
-      } else {
-        console.log("------------no item exists");
-        return false;
       }
     }
   };
@@ -238,47 +86,21 @@ const Cart = (props) => {
       if (existingCartItem[0].st_code == cartProd.st_code) {
         cartProd.qty = newQty;
         cartProd.subtotal = cartProd.unit_price * newQty;
+        console.log(newQty);
+        if (newQty == 0) {
+          console.log("subtotal should be equal to unit price");
+          cartProd.qty = 1;
+          cartProd.subtotal = cartProd.unit_price;
+        }
       }
+      console.log(cartProd);
     });
     console.log(cartItems);
     setCartItems(cartItems);
-    setQty(newQty);
 
-    localStorage.removeItem("cartProducts");
-    localStorage.setItem("cartProducts", JSON.stringify(cartItems));
-    const savedCartItems = localStorage.getItem("cartProducts");
-    calculateFinalSubTotal(savedCartItems);
-
-    // setReceivedData(null);
-  };
-
-  const updateExistingItem = (itemId, newQty) => {
-    console.log("=-------updateExistingItem---------------");
-    // const updateExistingItem = () => {
-
-    const existingCartItem = cartItems.filter(
-      (item, index) => index === itemId
-    );
-    console.log(newQty);
-    existingCartItem[0].qty = newQty;
-    console.log(existingCartItem);
-
-    cartItems.map((cartProd, index) => {
-      if (existingCartItem[0].st_code == cartProd.st_code) {
-        let updatedQty = cartProd.qty + newQty;
-        cartProd.qty = updatedQty;
-        cartProd.subtotal = cartProd.unit_price * updatedQty;
-      }
-    });
-    console.log(cartItems);
-    setCartItems(cartItems);
-    setQty(newQty);
-
-    localStorage.removeItem("cartProducts");
-    localStorage.setItem("cartProducts", JSON.stringify(cartItems));
-    const savedCartItems = localStorage.getItem("cartProducts");
-    calculateFinalSubTotal(savedCartItems);
-    // setReceivedData(null);
+    localStorage.removeItem("test");
+    localStorage.setItem("test", JSON.stringify(cartItems));
+    calculateFinalSubTotal();
   };
 
   const removeFromCart = (itemId) => {
@@ -286,6 +108,7 @@ const Cart = (props) => {
     const updatedCart = cartItems.filter((item, index) => index !== itemId);
     setCartItems(updatedCart);
     console.log(updatedCart);
+    localStorage.setItem("test", JSON.stringify(updatedCart));
     if (updatedCart.length == 0) {
       setFinalSubTotal(0);
     }
