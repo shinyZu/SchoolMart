@@ -22,83 +22,266 @@ import Footer from "../../components/Footer/Footer";
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
 
-// import img_item_1 from "../../assets/images/Home/Category/ct_pens.jpg";
+import BillingService from "../../services/BillingService";
+import OrderService from "../../services/OrderService";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-const img_item_1 =
-  "https://drive.google.com/uc?id=195Fima7KXJJuN0X0vf2fCIU6gSQwEvsK";
-
-const orderSummaryItems = [
-  {
-    img_url: "https://drive.google.com/uc?id=1udcfVrDsgSqJEZnTGhjHxH3NDyd17EAe",
-    productName: "Product 01",
-    price: 180,
-    qty: 1,
-    subtotal: 180,
-  },
-
-  {
-    img_url: "https://drive.google.com/uc?id=1pE7g9RUBB27Gu9l46bnFBkwvaKBhP_D9",
-    productName: "Product 02",
-    price: 100,
-    qty: 3,
-    subtotal: 300,
-  },
-
-  {
-    img_url: "https://drive.google.com/uc?id=195Fima7KXJJuN0X0vf2fCIU6gSQwEvsK",
-    productName: "Product 03",
-    price: 500,
-    qty: 3,
-    subtotal: 1500,
-  },
-];
-
 const Checkout = (props) => {
   const { classes } = props;
-  //   const { state } = useLocation();
+  const navigate = useNavigate();
+
   const location = useLocation();
   const receivedData = location.state; // The data sent from the previous page
 
-  //   Billing Info
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [country, setCountry] = useState("");
-  const [province, setProvince] = useState("");
-  const [streetAddress, setStreetAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [postalCode, setPostalCode] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  // Billing & Payment Info
+  const [billingInfoForm, setBillingInfoForm] = useState({
+    billing_id: "",
+    first_name: "",
+    last_name: "",
+    country: "",
+    province: "",
+    city: "",
+    street_address: "",
+    zip_code: "",
+    phone_no: "",
+    card_payment: true,
+    cash_on_delivery: false,
+    card_no: "",
+    card_holder_name: "",
+    card_expire_date: "",
+    card_cvv: "",
+    billing_status: "Pending",
+    coupon_price: "",
+    user_id: "",
+  });
+
+  const [billingDetailsFound, setBillingDetailsFound] = useState(false);
 
   //   Payment Info
-  const [paymentType, setPaymntType] = useState("card");
-  const [cardNo, setCardNo] = useState("");
-  const [cardHolderName, setCardHolderName] = useState("");
-  const [cardExpireDate, setCardExpireDate] = useState("");
-  const [cvv, setCVV] = useState("");
+  const [paymentType, setPaymentType] = useState("card");
   const [checked, setChecked] = useState(false);
 
   //   Order Summary
   const [finalSubtotal, setFinalSubTotal] = useState(0);
+  const [cart, setCart] = useState(() => {
+    const savedCartItems = localStorage.getItem("cart");
+    return savedCartItems ? JSON.parse(savedCartItems) : [];
+  });
+
+  // Order Details
+  // const [orderDetails, setOrderDetails] = useState({});
+
+  // Place Order btn
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  // Display Payment Details Form
+  const [isVisible, setIsVisible] = useState(true);
+
+  // Totals
+  const [shipping, setShipping] = useState(0);
+  const [discount, setDiscount] = useState(0);
+
+  useEffect(() => {
+    getBillingDetailsOfTheLoggedUser();
+  }, []);
+
+  useEffect(() => {
+    let isFilled = areAllValuesFilled();
+    if (isFilled) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+
+    // }
+  }, [billingInfoForm]);
 
   useEffect(() => {
     let final_subtotal = 0;
-    for (let item of orderSummaryItems) {
+    for (let item of cart) {
       final_subtotal += item.subtotal;
       console.log(final_subtotal);
       setFinalSubTotal(final_subtotal);
     }
   }, [finalSubtotal]);
 
+  // Function to check if all values in the 'billingInfoForm' object are filled
+  const areAllValuesFilled = () => {
+    const excludedKeys = [
+      "_id",
+      "billing_id",
+      "billing_status",
+      "card_payment",
+      "cash_on_delivery",
+      "coupon_price",
+      "user_id",
+      "__v",
+    ];
+    for (const key in billingInfoForm) {
+      if (!excludedKeys.includes(key)) {
+        console.log(key + " : " + billingInfoForm[key]);
+        if (!billingInfoForm[key]) {
+          return false; // If any non-excluded value is falsy, return false
+        }
+      }
+    }
+    return true; // All non-excluded values are filled
+  };
+
   const handlePaymentType = (event) => {
-    setPaymntType(event.target.value);
+    console.log(event.target.value);
+    setPaymentType(event.target.value);
   };
 
   const handleCheckBox = (event) => {
     console.log(checked);
     setChecked(event.target.checked);
+  };
+
+  const getBillingDetailsOfTheLoggedUser = async () => {
+    console.log("getBillingDetailsOfTheLoggedUser");
+    let res = await BillingService.getAllByCustomerId();
+
+    if (res.status === 200) {
+      let customerBillingInfo = res.data.data;
+      // console.log(customerBillingInfo);
+      setBillingInfoForm(customerBillingInfo);
+      setBillingDetailsFound(true);
+      setIsDisabled(false);
+    } else {
+      console.log("No any billing details found for this user.");
+      setBillingDetailsFound(false);
+    }
+
+    // TODO
+    setBillingInfoForm((prevData) => ({
+      ...prevData, // Copy all the properties from the previous state
+      user_id: 3, // Update the 'user_id' with the new value
+      coupon_price: receivedData.coupon,
+    }));
+    console.log(billingInfoForm);
+  };
+
+  const placeOrder = async () => {
+    console.log("placeOrder");
+    // TODO: get the user id from token and set here
+    console.log(billingDetailsFound);
+    console.log(billingInfoForm);
+
+    if (billingDetailsFound) {
+      console.log("---------1-----------");
+      // update billing info
+      console.log(billingInfoForm.card_payment);
+      console.log(billingInfoForm.cash_on_delivery);
+      console.log(billingInfoForm);
+      let res1 = await BillingService.updateBillingDetails(billingInfoForm);
+      if (res1.status === 200) {
+        console.log("---------2-----------");
+        console.log("Billing details updated successfully!");
+        alert(res1.data.message);
+      } else {
+        console.log("---------3-----------");
+        alert(res1.response.data.message);
+        return;
+      }
+    } else if (!billingDetailsFound && areAllValuesFilled()) {
+      console.log("---------4-----------");
+      // save billing info
+
+      let res2 = await BillingService.saveBillingDetails(billingInfoForm);
+      if (res2.status === 201) {
+        console.log("---------5-----------");
+        console.log("Billing details saved successfully!");
+        alert(res2.data.message);
+      } else {
+        console.log("---------6-----------");
+        alert(res2.response.data.message);
+        return;
+      }
+    }
+
+    // create order details list
+    let orderDetailsList = [];
+    const savedCartItems = localStorage.getItem("cart");
+    for (const item of JSON.parse(savedCartItems)) {
+      let obj = {
+        st_code: item.st_code,
+        order_qty: item.qty,
+      };
+      orderDetailsList.push(obj);
+    }
+    console.log(orderDetailsList);
+
+    // create order details
+    let orderData = {
+      order_date: new Date(),
+      order_cost: calculateOrdeCost(),
+      order_status: "Pending",
+      user_id: 3, // TODO
+      order_details: orderDetailsList,
+    };
+    console.log(orderData);
+
+    console.log("---------7-----------");
+    console.log("----now lets save order-------");
+    let res3 = await OrderService.placeOrder(orderData);
+
+    if (res3.status === 201) {
+      console.log("---------8-----------");
+      console.log("Order saved successfully!");
+      alert(res3.data.message);
+    } else {
+      console.log("---------9-----------");
+      alert(res3.response.data.message);
+      return;
+    }
+
+    clearFields();
+    navigate("/home");
+    clearCart();
+    clearTotals();
+  };
+
+  const calculateOrdeCost = () => {
+    // finalsubtotal - coupon
+
+    let cartTotal = finalSubtotal + shipping - receivedData.coupon - discount;
+    console.log("cartTotal Rs: " + cartTotal);
+    return cartTotal;
+  };
+  const clearFields = () => {
+    setBillingInfoForm({
+      billing_id: "",
+      first_name: "",
+      last_name: "",
+      country: "",
+      province: "",
+      city: "",
+      street_address: "",
+      zip_code: "",
+      phone_no: "",
+      card_payment: true,
+      cash_on_delivery: false,
+      card_no: "",
+      card_holder_name: "",
+      card_expire_date: "",
+      card_cvv: "",
+      billing_status: "",
+      coupon_price: "",
+      user_id: "",
+    });
+
+    setIsDisabled(true);
+  };
+
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("cart");
+  };
+
+  const clearTotals = () => {
+    setFinalSubTotal(0);
   };
 
   return (
@@ -199,9 +382,16 @@ const Checkout = (props) => {
                     variant="outlined"
                     type="text"
                     id="f_name"
+                    label="First Name"
                     placeholder="First Name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    value={billingInfoForm.first_name}
+                    onChange={(e) => {
+                      setBillingInfoForm({
+                        ...billingInfoForm,
+                        first_name: e.target.value,
+                      });
+                    }}
+                    // onChange={(e) => setFirstName(e.target.value)}
                     style={{ width: "100%", paddingTop: "5px" }}
                   />
                 </Grid>
@@ -219,9 +409,16 @@ const Checkout = (props) => {
                     variant="outlined"
                     type="text"
                     id="l_name"
+                    label="Last Name"
                     placeholder="Last Name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    value={billingInfoForm.last_name}
+                    onChange={(e) => {
+                      setBillingInfoForm({
+                        ...billingInfoForm,
+                        last_name: e.target.value,
+                      });
+                    }}
+                    // onChange={(e) => setFirstName(e.target.value)}
                     style={{ width: "100%", paddingTop: "5px" }}
                   />
                 </Grid>
@@ -252,9 +449,16 @@ const Checkout = (props) => {
                     variant="outlined"
                     type="text"
                     id="country"
+                    label="Country / Region"
                     placeholder="Country / Region"
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
+                    value={billingInfoForm.country}
+                    onChange={(e) => {
+                      setBillingInfoForm({
+                        ...billingInfoForm,
+                        country: e.target.value,
+                      });
+                    }}
+                    // onChange={(e) => setCountry(e.target.value)}
                     style={{ width: "100%", paddingTop: "5px" }}
                   />
                 </Grid>
@@ -272,9 +476,16 @@ const Checkout = (props) => {
                     variant="outlined"
                     type="text"
                     id="province"
+                    label="State / Province"
                     placeholder="State / Province"
-                    value={province}
-                    onChange={(e) => setProvince(e.target.value)}
+                    value={billingInfoForm.province}
+                    onChange={(e) => {
+                      setBillingInfoForm({
+                        ...billingInfoForm,
+                        province: e.target.value,
+                      });
+                    }}
+                    // onChange={(e) => setProvince(e.target.value)}
                     style={{ width: "100%", paddingTop: "5px" }}
                   />
                 </Grid>
@@ -305,9 +516,16 @@ const Checkout = (props) => {
                     variant="outlined"
                     type="text"
                     id="address"
+                    label="Street Address"
                     placeholder="Street Address"
-                    value={streetAddress}
-                    onChange={(e) => setStreetAddress(e.target.value)}
+                    value={billingInfoForm.street_address}
+                    onChange={(e) => {
+                      setBillingInfoForm({
+                        ...billingInfoForm,
+                        street_address: e.target.value,
+                      });
+                    }}
+                    // onChange={(e) => setStreetAddress(e.target.value)}
                     style={{ width: "100%", paddingTop: "5px" }}
                   />
                 </Grid>
@@ -338,9 +556,16 @@ const Checkout = (props) => {
                     variant="outlined"
                     type="text"
                     id="city"
+                    label="Town / City"
                     placeholder="Town / City"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
+                    value={billingInfoForm.city}
+                    onChange={(e) => {
+                      setBillingInfoForm({
+                        ...billingInfoForm,
+                        city: e.target.value,
+                      });
+                    }}
+                    // onChange={(e) => setCity(e.target.value)}
                     style={{ width: "100%", paddingTop: "5px" }}
                   />
                 </Grid>
@@ -358,9 +583,16 @@ const Checkout = (props) => {
                     variant="outlined"
                     type="text"
                     id="postal"
+                    label="Postal / ZIP Code"
                     placeholder="Postal / ZIP Code"
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
+                    value={billingInfoForm.zip_code}
+                    onChange={(e) => {
+                      setBillingInfoForm({
+                        ...billingInfoForm,
+                        zip_code: e.target.value,
+                      });
+                    }}
+                    // onChange={(e) => setPostalCode(e.target.value)}
                     style={{ width: "100%", paddingTop: "5px" }}
                   />
                 </Grid>
@@ -391,14 +623,27 @@ const Checkout = (props) => {
                     variant="outlined"
                     type="text"
                     id="phone"
+                    label="Phone"
                     placeholder="Phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    value={billingInfoForm.phone_no}
+                    onChange={(e) => {
+                      const numericValue = e.target.value.replace(
+                        /[^0-9]/g,
+                        ""
+                      ); // Remove non-numeric characters
+                      setBillingInfoForm({
+                        ...billingInfoForm,
+                        phone_no: numericValue,
+                      });
+                    }}
+                    inputProps={{
+                      pattern: "[0-9]*",
+                    }}
                     style={{ width: "100%", paddingTop: "5px" }}
                   />
                 </Grid>
 
-                <Grid
+                {/* <Grid
                   item
                   xl={5.8}
                   lg={5.8}
@@ -412,11 +657,17 @@ const Checkout = (props) => {
                     type="text"
                     id="email"
                     placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={billingInfoForm.email}
+                    onChange={(e) => {
+                      setBillingInfoForm({
+                        ...billingInfoForm,
+                        email: e.target.value,
+                      });
+                    }}
+                    // onChange={(e) => setEmail(e.target.value)}
                     style={{ width: "100%", paddingTop: "5px" }}
                   />
-                </Grid>
+                </Grid> */}
               </Grid>
             </Grid>
 
@@ -468,7 +719,26 @@ const Checkout = (props) => {
                     aria-labelledby="demo-controlled-radio-buttons-group"
                     name="controlled-radio-buttons-group"
                     value={paymentType}
-                    onChange={handlePaymentType}
+                    // onChange={handlePaymentType}
+                    onChange={(e) => {
+                      let type = e.target.value;
+                      if (type === "card") {
+                        setBillingInfoForm({
+                          ...billingInfoForm,
+                          card_payment: true,
+                          cash_on_delivery: false,
+                        });
+                        setIsVisible(true);
+                      } else {
+                        setBillingInfoForm({
+                          ...billingInfoForm,
+                          card_payment: false,
+                          cash_on_delivery: true,
+                        });
+                        setIsVisible(false);
+                      }
+                      setPaymentType(type);
+                    }}
                   >
                     <FormControlLabel
                       value="card"
@@ -504,141 +774,183 @@ const Checkout = (props) => {
 
               {/* --------------Payment Text Fields ------------- */}
 
-              <Grid
-                container
-                rowGap={2}
-                xl={12}
-                lg={12}
-                md={12}
-                sm={12}
-                xs={12}
-                className={classes.payment_info_fields_container}
-                display="flex"
-                justifyContent="space-between"
-              >
-                {/* -------- Row 1 ------------- */}
+              {isVisible ? (
                 <Grid
                   container
+                  rowGap={2}
                   xl={12}
                   lg={12}
                   md={12}
                   sm={12}
                   xs={12}
-                  className={classes.payment_info_row}
+                  className={classes.payment_info_fields_container}
                   display="flex"
                   justifyContent="space-between"
                 >
+                  {/* -------- Row 1 ------------- */}
                   <Grid
-                    item
+                    container
                     xl={12}
                     lg={12}
                     md={12}
                     sm={12}
                     xs={12}
                     className={classes.payment_info_row}
+                    display="flex"
+                    justifyContent="space-between"
                   >
-                    <MyTextField
-                      variant="outlined"
-                      type="text"
-                      id="card_no"
-                      placeholder="Card Number"
-                      value={cardNo}
-                      onChange={(e) => setCardNo(e.target.value)}
-                      style={{ width: "100%", paddingTop: "5px" }}
-                    />
+                    <Grid
+                      item
+                      xl={12}
+                      lg={12}
+                      md={12}
+                      sm={12}
+                      xs={12}
+                      className={classes.payment_info_row}
+                    >
+                      <MyTextField
+                        variant="outlined"
+                        type="text"
+                        id="card_no"
+                        label="Card Number"
+                        placeholder="Card Number"
+                        value={billingInfoForm.card_no}
+                        onChange={(e) => {
+                          const numericValue = e.target.value.replace(
+                            /[^0-9]/g,
+                            ""
+                          );
+                          setBillingInfoForm({
+                            ...billingInfoForm,
+                            card_no: numericValue,
+                          });
+                        }}
+                        inputProps={{
+                          pattern: "[0-9]*",
+                        }}
+                        style={{ width: "100%", paddingTop: "5px" }}
+                      />
+                    </Grid>
                   </Grid>
-                </Grid>
 
-                {/* -------- Row 2 ------------- */}
-                <Grid
-                  container
-                  xl={12}
-                  lg={12}
-                  md={12}
-                  sm={12}
-                  xs={12}
-                  className={classes.payment_info_row}
-                  display="flex"
-                  justifyContent="space-between"
-                >
+                  {/* -------- Row 2 ------------- */}
                   <Grid
-                    item
+                    container
                     xl={12}
                     lg={12}
                     md={12}
                     sm={12}
                     xs={12}
                     className={classes.payment_info_row}
+                    display="flex"
+                    justifyContent="space-between"
                   >
-                    <MyTextField
-                      variant="outlined"
-                      type="text"
-                      id="card_holder"
-                      placeholder="Card Holder Name"
-                      value={cardHolderName}
-                      onChange={(e) => setCardHolderName(e.target.value)}
-                      style={{ width: "100%", paddingTop: "5px" }}
-                    />
-                  </Grid>
-                </Grid>
-
-                {/* -------- Row 3 ------------- */}
-                <Grid
-                  container
-                  xl={12}
-                  lg={12}
-                  md={12}
-                  sm={12}
-                  xs={12}
-                  className={classes.payment_info_row}
-                  display="flex"
-                  justifyContent="space-between"
-                >
-                  <Grid
-                    item
-                    xl={5.8}
-                    lg={5.8}
-                    md={5.8}
-                    sm={12}
-                    xs={12}
-                    className={classes.payment_info_row_left}
-                  >
-                    <MyTextField
-                      variant="outlined"
-                      type="text"
-                      id="expireDate"
-                      placeholder="Expires MM/YY"
-                      value={cardExpireDate}
-                      onChange={(e) => setCardExpireDate(e.target.value)}
-                      style={{ width: "100%", paddingTop: "5px" }}
-                    />
+                    <Grid
+                      item
+                      xl={12}
+                      lg={12}
+                      md={12}
+                      sm={12}
+                      xs={12}
+                      className={classes.payment_info_row}
+                    >
+                      <MyTextField
+                        variant="outlined"
+                        type="text"
+                        id="card_holder"
+                        label="Card Holder Name"
+                        placeholder="Card Holder Name"
+                        value={billingInfoForm.card_holder_name}
+                        onChange={(e) => {
+                          setBillingInfoForm({
+                            ...billingInfoForm,
+                            card_holder_name: e.target.value,
+                          });
+                        }}
+                        // onChange={(e) => setCardHolderName(e.target.value)}
+                        style={{ width: "100%", paddingTop: "5px" }}
+                      />
+                    </Grid>
                   </Grid>
 
+                  {/* -------- Row 3 ------------- */}
                   <Grid
-                    item
-                    xl={5.8}
-                    lg={5.8}
-                    md={5.8}
+                    container
+                    xl={12}
+                    lg={12}
+                    md={12}
                     sm={12}
                     xs={12}
-                    className={classes.payment_info_row_right}
+                    className={classes.payment_info_row}
+                    display="flex"
+                    justifyContent="space-between"
                   >
-                    <MyTextField
-                      variant="outlined"
-                      type="text"
-                      id="cvv"
-                      placeholder="CVV"
-                      value={cvv}
-                      onChange={(e) => setCVV(e.target.value)}
-                      style={{ width: "100%", paddingTop: "5px" }}
-                    />
+                    <Grid
+                      item
+                      xl={5.8}
+                      lg={5.8}
+                      md={5.8}
+                      sm={12}
+                      xs={12}
+                      className={classes.payment_info_row_left}
+                    >
+                      <MyTextField
+                        variant="outlined"
+                        type="text"
+                        id="expireDate"
+                        label="Expires MM/YY"
+                        placeholder="Expires MM/YY"
+                        value={billingInfoForm.card_expire_date}
+                        onChange={(e) => {
+                          setBillingInfoForm({
+                            ...billingInfoForm,
+                            card_expire_date: e.target.value,
+                          });
+                        }}
+                        // onChange={(e) => setCardExpireDate(e.target.value)}
+                        style={{ width: "100%", paddingTop: "5px" }}
+                      />
+                    </Grid>
+
+                    <Grid
+                      item
+                      xl={5.8}
+                      lg={5.8}
+                      md={5.8}
+                      sm={12}
+                      xs={12}
+                      className={classes.payment_info_row_right}
+                    >
+                      <MyTextField
+                        variant="outlined"
+                        type="text"
+                        id="cvv"
+                        label="CVV"
+                        placeholder="CVV"
+                        value={billingInfoForm.card_cvv}
+                        onChange={(e) => {
+                          const numericValue = e.target.value.replace(
+                            /[^0-9]/g,
+                            ""
+                          );
+                          setBillingInfoForm({
+                            ...billingInfoForm,
+                            card_cvv: numericValue,
+                          });
+                        }}
+                        inputProps={{
+                          pattern: "[0-9]*",
+                        }}
+                        style={{ width: "100%", paddingTop: "5px" }}
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              ) : null}
 
               {/* ----------------Save & Confirm Payment Info -------------- */}
 
-              <Grid
+              {/* <Grid
                 container
                 xl={12}
                 lg={12}
@@ -665,11 +977,11 @@ const Checkout = (props) => {
                     label="Save card details."
                   />
                 </FormGroup>
-              </Grid>
+              </Grid> */}
 
               {/* ---------- Save Card Detail button -------------- */}
 
-              <Grid
+              {/* <Grid
                 item
                 xl={6}
                 lg={6}
@@ -690,7 +1002,7 @@ const Checkout = (props) => {
                     console.log("Saved Card Details");
                   }}
                 />
-              </Grid>
+              </Grid> */}
             </Grid>
           </Grid>
 
@@ -747,14 +1059,14 @@ const Checkout = (props) => {
             </Grid>
 
             {/*--------------------- Item Summary ------------------------ */}
-            {orderSummaryItems.map((item, index) => {
+            {cart.map((item, index) => {
               return <SummaryItem key={index} item={item} />;
             })}
 
             {/* ----------- Order Totals ----------- */}
             <CartTotals
               subtotal={finalSubtotal}
-              coupon={receivedData.coupon}
+              coupon={finalSubtotal == 0 ? 0 : receivedData.coupon}
               shipping={0.0}
               discount={0.0}
             />
@@ -774,10 +1086,16 @@ const Checkout = (props) => {
                 size="large"
                 variant="outlined"
                 type="button"
-                className={classes.btn_place_order}
+                disabled={isDisabled}
+                className={
+                  isDisabled
+                    ? classes.btn_place_order_disabled
+                    : classes.btn_place_order
+                }
                 style={{ width: "100%", height: "90%" }}
                 onClick={(e) => {
-                  console.log("Order Placed");
+                  // console.log("Order Placed");
+                  placeOrder();
                 }}
               />
               {/* </Link> */}

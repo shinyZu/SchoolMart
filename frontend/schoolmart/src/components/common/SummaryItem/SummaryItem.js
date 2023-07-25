@@ -36,33 +36,33 @@ const SummaryItem = (props) => {
           sm={1}
           xs={1}
           className={classes.tbl_items_img_container}
-          style={{ backgroundImage: `url(${item.img_url})` }}
+          style={{ backgroundImage: `url(${item.image_url})` }}
         ></Grid>
 
         <Grid
           item
-          xl={4}
-          lg={4}
-          md={4}
-          sm={4}
-          xs={4}
+          xl={8.19}
+          lg={8.19}
+          md={8.19}
+          sm={8.19}
+          xs={8.19}
           className={classes.tbl_items_name_container}
           display="flex"
           // justifyContent="end"
           alignItems="center"
         >
           <Typography variant="h7" className={classes.txt_item_values}>
-            {item.productName} X {item.qty}
+            {item.st_name} X {item.qty}
           </Typography>
         </Grid>
 
         <Grid
           item
-          xl={6.6}
-          lg={6.6}
-          md={6.6}
-          sm={6.6}
-          xs={6.6}
+          xl={2.5}
+          lg={2.5}
+          md={2.5}
+          sm={2.5}
+          xs={2.5}
           className={classes.tbl_items_subtotal_container}
           display="flex"
           justifyContent="end"

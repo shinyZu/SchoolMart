@@ -32,15 +32,18 @@ const Cart = (props) => {
   //   const [cartItems, setCartItems] = useState([]);
 
   const [cartItems, setCartItems] = useState(() => {
-    const savedCartItems = localStorage.getItem("test");
+    const savedCartItems = localStorage.getItem("cart");
     return savedCartItems ? JSON.parse(savedCartItems) : [];
   });
 
-  const [couponValue, setCouponValue] = useState(0.0);
+  const [couponValue, setCouponValue] = useState(0);
   const [finalSubtotal, setFinalSubTotal] = useState(0);
 
   const [categories, setCategories] = useState([]);
   const [stationeryList, setStationeryList] = useState([]);
+
+  // Proceed to checkout btn
+  const [isDisabled, setIsDisabled] = useState(false);
 
   useEffect(() => {
     console.log("=-------UE-1---------------");
@@ -49,6 +52,11 @@ const Cart = (props) => {
       setQty(data.wantedQty.data);
     }
     calculateFinalSubTotal();
+    if (cartItems.length == 0) {
+      setIsDisabled(true);
+    } else {
+      setIsDisabled(false);
+    }
   });
 
   useEffect(() => {
@@ -61,7 +69,7 @@ const Cart = (props) => {
 
   const calculateFinalSubTotal = () => {
     console.log("=-------calculateFinalSubTotal---------------");
-    const savedCartItems = localStorage.getItem("test");
+    const savedCartItems = localStorage.getItem("cart");
     console.log(JSON.parse(savedCartItems));
     if (JSON.parse(savedCartItems)) {
       let final_subtotal = 0;
@@ -98,8 +106,8 @@ const Cart = (props) => {
     console.log(cartItems);
     setCartItems(cartItems);
 
-    localStorage.removeItem("test");
-    localStorage.setItem("test", JSON.stringify(cartItems));
+    localStorage.removeItem("cart");
+    localStorage.setItem("cart", JSON.stringify(cartItems));
     calculateFinalSubTotal();
   };
 
@@ -108,7 +116,7 @@ const Cart = (props) => {
     const updatedCart = cartItems.filter((item, index) => index !== itemId);
     setCartItems(updatedCart);
     console.log(updatedCart);
-    localStorage.setItem("test", JSON.stringify(updatedCart));
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
     if (updatedCart.length == 0) {
       setFinalSubTotal(0);
     }
@@ -281,19 +289,26 @@ const Cart = (props) => {
               flexDirection="column"
             >
               <MyTextField
+                label="Apply Coupon"
                 variant="outlined"
                 type="text"
                 id="coupon"
+                placeholder="Rs"
+                // value={`Rs ${couponValue}.00`}
                 value={couponValue}
-                onChange={(e) => {
-                  setCouponValue(e.target.value);
-                }}
                 style={{ width: "100%", paddingTop: "5px" }}
+                inputProps={{
+                  pattern: "[0-9]*", // This is a regex pattern that allows only numeric characters
+                }}
+                onChange={(e) => {
+                  const numericValue = e.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+                  setCouponValue(numericValue);
+                }}
               />
 
-              <p>If you have a coupon, please apply it above.</p>
+              <p>If you have a coupon, please apply its value here.</p>
 
-              <MyButton
+              {/* <MyButton
                 label="Apply Coupon"
                 size="small"
                 variant="outlined"
@@ -302,7 +317,7 @@ const Cart = (props) => {
                 onClick={(e) => {
                   console.log("Coupon Applied");
                 }}
-              />
+              /> */}
             </Grid>
 
             {/* ------------ Cart Totals Info --------------- */}
@@ -358,7 +373,12 @@ const Cart = (props) => {
                     size="large"
                     variant="outlined"
                     type="button"
-                    className={classes.btn_proceed_checkout}
+                    disabled={isDisabled}
+                    className={
+                      isDisabled
+                        ? classes.btn_proceed_checkout_disabled
+                        : classes.btn_proceed_checkout
+                    }
                     style={{ width: "100%", height: "90%" }}
                   />
                 </Link>

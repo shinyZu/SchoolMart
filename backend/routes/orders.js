@@ -118,7 +118,7 @@ router.post("/", cors(), authenticateCustomerToken, async (req, res) => {
 
     // Save the order to the database
     const savedOrder = await newOrder.save();
-    res.send({
+    res.status(201).send({
       status: 201,
       category: savedOrder,
       message: "Order placed successfully!",

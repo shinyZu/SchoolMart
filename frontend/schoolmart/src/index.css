@@ -181,3 +181,23 @@ input[type="text"]:not(#f_login):not(#f_pwd) {
   border: 1px solid #ac7088 !important;
   color: white !important;
 }
+
+/* .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+  font-family: "Acme", sans-serif !important;
+}
+
+.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  font-family: "Acme", sans-serif !important;
+} */
+
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root,
+.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused,
+.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
+  font-family: "Acme", sans-serif !important;
+}
+
+/* .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused {
+.css-1u3bzj6-MuiFormControl-root-MuiTextField-root.Mui-focused {
+  border: 2px solid red !important;
+  border-color: red !important;
+} */

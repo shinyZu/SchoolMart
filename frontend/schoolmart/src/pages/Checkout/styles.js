@@ -112,6 +112,7 @@ export const styleSheet = {
       backgroundColor: "#99627A !important",
     },
     padding: "10px 60px !important",
+    boxShadow: "5px 5px 10px 2px rgb(7 12 8 / 50%) !important",
   },
 
   //   -------Order Summary -----------------
@@ -154,6 +155,15 @@ export const styleSheet = {
       cursor: "pointer",
       backgroundColor: "#99627A !important",
     },
+    padding: "10px 60px !important",
+    boxShadow: "5px 5px 10px 2px rgb(7 12 8 / 50%) !important",
+  },
+
+  btn_place_order_disabled: {
+    border: "1px #95a5a6 !important",
+    backgroundColor: "#95a5a6 !important",
+    color: "white !important",
+    fontFamily: '"Acme", sans-serif !important',
     padding: "10px 60px !important",
   },
 };

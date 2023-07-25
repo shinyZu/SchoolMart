@@ -57,7 +57,7 @@ const ProductDetails = (props) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
 
   const [cart, setCart] = useState(() => {
-    const savedCartItems = localStorage.getItem("test");
+    const savedCartItems = localStorage.getItem("cart");
     return savedCartItems ? JSON.parse(savedCartItems) : [];
   });
 
@@ -169,7 +169,7 @@ const ProductDetails = (props) => {
         const updatedCart = [...cart, newItem];
         console.log(updatedCart);
         setCart(updatedCart);
-        localStorage.setItem("test", JSON.stringify(updatedCart));
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
       }
     }
   };

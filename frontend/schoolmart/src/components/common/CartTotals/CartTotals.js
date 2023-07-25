@@ -123,7 +123,7 @@ const CartTotals = (props) => {
 
           <Typography variant="h5" className={classes.cart_total_title}>
             LKR{" "}
-            {props.subtotal + props.shipping - props.coupon - props.discount}
+            {props.subtotal + props.shipping - props.coupon - props.discount}.00
           </Typography>
         </Grid>
       </Grid>

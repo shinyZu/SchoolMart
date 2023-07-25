@@ -96,6 +96,7 @@ export const styleSheet = {
       backgroundColor: "#99627A !important",
     },
     padding: "10px 60px !important",
+    boxShadow: "5px 5px 10px 2px rgb(7 12 8 / 50%) !important",
   },
 
   //   --------Second Container - Top Categories---------------------

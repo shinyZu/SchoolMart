@@ -23,7 +23,7 @@ router.get("/getAll", cors(), authenticateAdminToken, async (req, res) => {
   }
 });
 
-// Get billing info by user_id - Customer
+// Get billing info by user_id - Customer - in use
 router.get(
   "/user/getAll",
   cors(),
@@ -36,6 +36,7 @@ router.get(
         user_id: verifiedToken.userId,
       });
       if (!billingInfoFound) {
+        console.log("No any billing details found for this user");
         return res.status(404).send({
           status: 404,
           message: "No any billing details found for this user.",
@@ -99,7 +100,7 @@ router.post("/", cors(), authenticateCustomerToken, async (req, res) => {
 
     // Save the info to the database
     const savedBilling = await newBilling.save();
-    res.send({
+    res.status(201).send({
       status: 201,
       category: savedBilling,
       message: "Billing details saved successfully!",
@@ -113,6 +114,14 @@ router.post("/", cors(), authenticateCustomerToken, async (req, res) => {
 router.put("/", cors(), authenticateCustomerToken, async (req, res) => {
   try {
     const body = req.body;
+    console.log(body.user_id);
+
+    if (!body.user_id) {
+      return res.status(400).send({
+        status: 400,
+        message: "User not authorized. Please log again.",
+      });
+    }
 
     const verified = verifyToken(req.headers.authorization, res);
     if (verified.userId != body.user_id) {
@@ -153,8 +162,8 @@ router.put("/", cors(), authenticateCustomerToken, async (req, res) => {
 
     // Update the info to the database
     const updatedBilling = await billingInfoExist.save();
-    res.send({
-      status: 201,
+    res.status(200).send({
+      status: 200,
       category: updatedBilling,
       message: "Billing details updated successfully!",
     });

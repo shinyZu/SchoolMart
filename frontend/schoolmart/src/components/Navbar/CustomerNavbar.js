@@ -38,6 +38,8 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const CustomerNavbar = (props) => {
   const { classes } = props;
+  const navigate = useNavigate();
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [isLogged, setIsLoggedUser] = useState(true);
@@ -64,6 +66,11 @@ const CustomerNavbar = (props) => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const goToDashboard = () => {
+    //  navigate("/dashboard");
+    navigate("/home");
   };
 
   function changePage(e) {
@@ -283,11 +290,19 @@ const CustomerNavbar = (props) => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
+                {settings.map((setting) =>
+                  setting === "Dashboard" ? (
+                    <>
+                      <MenuItem key={setting} onClick={goToDashboard}>
+                        <Typography textAlign="center">{setting}</Typography>
+                      </MenuItem>
+                    </>
+                  ) : (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  )
+                )}
               </Menu>
             </Box>
           ) : (

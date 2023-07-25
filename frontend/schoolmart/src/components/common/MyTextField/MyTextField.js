@@ -6,6 +6,7 @@ const MyTextField = (props) => {
     <>
       <TextField
         variant={props.variant}
+        label={props.label}
         type={props.type}
         placeholder={props.placeholder}
         value={props.value}
@@ -13,6 +14,7 @@ const MyTextField = (props) => {
         // style={{ width: "78%" }}
         style={props.style}
         disabled={props.disabled}
+        inputProps={props.inputProps}
       />
     </>
   );
