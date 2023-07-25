@@ -24,7 +24,8 @@ const orderDetails = require("./routes/orderDetail");
 const billingDetail = require("./routes/billingDetail");
 
 app.use(`${baseURL}token`, token);
-app.use(`${baseURL}login`, login);
+// app.use(`${baseURL}login`, login);
+app.use(`${baseURL}login`, login.router);
 app.use(`${baseURL}user`, user);
 app.use(`${baseURL}stationery`, stationery);
 app.use(`${baseURL}category`, category);

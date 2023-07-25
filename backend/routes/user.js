@@ -9,9 +9,15 @@ const {
 const app = express();
 const cors = require("cors");
 const router = express.Router();
+const axios = require("axios");
 // app.use(express.json());
 
 const User = require("../models/user.models");
+
+// -------------------
+const login = require("./login");
+const baseURL = "/schoolmart/api/v1/";
+// -------------------
 
 // Register User - in user
 router.post("/register", cors(), async (req, res) => {
@@ -57,11 +63,28 @@ router.post("/register", cors(), async (req, res) => {
 
     // Save the user to the database
     const savedUser = await user.save();
-    return res.send({
-      status: 201,
-      user: savedUser,
-      message: "User registered successfully!",
-    });
+
+    // Call login() in login router
+    let tokenData = await login.generateToken(
+      nextUserId,
+      body.email,
+      hashedPassword,
+      body.user_role,
+      res
+    );
+    console.log("=============== tokenData in user.js: ===============");
+    console.log(tokenData);
+
+    if (tokenData) {
+      // send response after registering & login
+      return res.send({
+        status: 201,
+        message: "User registered successfully!",
+        data: tokenData,
+      });
+    } else {
+      return res.status(400).send({ status: 400, message: "Failed to login." });
+    }
   } catch (err) {
     return res.status(400).send(err.message);
   }
@@ -204,6 +227,19 @@ router.delete("/:id", cors(), authenticateCustomerToken, async (req, res) => {
     } else {
       return res.status(403).send({ status: 403, messge: "Access denied." });
     }
+  } catch (err) {
+    return res.status(400).send({ status: 400, message: err.message });
+  }
+});
+
+// Test API for - calling of login() function in login.js router
+router.get("/test/register", cors(), async (req, res) => {
+  try {
+    console.log("called test register user");
+
+    console.log(login.myFunction());
+    let data = login.myFunction();
+    res.json(data);
   } catch (err) {
     return res.status(400).send({ status: 400, message: err.message });
   }
