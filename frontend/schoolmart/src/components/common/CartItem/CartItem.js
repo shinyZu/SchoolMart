@@ -23,6 +23,16 @@ const CartItem = (props) => {
   };
 
   const decreaseQty = (v) => {
+    console.log(qty);
+    let q;
+    // if (qty == 1) {
+    //   console.log(item.unit_price);
+    //   setQty(1);
+    //   q = item.unit_price;
+    // } else {
+    //   setQty(v);
+    //   q = v;
+    // }
     setQty(v);
     props.onUpdate(props.index, v);
   };
@@ -99,8 +109,10 @@ const CartItem = (props) => {
         >
           <QtyChanger
             // qty={item.qty}
+            index={props.index}
             qty={qty}
             onIncrease={increaseQty}
+            // onDecrease={decreaseQty}
             onDecrease={decreaseQty}
           />
         </Grid>
@@ -119,7 +131,9 @@ const CartItem = (props) => {
         >
           <Typography variant="h7" className={classes.txt_item_values}>
             {/* LKR {item.unit_price * item.qty}.00 */}
-            LKR {item.unit_price * qty}.00
+            {item.qty == 1
+              ? `LKR ${item.unit_price}.00`
+              : `LKR ${item.unit_price * qty}.00`}
           </Typography>
         </Grid>
 

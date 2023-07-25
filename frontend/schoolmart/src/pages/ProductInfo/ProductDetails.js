@@ -56,33 +56,14 @@ const ProductDetails = (props) => {
   const [categories, setCategories] = useState([]);
   const [relatedProducts, setRelatedProducts] = useState([]);
 
-  // ---------------
-  const [cartItems, setCartItems] = useState([]);
-  // ---------------
+  const [cart, setCart] = useState(() => {
+    const savedCartItems = localStorage.getItem("test");
+    return savedCartItems ? JSON.parse(savedCartItems) : [];
+  });
 
   useEffect(() => {
     getAllCategories();
   }, []);
-
-  // // --------------------
-  // // Load products from localStorage on component mount
-  // useEffect(() => {
-  //   const cartProducts = localStorage.getItem("cartProducts");
-  //   if (cartProducts) {
-  //     console.log(cartProducts);
-  //     setCartItems(JSON.parse(cartProducts));
-  //   } else {
-  //     // addNewItemToCart(cartItemData);
-  //     localStorage.setItem("cartProducts", JSON.stringify(cartItemData));
-  //   }
-  // }, []);
-
-  // // Update localStorage whenever 'cartItems' state changes
-  // useEffect(() => {
-  //   console.log(cartItems);
-  //   localStorage.setItem("cartProducts", JSON.stringify(cartItems));
-  // }, [cartItems]);
-  // // --------------------
 
   useEffect(() => {
     if (categories != []) {
@@ -90,30 +71,12 @@ const ProductDetails = (props) => {
     }
   }, [categories]);
 
-  // Function to add new products to the cartItems list
-  // should be called by Add To Cart btn
-  const addNewItemToCart = (cartItemData) => {
-    setCartItems((prev) => {
-      return [
-        ...prev,
-        {
-          category_id: cartItemData.category_id,
-          category: cartItemData.category,
-          st_code: cartItemData.st_code,
-          st_name: cartItemData.st_name,
-          unit_price: cartItemData.unit_price,
-          image_url: cartItemData.image_url,
-          qty: { qty },
-        },
-      ];
-    });
-  };
-
   const increaseQty = (v) => {
     setQty(v);
   };
 
   const decreaseQty = (v) => {
+    console.log(qty);
     setQty(v);
   };
 
@@ -168,6 +131,47 @@ const ProductDetails = (props) => {
       });
     });
     console.log(relatedProducts);
+  };
+
+  const addToCart = (cart) => {
+    console.log("=-------addToCart---------------");
+    if (cart) {
+      // check whether item already exists in the current cart
+      const existingProductIndex = cart.findIndex(
+        (item) => item.st_code === cartItemData.st_code
+      );
+
+      if (existingProductIndex !== -1) {
+        console.log("if item exists------------");
+        const itemsToBeupdated = [...cart];
+        itemsToBeupdated[existingProductIndex].qty += qty;
+        itemsToBeupdated[existingProductIndex].subtotal =
+          itemsToBeupdated[existingProductIndex].unit_price *
+          itemsToBeupdated[existingProductIndex].qty;
+        setCart(itemsToBeupdated);
+        setQty(itemsToBeupdated[existingProductIndex].qty + qty);
+        localStorage.setItem("test", JSON.stringify(itemsToBeupdated));
+      } else {
+        console.log("if item doesn't exist------------");
+        let newItem = {
+          category_id: cartItemData.category_id,
+          category: cartItemData.category,
+          st_code: cartItemData.st_code,
+          st_name: cartItemData.st_name,
+          unit_price: cartItemData.unit_price,
+          image_url: cartItemData.image_url,
+          qty: qty,
+          subtotal: cartItemData.unit_price * qty,
+        };
+        console.log(newItem);
+        console.log(cart);
+
+        const updatedCart = [...cart, newItem];
+        console.log(updatedCart);
+        setCart(updatedCart);
+        localStorage.setItem("test", JSON.stringify(updatedCart));
+      }
+    }
   };
 
   return (
@@ -273,9 +277,11 @@ const ProductDetails = (props) => {
                   variant="outlined"
                   type="button"
                   className={classes.btn_add_to_cart}
-                  // onClick={() => {
-
-                  // }}
+                  onClick={() => {
+                    console.log("clicked AddToCart btn");
+                    console.log(cart);
+                    addToCart(cart);
+                  }}
                 />
               </Link>
             </Grid>

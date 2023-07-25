@@ -13,7 +13,8 @@ import Home from "./pages/Home/Home";
 import Shop from "./pages/Shop/Shop";
 import About from "./pages/About/About";
 import Contact from "./pages/Contact/Contact";
-import Cart from "./pages/Cart/Cart";
+// import Cart from "./pages/Cart/Cart";
+import CartTest from "./pages/Cart/CartTest";
 import Checkout from "./pages/Checkout/Checkout";
 import ProductDetails from "./pages/ProductInfo/ProductDetails";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
@@ -39,7 +40,8 @@ const App = () => {
         <Route path="/shop" element={<Shop />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/cart" element={<Cart />} />
+        {/* <Route path="/cart" element={<Cart />} /> */}
+        <Route path="/cart" element={<CartTest />} />
         <Route path="/cart/checkout" element={<Checkout />} />
         <Route path="/product-details" element={<ProductDetails />} />
         <Route path="/admin" element={<AdminPanel />} />
