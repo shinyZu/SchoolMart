@@ -19,6 +19,7 @@ import Cart from "./pages/Cart/Cart";
 import Checkout from "./pages/Checkout/Checkout";
 import ProductDetails from "./pages/ProductInfo/ProductDetails";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
+import NotFound from "./pages/Session/NotFound";
 
 const App = () => {
   // const navigate = useNavigate();
@@ -73,7 +74,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" exact element={<Navigate replace to="/login" />} />
+        <Route path="/" exact element={<Navigate replace to="/home" />} />
         <Route path="/home" element={<Home handleLogin={handleLogin} />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/about" element={<About />} />
@@ -83,6 +84,7 @@ const App = () => {
         <Route path="/cart/checkout" element={<Checkout />} />
         <Route path="/product-details" element={<ProductDetails />} />
         <Route path="/admin" element={<AdminPanel />} />
+        <Route path="*" element={<NotFound />} />
 
         <Route
           path="/login"

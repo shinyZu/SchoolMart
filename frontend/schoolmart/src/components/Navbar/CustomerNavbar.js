@@ -57,20 +57,16 @@ const CustomerNavbar = (props) => {
   useEffect(() => {
     if (isLogged) {
       settings[3] = "Logout";
-      navLinkStyle({ isActive: true });
     } else {
       settings[3] = "Login";
     }
-
-    // console.log("---handling login in Navbar-----");
-    // let token = localStorage.getItem("token");
-    // console.log(token);
-    // if (token) {
-    //   props.handleLogin(true);
-    // } else {
-    //   props.handleLogin(false);
-    // }
   });
+
+  const navLinkStyle = ({ isActive }) => {
+    return {
+      color: isActive ? "#D25380" : "normal",
+    };
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -126,12 +122,6 @@ const CustomerNavbar = (props) => {
     } else {
       alert(res.response.data.message);
     }
-  };
-
-  const navLinkStyle = ({ isActive }) => {
-    return {
-      color: isActive ? "#D25380" : "normal",
-    };
   };
 
   return (
@@ -364,11 +354,10 @@ const CustomerNavbar = (props) => {
             </Box>
           ) : (
             <Button
-              // onClick={handleCloseNavMenu}
+              className={classes.nav_btn_login}
               onClick={() => {
                 console.log("clciked login btn in navbar");
                 navigate("/login");
-                // props.handleLogin(false);
               }}
               sx={{ my: 2, color: "white", display: "block" }}
             >

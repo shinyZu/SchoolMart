@@ -13,6 +13,7 @@ import LoginService from "../../services/LoginService";
 
 const LoginForm = (props) => {
   const { classes, onLogin } = props;
+  const navigate = useNavigate();
 
   const [loginFormData, setLoginFormData] = useState({
     username: "",
@@ -69,7 +70,8 @@ const LoginForm = (props) => {
         );
         // localStorage.setItem("isLoggedOut", false);
         alert(res.data.message);
-        props.onLogin(isEmailValid && isPasswordValid);
+        // props.onLogin(isEmailValid && isPasswordValid);
+        navigate("/home");
       }
     } else {
       alert(res.response.data.message);

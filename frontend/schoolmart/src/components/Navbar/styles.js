@@ -46,4 +46,17 @@ export const styleSheet = {
     //   color: "yellow",
     // },
   },
+
+  nav_btn_login: {
+    border: "1px #99627A !important",
+    backgroundColor: "#AC7088 !important",
+    color: "white !important",
+    fontFamily: '"Acme", sans-serif !important',
+    "&:hover": {
+      cursor: "pointer",
+      backgroundColor: "#99627A !important",
+    },
+    // padding: "5px 15px!important",
+    boxShadow: "5px 5px 10px 2px rgb(7 12 8 / 50%) !important",
+  },
 };
