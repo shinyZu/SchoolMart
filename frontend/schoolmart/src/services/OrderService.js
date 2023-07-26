@@ -12,11 +12,12 @@ const customerToken2 =
 
 class OrderService {
   placeOrder = async (data) => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .post("orders", data, {
           headers: {
-            Authorization: `Bearer ${customerToken2}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {

@@ -63,11 +63,12 @@ class StationeryService {
   };
 
   getNextId = async () => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .get("stationery/next/id", {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
@@ -82,11 +83,12 @@ class StationeryService {
 
   // Without image
   saveProduct = async (data) => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .post("stationery", data, {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
@@ -101,11 +103,12 @@ class StationeryService {
 
   // WITH image
   saveProductWithImage = async (data) => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .post("stationery/drive/url/prod", data, {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         })
@@ -121,11 +124,12 @@ class StationeryService {
 
   // Update only product
   updateProduct = async (data, id) => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .put("stationery/" + id, data, {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${token}`,
             // "Content-Type": "multipart/form-data",
           },
         })
@@ -141,11 +145,12 @@ class StationeryService {
 
   // Update only image
   updateImage = async (st_code, data) => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .put("stationery/drive/url/db/" + st_code, data, {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         })
@@ -161,11 +166,12 @@ class StationeryService {
 
   // Delete product & Image
   deleteProduct = async (id) => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .delete("stationery/drive/" + id, {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${token}`,
             // "Content-Type": "multipart/form-data",
           },
         })

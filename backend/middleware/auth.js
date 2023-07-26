@@ -98,6 +98,7 @@ const verifyToken = (authHeader, res) => {
         .json({ status: 401, message: "No token provided." });
     }
 
+    console.log(access_token);
     const verified = jwt.verify(access_token, jwtSecretKey);
 
     if (verified) {

@@ -12,10 +12,11 @@ const adminToken =
 // const customerToken2 =
 //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoiVHVlIEp1bCAyNSAyMDIzIDE2OjI0OjQ3IEdNVCswNTMwIChJbmRpYSBTdGFuZGFyZCBUaW1lKSIsInVzZXJJZCI6MywidXNlcm5hbWUiOiJicmFuZG9uQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJHg0WDRZYjVsMXlDRFRLQS9DamdTMy5rTFBiYjZ5SkRGcE5OL20vcy9UTkZWNklSNWw1TDF5IiwidXNlcl9yb2xlIjoiQ3VzdG9tZXIiLCJpYXQiOjE2OTAyODI0ODd9.u6de9qT9Xy8QUiDsaFANYWQPNhPjD-mYmVhE3S_GOAo";
 
-const token = localStorage.getItem("token");
+const token = JSON.parse(localStorage.getItem("token"));
 
 class BillingService {
   getAllByCustomerId = async () => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .get("billingdetails/user/getAll", {
@@ -34,6 +35,7 @@ class BillingService {
   };
 
   saveBillingDetails = async (data) => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .post("billingdetails", data, {
@@ -52,6 +54,7 @@ class BillingService {
   };
 
   updateBillingDetails = async (data) => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .put("billingdetails", data, {

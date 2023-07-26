@@ -184,6 +184,14 @@ const Checkout = (props) => {
   const placeOrder = async () => {
     console.log("placeOrder");
     // TODO: get the user id from token and set here
+    let decodedToken = decodeToken();
+    console.log(decodedToken.user_id);
+
+    setBillingInfoForm((prevData) => ({
+      ...prevData,
+      user_id: decodedToken.user_id,
+    }));
+
     console.log(billingDetailsFound);
     console.log(billingInfoForm);
 
@@ -236,7 +244,7 @@ const Checkout = (props) => {
       order_date: new Date(),
       order_cost: calculateOrdeCost(),
       order_status: "Pending",
-      user_id: 3, // TODO
+      user_id: decodeToken().user_id, // TODO
       order_details: orderDetailsList,
     };
     console.log(orderData);

@@ -33,7 +33,7 @@ router.get(
       const verifiedToken = verifyToken(req.headers.authorization, res);
 
       const billingInfoFound = await BillingDetails.findOne({
-        user_id: verifiedToken.userId,
+        user_id: verifiedToken.user_id,
       });
       if (!billingInfoFound) {
         console.log("No any billing details found for this user");
@@ -55,7 +55,7 @@ router.post("/", cors(), authenticateCustomerToken, async (req, res) => {
   try {
     const verified = verifyToken(req.headers.authorization, res);
     const body = req.body;
-    if (verified.userId != body.user_id) {
+    if (verified.user_id != body.user_id) {
       return res.status(403).send({ status: 403, message: "Access denied." });
     }
 
@@ -124,12 +124,13 @@ router.put("/", cors(), authenticateCustomerToken, async (req, res) => {
     }
 
     const verified = verifyToken(req.headers.authorization, res);
-    if (verified.userId != body.user_id) {
+    console.log("verified.user_id : " + verified.user_id);
+    if (verified.user_id != body.user_id) {
       return res.status(403).send({ status: 403, message: "Access denied." });
     }
 
     const billingInfoExist = await BillingDetails.findOne({
-      user_id: verified.userId,
+      user_id: verified.user_id,
     });
 
     if (!billingInfoExist) {
@@ -192,7 +193,7 @@ router.delete(
       }
 
       const verified = verifyToken(req.headers.authorization, res);
-      if (verified.userId != billingInfoExist.user_id) {
+      if (verified.user_id != billingInfoExist.user_id) {
         return res.status(403).send({ status: 403, message: "Access denied." });
       }
 

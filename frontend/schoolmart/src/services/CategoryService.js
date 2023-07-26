@@ -6,11 +6,12 @@ const adminToken =
 
 class CategoryService {
   getAll = async () => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .get("category/getAll", {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
@@ -24,11 +25,12 @@ class CategoryService {
   };
 
   getNextId = async () => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .get("category/next/id", {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
@@ -42,11 +44,12 @@ class CategoryService {
   };
 
   saveCategory = async (data) => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .post("category", data, {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
@@ -60,12 +63,13 @@ class CategoryService {
   };
 
   updateCategory = async (data) => {
+    const token = JSON.parse(localStorage.getItem("token"));
     let id = data.category_id;
     const promise = new Promise((resolve, reject) => {
       axios
         .put("category/" + id, data, {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
@@ -79,11 +83,12 @@ class CategoryService {
   };
 
   deleteCategory = async (id) => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .delete("category/" + id, {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${token}`,
             // "Content-Type": "multipart/form-data",
           },
         })

@@ -9,11 +9,12 @@ const customerToken =
 
 class OrderDetailService {
   getAllByAdmin = async () => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .get("orderdetails/getAll", {
           headers: {
-            Authorization: `Bearer ${customerToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
@@ -27,11 +28,12 @@ class OrderDetailService {
   };
 
   getAllByUserId = async () => {
+    const token = JSON.parse(localStorage.getItem("token"));
     const promise = new Promise((resolve, reject) => {
       axios
         .get("orderdetails/user/getAll", {
           headers: {
-            Authorization: `Bearer ${customerToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {

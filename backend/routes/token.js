@@ -22,7 +22,7 @@ router.post("/generateToken", cors(), async (req, res) => {
 
   let data = {
     time: Date(),
-    userId: 12,
+    user_id: 12,
     username: req.body.username,
     password: hashedPassword,
   };
@@ -97,7 +97,7 @@ router.post("/refresh", cors(), async (req, res) => {
 
   let data = {
     time: Date(),
-    userId: userExist.user_id,
+    user_id: userExist.user_id,
     username: req.body.username,
     password: userExist.password,
     user_role: userExist.user_role,

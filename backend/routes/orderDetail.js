@@ -33,7 +33,7 @@ router.get(
     try {
       const verified = verifyToken(req.headers.authorization, res);
 
-      const orders = await Orders.find({ user_id: verified.userId });
+      const orders = await Orders.find({ user_id: verified.user_id });
       const orderDetails = [];
       if (orders.length > 0) {
         for (let obj of orders) {
@@ -63,7 +63,7 @@ router.get(
 
       const orderFound = await Orders.findOne({
         order_id: req.params.orderId,
-        user_id: verified.userId,
+        user_id: verified.user_id,
       });
 
       // console.log(orders);

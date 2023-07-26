@@ -52,7 +52,7 @@ router.get(
 
       const orderFound = await Orders.findOne({
         order_id: req.params.orderId,
-        user_id: verified.userId,
+        user_id: verified.user_id,
       });
 
       if (!orderFound) {
@@ -79,7 +79,7 @@ router.post("/", cors(), authenticateCustomerToken, async (req, res) => {
   try {
     const verified = verifyToken(req.headers.authorization, res);
 
-    if (verified.userId != body.user_id) {
+    if (verified.user_id != body.user_id) {
       return res.status(403).send({ status: 403, message: "Access denied." });
     }
 
@@ -135,7 +135,7 @@ router.put("/:id", cors(), authenticateCustomerToken, async (req, res) => {
     const body = req.body;
     const verified = verifyToken(req.headers.authorization, res);
 
-    if (verified.userId != body.user_id) {
+    if (verified.user_id != body.user_id) {
       return res.status(403).send({ status: 403, message: "Access denied." });
     }
 
@@ -186,7 +186,7 @@ router.delete("/:id", cors(), authenticateCustomerToken, async (req, res) => {
 
     const verified = verifyToken(req.headers.authorization, res);
 
-    if (verified.userId != orderExist.user_id) {
+    if (verified.user_id != orderExist.user_id) {
       return res.status(403).send({ status: 403, message: "Access denied." });
     }
 
