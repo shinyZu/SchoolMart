@@ -18,6 +18,8 @@ import MyButton from "../../components/common/MyButton/MyButton";
 import SummaryItem from "../../components/common/SummaryItem/SummaryItem";
 import CartTotals from "../../components/common/CartTotals/CartTotals";
 import Footer from "../../components/Footer/Footer";
+import MySnackBar from "../../components/common/MySnackBar/MySnackbar";
+import ConfirmDialog from "../../components/common/ConfirmDialog/ConfirmDialog";
 
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
@@ -82,6 +84,22 @@ const Checkout = (props) => {
   // Totals
   const [shipping, setShipping] = useState(0);
   const [discount, setDiscount] = useState(0);
+
+  // Alerts & Confirmation dialog boxes
+  const [openAlert, setOpenAlert] = useState({
+    open: "",
+    alert: "",
+    severity: "",
+    variant: "",
+  });
+
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    title: "",
+    subTitle: "",
+    confirmBtnStyle: {},
+    action: "",
+  });
 
   useEffect(() => {
     getBillingDetailsOfTheLoggedUser();
@@ -205,10 +223,16 @@ const Checkout = (props) => {
       if (res1.status === 200) {
         console.log("---------2-----------");
         console.log("Billing details updated successfully!");
-        alert(res1.data.message);
+        // alert(res1.data.message);
       } else {
         console.log("---------3-----------");
-        alert(res1.response.data.message);
+        // alert(res1.response.data.message);
+        setOpenAlert({
+          open: true,
+          alert: res1.response.data.message,
+          severity: "error",
+          variant: "standard",
+        });
         return;
       }
     } else if (!billingDetailsFound && areAllValuesFilled()) {
@@ -219,10 +243,16 @@ const Checkout = (props) => {
       if (res2.status === 201) {
         console.log("---------5-----------");
         console.log("Billing details saved successfully!");
-        alert(res2.data.message);
+        // alert(res2.data.message);
       } else {
         console.log("---------6-----------");
-        alert(res2.response.data.message);
+        // alert(res2.response.data.message);
+        setOpenAlert({
+          open: true,
+          alert: res2.response.data.message,
+          severity: "error",
+          variant: "standard",
+        });
         return;
       }
     }
@@ -251,22 +281,49 @@ const Checkout = (props) => {
 
     console.log("---------7-----------");
     console.log("----now lets save order-------");
-    let res3 = await OrderService.placeOrder(orderData);
 
-    if (res3.status === 201) {
-      console.log("---------8-----------");
-      console.log("Order saved successfully!");
-      alert(res3.data.message);
-    } else {
-      console.log("---------9-----------");
-      alert(res3.response.data.message);
-      return;
-    }
+    setConfirmDialog({
+      isOpen: true,
+      title: "Are you sure you want to place this Order?",
+      subTitle: "You can't revert this operation",
+      action: "Save",
+      confirmBtnStyle: {
+        backgroundColor: "rgb(26, 188, 156)",
+        color: "white",
+      },
+      onConfirm: async () => {
+        let res3 = await OrderService.placeOrder(orderData);
 
-    clearFields();
-    navigate("/home");
-    clearCart();
-    clearTotals();
+        if (res3.status === 201) {
+          console.log("---------8-----------");
+          console.log("Order saved successfully!");
+          // alert(res3.data.message);
+          setOpenAlert({
+            open: true,
+            alert: res3.data.message,
+            severity: "success",
+            variant: "standard",
+          });
+          setConfirmDialog({ isOpen: false });
+        } else {
+          console.log("---------9-----------");
+          // alert(res3.response.data.message);
+          setConfirmDialog({ isOpen: false });
+          setOpenAlert({
+            open: true,
+            alert: res3.response.data.message,
+            severity: "error",
+            variant: "standard",
+          });
+          return;
+        }
+
+        clearFields();
+        // navigate("/cart");
+        clearCart();
+        clearTotals();
+      },
+    });
   };
 
   const calculateOrdeCost = () => {
@@ -1132,6 +1189,20 @@ const Checkout = (props) => {
 
       {/* ------------- Footer -------------- */}
       <Footer />
+
+      <MySnackBar
+        open={openAlert.open}
+        alert={openAlert.alert}
+        severity={openAlert.severity}
+        variant={openAlert.variant}
+        onClose={() => {
+          setOpenAlert({ open: false });
+        }}
+      />
+      <ConfirmDialog
+        confirmDialog={confirmDialog}
+        setConfirmDialog={setConfirmDialog}
+      />
     </div>
   );
 };

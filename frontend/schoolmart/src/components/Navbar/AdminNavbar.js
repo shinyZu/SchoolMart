@@ -101,7 +101,7 @@ const AdminNavbar = (props) => {
       if (res.data.data) {
         // remove tokn from LS
         localStorage.removeItem("token");
-        alert(res.data.message);
+        // alert(res.data.message);
 
         console.log("------right before returning false from Navbar------");
         handleCloseUserMenu();

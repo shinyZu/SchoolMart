@@ -23,7 +23,7 @@ const LoginForm = (props) => {
 
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const [openErrorMessage, setOpenErrorMessage] = useState({
+  const [openAlert, setOpenAlert] = useState({
     open: "",
     alert: "",
     severity: "",
@@ -69,13 +69,20 @@ const LoginForm = (props) => {
           "token",
           JSON.stringify(res.data.data.access_token)
         );
-        alert(res.data.message);
+        // alert(res.data.message);
         checkIfCustomerOrAdmin(res.data.data.access_token);
         // props.onLogin(isEmailValid && isPasswordValid);
         // navigate("/home");
       }
     } else {
-      alert(res.response.data.message);
+      // TOD0
+      // alert(res.response.data.message);
+      setOpenAlert({
+        open: true,
+        alert: res.response.data.message,
+        severity: "error",
+        variant: "standard",
+      });
     }
   };
 
@@ -101,54 +108,6 @@ const LoginForm = (props) => {
           {/* Unlock the Access to Quality Education Resources! */}
           Discover the Tools for Academic Success...!
         </h1>
-        {/* <form onSubmit={handleSubmit}>
-          <div>
-            <label className={classes.login_text}>Email :</label>
-            <MyTextField
-              variant="filled"
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              style={{
-                width: "100%",
-                paddingTop: "5px",
-              }}
-            />
-          </div>
-          <br />
-          <div>
-            <label className={classes.login_text}>Password :</label>
-            <MyTextField
-              variant="filled"
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={{ width: "100%", paddingTop: "5px" }}
-            />
-          </div>
-          <br />
-          <div className={classes.login_footer}>
-            <button className={classes.btn_login} type="submit">
-              Login
-            </button>
-            <small className={classes.login_footer_text}>
-              Not a member?{" "}
-              <u>
-                <Link
-                  to="#register"
-                  className={classes.txt_register}
-                  onClick={() => {
-                    props.onSwitch();
-                  }}
-                >
-                  Register
-                </Link>
-              </u>
-            </small>
-          </div>
-        </form> */}
 
         <ValidatorForm className="pt-2" /* onSubmit={handleSubmit} */>
           <TextValidator
@@ -162,12 +121,6 @@ const LoginForm = (props) => {
             validators={["matchRegexp:^[A-z|0-9]{4,}@(gmail)(.com|.lk)$"]}
             errorMessages={["Invalid email address"]}
             value={loginFormData.username}
-            // onChange={(e) => {
-            //   setLoginFormData({
-            //     ...loginFormData,
-            //     email: e.target.value,
-            //   });
-            // }}
             onChange={handleEmailChange}
           />
           <TextValidator
@@ -181,19 +134,12 @@ const LoginForm = (props) => {
             validators={["matchRegexp:^[A-z|0-9|@]{8,}$"]}
             errorMessages={["Must have atleast 8 characters"]}
             value={loginFormData.password}
-            // onChange={(e) => {
-            //   setLoginFormData({
-            //     ...loginFormData,
-            //     password: e.target.value,
-            //   });
-            // }}
             onChange={handlePasswordChange}
           />
         </ValidatorForm>
         <br />
         <div className={classes.login_footer}>
           <button
-            // className={classes.btn_login}
             disabled={!(isEmailValid && isPasswordValid)}
             className={
               isEmailValid && isPasswordValid
@@ -203,8 +149,6 @@ const LoginForm = (props) => {
             type="submit"
             onClick={(e) => {
               handleSubmit(e);
-              // console.log(e);
-              // console.log(isEmailValid && isPasswordValid);
             }}
           >
             Login
@@ -212,13 +156,7 @@ const LoginForm = (props) => {
           <small className={classes.login_footer_text}>
             Not a member?{" "}
             <u>
-              <Link
-                to="#register"
-                className={classes.txt_register}
-                // onClick={() => {
-                //   props.onSwitch();
-                // }}
-              >
+              <Link to="#register" className={classes.txt_register}>
                 Register
               </Link>
             </u>
@@ -226,12 +164,12 @@ const LoginForm = (props) => {
         </div>
       </div>
       <MySnackBar
-        open={openErrorMessage.open}
-        alert={openErrorMessage.alert}
-        severity={openErrorMessage.severity}
-        variant={openErrorMessage.variant}
+        open={openAlert.open}
+        alert={openAlert.alert}
+        severity={openAlert.severity}
+        variant={openAlert.variant}
         onClose={() => {
-          setOpenErrorMessage({ open: false });
+          setOpenAlert({ open: false });
         }}
       />
     </div>
