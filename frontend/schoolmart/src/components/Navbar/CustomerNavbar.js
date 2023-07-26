@@ -26,9 +26,12 @@ import AdbIcon from "@mui/icons-material/Adb";
 
 import profile_pic from "../../assets/images/male_profile.jpg";
 import logo from "../../assets/images/logo_4.png";
+import jwtDecode from "jwt-decode";
 
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
+
+import LoginService from "../../services/LoginService";
 
 const footer_bg_texture =
   "https://www.transparenttextures.com/patterns/nistri.png";
@@ -37,20 +40,36 @@ const pages = ["Home", "Shop", "About Us", "Contact Us", "Cart"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const CustomerNavbar = (props) => {
+  console.log(props);
   const { classes } = props;
   const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [isLogged, setIsLoggedUser] = useState(true);
   const [value, setValue] = useState("");
+
+  // const [isLogged, setIsLoggedUser] = useState(false);
+  const [isLogged, setIsLogged] = useState(() => {
+    const token = localStorage.getItem("token");
+    return token ? true : false;
+  });
 
   useEffect(() => {
     if (isLogged) {
       settings[3] = "Logout";
+      navLinkStyle({ isActive: true });
     } else {
       settings[3] = "Login";
     }
+
+    // console.log("---handling login in Navbar-----");
+    // let token = localStorage.getItem("token");
+    // console.log(token);
+    // if (token) {
+    //   props.handleLogin(true);
+    // } else {
+    //   props.handleLogin(false);
+    // }
   });
 
   const handleOpenNavMenu = (event) => {
@@ -76,6 +95,38 @@ const CustomerNavbar = (props) => {
   function changePage(e) {
     setValue(e.target.innerText);
   }
+
+  const handleLogout = () => {
+    let token = localStorage.getItem("token");
+    const decodedToken = jwtDecode(token);
+    console.log(decodedToken.username);
+    logoutUser(decodedToken.username);
+  };
+
+  const logoutUser = async (username) => {
+    let res = await LoginService.logout(username);
+    console.log(res);
+
+    if (res.status === 200) {
+      if (res.data.data) {
+        // remove tokn from LS
+        localStorage.removeItem("token");
+        // localStorage.setItem("isLoggedOut", true);
+
+        // set logout status in LS
+        // localStorage.setItem("isLoggedOut", false);
+        alert(res.data.message);
+
+        console.log("------right before returning false from Navbar------");
+        // props.handleLogin(false);
+        handleCloseUserMenu();
+        setIsLogged(false);
+        navigate("/home");
+      }
+    } else {
+      alert(res.response.data.message);
+    }
+  };
 
   const navLinkStyle = ({ isActive }) => {
     return {
@@ -242,18 +293,20 @@ const CustomerNavbar = (props) => {
                 />
               </NavLink>
 
-              <NavLink
-                smooth
-                to="/cart"
-                className={classes.nav__text}
-                style={navLinkStyle}
-              >
-                <Tab
-                  icon={<ShoppingCartIcon />}
+              {isLogged ? (
+                <NavLink
+                  smooth
+                  to="/cart"
                   className={classes.nav__text}
-                  label="Cart"
-                />
-              </NavLink>
+                  style={navLinkStyle}
+                >
+                  <Tab
+                    icon={<ShoppingCartIcon />}
+                    className={classes.nav__text}
+                    label="Cart"
+                  />
+                </NavLink>
+              ) : null}
             </Tabs>
           </Box>
           {/* <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
@@ -297,6 +350,10 @@ const CustomerNavbar = (props) => {
                         <Typography textAlign="center">{setting}</Typography>
                       </MenuItem>
                     </>
+                  ) : setting === "Logout" ? (
+                    <MenuItem key={setting} onClick={handleLogout}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
                   ) : (
                     <MenuItem key={setting} onClick={handleCloseUserMenu}>
                       <Typography textAlign="center">{setting}</Typography>
@@ -307,7 +364,12 @@ const CustomerNavbar = (props) => {
             </Box>
           ) : (
             <Button
-              onClick={handleCloseNavMenu}
+              // onClick={handleCloseNavMenu}
+              onClick={() => {
+                console.log("clciked login btn in navbar");
+                navigate("/login");
+                // props.handleLogin(false);
+              }}
               sx={{ my: 2, color: "white", display: "block" }}
             >
               Login

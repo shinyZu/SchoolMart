@@ -6,6 +6,7 @@ import {
   Switch,
   useHistory,
   Navigate,
+  useNavigate,
 } from "react-router-dom";
 
 import Login from "./pages/Login/Login";
@@ -20,15 +21,52 @@ import ProductDetails from "./pages/ProductInfo/ProductDetails";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
 
 const App = () => {
+  // const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedOut, setLoggedOut] = useState(() => {
+    const isLoggedOut = localStorage.getItem("isLoggedOut");
+    return isLoggedOut ? true : false;
+  });
+
+  const [tokenAvailable, setTokenAvailable] = useState(() => {
+    const tokenAvailable = localStorage.getItem("token");
+    return tokenAvailable ? true : false;
+  });
+
+  useEffect(() => {
+    console.log("-useEffect 1 in App js-----");
+    console.log(loggedIn);
+    console.log(tokenAvailable);
+  });
+
+  useEffect(() => {
+    console.log("-useEffect 2 in App js-----");
+
+    console.log(tokenAvailable);
+    handleLogin(tokenAvailable);
+  }, [tokenAvailable]);
 
   const handleLogin = (isSuccess) => {
     console.log("handleLogin");
     console.log("App.js : " + isSuccess);
+
+    console.log(isSuccess);
+    console.log(loggedOut);
+    console.log(tokenAvailable);
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      setTokenAvailable(true);
+    }
+
     if (isSuccess) {
+      console.log("-------is Logged in------");
       setLoggedIn(true);
+      setLoggedOut(false);
     } else {
+      console.log("-------is Logged out------");
       setLoggedIn(false);
+      setLoggedOut(true);
     }
   };
 
@@ -36,7 +74,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" exact element={<Navigate replace to="/login" />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<Home handleLogin={handleLogin} />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
@@ -58,7 +96,13 @@ const App = () => {
         />
         <Route
           path="/home"
-          element={loggedIn ? <Home /> : <Login onLogin={handleLogin} />}
+          element={
+            loggedIn ? (
+              <Home handleLogin={handleLogin} />
+            ) : (
+              <Login onLogin={handleLogin} />
+            )
+          }
         />
       </Routes>
     </Router>

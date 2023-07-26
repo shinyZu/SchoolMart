@@ -24,6 +24,7 @@ import { withStyles } from "@mui/styles";
 
 import BillingService from "../../services/BillingService";
 import OrderService from "../../services/OrderService";
+import jwtDecode from "jwt-decode";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -139,6 +140,19 @@ const Checkout = (props) => {
     setChecked(event.target.checked);
   };
 
+  // Function to decode the JWT token
+  const decodeToken = () => {
+    try {
+      const token = localStorage.getItem("token");
+      const decodedToken = jwtDecode(token);
+      console.log(decodedToken);
+      return decodedToken;
+    } catch (error) {
+      console.error("Error decoding JWT token:", error);
+      return null;
+    }
+  };
+
   const getBillingDetailsOfTheLoggedUser = async () => {
     console.log("getBillingDetailsOfTheLoggedUser");
     let res = await BillingService.getAllByCustomerId();
@@ -155,9 +169,13 @@ const Checkout = (props) => {
     }
 
     // TODO
+    // Get user_id from token
+    let decodedToken = decodeToken();
+    console.log(decodedToken.user_id);
+
     setBillingInfoForm((prevData) => ({
       ...prevData, // Copy all the properties from the previous state
-      user_id: 3, // Update the 'user_id' with the new value
+      user_id: decodedToken.user_id, // Update the 'user_id' with the new value
       coupon_price: receivedData.coupon,
     }));
     console.log(billingInfoForm);

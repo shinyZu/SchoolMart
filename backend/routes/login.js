@@ -27,6 +27,7 @@ router.get("/", cors(), authenticateAdminToken, async (req, res) => {
 // Login User & generate JWT token -  in use
 router.post("/", cors(), async (req, res) => {
   try {
+    console.log(req.body);
     const userExist = await User.findOne({ email: req.body.username });
     const userAlreadyLogged = await Login.findOne({ email: req.body.username });
 
@@ -111,7 +112,7 @@ router.post("/", cors(), async (req, res) => {
       //   // expires_in: "2m",
       //   refresh_token: bearer_refreshToken,
       // });
-      return res.send({
+      return res.status(200).send({
         status: 200,
         message: "User signed in successfully!",
         data: tokenData,
@@ -133,7 +134,7 @@ router.delete("/logout/:email", cors(), async (req, res) => {
     }
     let deletedUser = await user.deleteOne(user);
 
-    return res.send({
+    return res.status(200).send({
       status: 200,
       message: "User signed out successfully!",
       data: deletedUser,
@@ -187,7 +188,7 @@ const generateToken = async (
 
     let data = {
       time: Date(),
-      userId: user_id,
+      user_id: user_id,
       username: username,
       password: hashedPassword,
       user_role: user_role,
@@ -202,8 +203,8 @@ const generateToken = async (
     const refreshToken = jwt.sign(data, jwtRefreshKey);
 
     // Format the tokens as Bearer token
-    const bearer_accessToken = `Bearer ${accessToken}`;
-    const bearer_refreshToken = `Bearer ${refreshToken}`;
+    const bearer_accessToken = `${accessToken}`;
+    const bearer_refreshToken = `${refreshToken}`;
 
     const login = new Login({
       email: username,
@@ -217,6 +218,7 @@ const generateToken = async (
       // logged_user: loggedInUser,
       user_id: user_id,
       user_role: user_role,
+      token_type: "Bearer",
       access_token: bearer_accessToken,
       refresh_token: bearer_refreshToken,
       // expires_in: 3600 / 60 + " min",

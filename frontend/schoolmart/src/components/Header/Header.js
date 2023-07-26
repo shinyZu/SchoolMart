@@ -9,7 +9,7 @@ const Header = (props) => {
   const { classes } = props;
   return (
     <div id="header">
-      <CustomerNavbar />
+      <CustomerNavbar handleLogin={props.handleLogin} />
     </div>
   );
 };

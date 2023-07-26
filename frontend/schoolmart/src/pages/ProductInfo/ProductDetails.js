@@ -16,33 +16,6 @@ import { withStyles } from "@mui/styles";
 import CategoryService from "../../services/CategoryService";
 import StationeryService from "../../services/StationeryService";
 
-// const relatedProducts = [
-//   {
-//     img: "",
-//     category: "Category 1",
-//     productName: "Product 1",
-//     price: "00.00",
-//   },
-//   {
-//     img: "",
-//     category: "Category 1",
-//     productName: "Product 1",
-//     price: "00.00",
-//   },
-//   {
-//     img: "",
-//     category: "Category 1",
-//     productName: "Product 1",
-//     price: "00.00",
-//   },
-//   {
-//     img: "",
-//     category: "Category 1",
-//     productName: "Product 1",
-//     price: "00.00",
-//   },
-// ];
-
 const ProductDetails = (props) => {
   const { classes } = props;
   const navigate = useNavigate();
@@ -59,6 +32,11 @@ const ProductDetails = (props) => {
   const [cart, setCart] = useState(() => {
     const savedCartItems = localStorage.getItem("cart");
     return savedCartItems ? JSON.parse(savedCartItems) : [];
+  });
+
+  const [isLogged, setIsLogged] = useState(() => {
+    const token = localStorage.getItem("token");
+    return token ? true : false;
   });
 
   useEffect(() => {
@@ -150,7 +128,7 @@ const ProductDetails = (props) => {
           itemsToBeupdated[existingProductIndex].qty;
         setCart(itemsToBeupdated);
         setQty(itemsToBeupdated[existingProductIndex].qty + qty);
-        localStorage.setItem("test", JSON.stringify(itemsToBeupdated));
+        localStorage.setItem("cart", JSON.stringify(itemsToBeupdated));
       } else {
         console.log("if item doesn't exist------------");
         let newItem = {
@@ -263,27 +241,33 @@ const ProductDetails = (props) => {
               display="flex"
               alignItems="flex-end"
             >
-              {/* <Link to="/cart"> */}
-              <Link
-                to="/cart"
-                state={{
-                  product: cartItemData,
-                  wantedQty: { qty },
-                }}
-              >
-                <MyButton
-                  label="Add To Cart"
-                  size="small"
-                  variant="outlined"
-                  type="button"
-                  className={classes.btn_add_to_cart}
-                  onClick={() => {
-                    console.log("clicked AddToCart btn");
-                    console.log(cart);
-                    addToCart(cart);
+              {isLogged ? (
+                <Link
+                  to="/cart"
+                  state={{
+                    product: cartItemData,
+                    wantedQty: { qty },
                   }}
-                />
-              </Link>
+                >
+                  <MyButton
+                    label="Add To Cart"
+                    size="small"
+                    variant="outlined"
+                    type="button"
+                    className={classes.btn_add_to_cart}
+                    onClick={() => {
+                      console.log("clicked AddToCart btn");
+                      console.log(cart);
+                      addToCart(cart);
+                    }}
+                  />
+                </Link>
+              ) : (
+                <p style={{ color: "#c0392b" }}>
+                  Please login to purchase products !
+                </p>
+              )}
+              {/* <Link to="/cart"> */}
             </Grid>
           </Grid>
         </Grid>
@@ -348,7 +332,10 @@ const ProductDetails = (props) => {
                         key={index}
                         product={product}
                         onClick={(e) => {
-                          navigate("/product-details");
+                          console.log(product);
+                          navigate("/product-details", {
+                            state: { product: product },
+                          });
                         }}
                         cardWidth={2.5}
                       />

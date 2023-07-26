@@ -15,9 +15,18 @@ export const styleSheet = {
 
   btn_login: {
     backgroundColor: "#2c3e50",
+    boxShadow: "5px 5px 10px 2px rgb(7 12 8 / 50%) !important",
     "&:hover": {
       cursor: "pointer",
       backgroundColor: "#34495e !important",
+    },
+  },
+
+  btn_login_disabled: {
+    backgroundColor: "#7f8c8d !important",
+    "&:hover": {
+      cursor: "default",
+      backgroundColor: "#7f8c8d !important",
     },
   },
 

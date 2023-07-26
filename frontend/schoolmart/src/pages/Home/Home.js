@@ -25,6 +25,19 @@ const Home = (props) => {
   const [categoryTitle, setCategoryTitle] = useState("");
 
   useEffect(() => {
+    console.log("---handling login in Home-----");
+    let token = localStorage.getItem("token");
+    console.log(token);
+    if (token) {
+      props.handleLogin(true);
+      // navigate("/home");
+    } else {
+      props.handleLogin(false);
+      // navigate("/home");
+    }
+  });
+
+  useEffect(() => {
     getAllCategories();
   }, []);
 
@@ -90,7 +103,7 @@ const Home = (props) => {
   return (
     <>
       <div id="home">
-        <Header />
+        <Header handleLogin={props.handleLogin} />
         <Box sx={{ flexGrow: 1 }} className={classes.box_container}>
           {/* --------First Container From Top--------------- */}
           <Grid
