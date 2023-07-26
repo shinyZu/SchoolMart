@@ -26,21 +26,20 @@ import AdbIcon from "@mui/icons-material/Adb";
 
 import profile_pic from "../../assets/images/male_profile.jpg";
 import logo from "../../assets/images/logo_4.png";
-import jwtDecode from "jwt-decode";
 
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
 
 import LoginService from "../../services/LoginService";
+import jwtDecode from "jwt-decode";
 
 const footer_bg_texture =
   "https://www.transparenttextures.com/patterns/nistri.png";
 
 const pages = ["Home", "Shop", "About Us", "Contact Us", "Cart"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+// const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const CustomerNavbar = (props) => {
-  console.log(props);
   const { classes } = props;
   const navigate = useNavigate();
 
@@ -48,19 +47,96 @@ const CustomerNavbar = (props) => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [value, setValue] = useState("");
 
+  const [settings, setSettings] = useState([
+    "Profile",
+    "Account",
+    "Dashboard",
+    "Logout",
+  ]);
+
   // const [isLogged, setIsLoggedUser] = useState(false);
   const [isLogged, setIsLogged] = useState(() => {
     const token = localStorage.getItem("token");
     return token ? true : false;
   });
 
-  useEffect(() => {
-    if (isLogged) {
-      settings[3] = "Logout";
-    } else {
-      settings[3] = "Login";
+  const [isAdmin, setIsAdmin] = useState(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const isAdmin = jwtDecode(token).user_role === "Admin";
+      return isAdmin ? true : false;
     }
   });
+
+  const [isCustomer, setIsCustomer] = useState(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const isCustomer = jwtDecode(token).user_role === "Customer";
+      return isCustomer ? true : false;
+    }
+  });
+
+  useEffect(() => {
+    console.log("-------in Customer Navbar------");
+    console.log("isAdmin : " + isAdmin);
+    console.log("isCustomer: " + isCustomer);
+    console.log("settings 1: " + settings);
+
+    // if (isLogged) {
+    //   settings[3] = "Logout";
+    // } else {
+    //   settings[3] = "Login";
+    // }
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      if (token.user_role === "Admin") {
+        setIsAdmin(true);
+      } else {
+        setIsCustomer(true);
+      }
+    }
+
+    console.log("settings 2: " + settings);
+  });
+
+  useEffect(() => {
+    if (isLogged) {
+      setSettings((prevSettings) => {
+        const updatedSettings = [...prevSettings]; // Create a copy of the original array
+        updatedSettings[3] = "Logout"; // Update the second index with the new value
+        return updatedSettings; // Return the updated array
+      });
+    } else {
+      setSettings((prevSettings) => {
+        const updatedSettings = [...prevSettings];
+        updatedSettings[3] = "Login";
+        return updatedSettings;
+      });
+    }
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      if (jwtDecode(token).user_role === "Admin") {
+        console.log("--------update with Admin Panel-------------");
+        // setIsAdmin(true);
+        setSettings((prevSettings) => {
+          const updatedSettings = [...prevSettings];
+          updatedSettings[2] = "Admin Panel";
+          return updatedSettings;
+        });
+      } else {
+        // setIsCustomer(true);
+        console.log("--------update with Dashboard-------------");
+        setSettings((prevSettings) => {
+          const updatedSettings = [...prevSettings];
+          updatedSettings[2] = "Dashboard";
+          return updatedSettings;
+        });
+      }
+    }
+    console.log("settings 3: " + settings);
+  }, []);
 
   const navLinkStyle = ({ isActive }) => {
     return {
@@ -107,14 +183,9 @@ const CustomerNavbar = (props) => {
       if (res.data.data) {
         // remove tokn from LS
         localStorage.removeItem("token");
-        // localStorage.setItem("isLoggedOut", true);
-
-        // set logout status in LS
-        // localStorage.setItem("isLoggedOut", false);
         alert(res.data.message);
 
         console.log("------right before returning false from Navbar------");
-        // props.handleLogin(false);
         handleCloseUserMenu();
         setIsLogged(false);
         navigate("/home");
@@ -333,13 +404,24 @@ const CustomerNavbar = (props) => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                {/* If a Customer is logged in */}
+
                 {settings.map((setting) =>
-                  setting === "Dashboard" ? (
+                  isCustomer && setting === "Dashboard" ? (
                     <>
                       <MenuItem key={setting} onClick={goToDashboard}>
                         <Typography textAlign="center">{setting}</Typography>
                       </MenuItem>
                     </>
+                  ) : isAdmin && setting === "Admin Panel" ? (
+                    <MenuItem
+                      key={setting}
+                      onClick={() => {
+                        navigate("/admin/panel");
+                      }}
+                    >
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
                   ) : setting === "Logout" ? (
                     <MenuItem key={setting} onClick={handleLogout}>
                       <Typography textAlign="center">{setting}</Typography>

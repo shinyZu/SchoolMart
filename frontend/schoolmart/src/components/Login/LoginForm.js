@@ -10,6 +10,7 @@ import MyTextField from "../../components/common/MyTextField/MyTextField";
 import MySnackBar from "../../components/common/MySnackBar/MySnackbar";
 
 import LoginService from "../../services/LoginService";
+import jwtDecode from "jwt-decode";
 
 const LoginForm = (props) => {
   const { classes, onLogin } = props;
@@ -63,18 +64,29 @@ const LoginForm = (props) => {
 
     if (res.status === 200) {
       if (res.data.data) {
-        console.log(res.data.data);
+        console.log(res.data.data.access_token);
         localStorage.setItem(
           "token",
           JSON.stringify(res.data.data.access_token)
         );
-        // localStorage.setItem("isLoggedOut", false);
         alert(res.data.message);
+        checkIfCustomerOrAdmin(res.data.data.access_token);
         // props.onLogin(isEmailValid && isPasswordValid);
-        navigate("/home");
+        // navigate("/home");
       }
     } else {
       alert(res.response.data.message);
+    }
+  };
+
+  const checkIfCustomerOrAdmin = (token) => {
+    const decodedToken = jwtDecode(token);
+    if (decodedToken.user_role === "Admin") {
+      props.onLogin(true, decodedToken.user_role);
+      // navigate("/admin/panel");
+    } else {
+      props.onLogin(true, decodedToken.user_role);
+      // navigate("/home");
     }
   };
 

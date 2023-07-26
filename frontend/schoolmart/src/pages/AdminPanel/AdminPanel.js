@@ -262,6 +262,19 @@ const AdminPanel = (props) => {
     },
   ];
 
+  // useEffect(() => {
+  //   console.log("---handling login in Admin Panel-----");
+  //   let token = localStorage.getItem("token");
+  //   console.log(token);
+  //   if (token) {
+  //     props.handleLogin(true);
+  //     // navigate("/home");
+  //   } else {
+  //     props.handleLogin(false);
+  //     // navigate("/home");
+  //   }
+  // });
+
   useEffect(() => {
     console.log("useEffect []");
     getAllCategories();
@@ -801,7 +814,7 @@ const AdminPanel = (props) => {
 
   return (
     <div id="home">
-      <AdminNavbar />
+      <AdminNavbar handleLogin={props.handleLogin} />
 
       <Box sx={{ flexGrow: 1 }} className={classes.box_container}>
         <Grid

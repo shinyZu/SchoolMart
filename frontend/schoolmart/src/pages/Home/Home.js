@@ -15,6 +15,7 @@ import { withStyles } from "@mui/styles";
 
 import CategoryService from "../../services/CategoryService";
 import StationeryService from "../../services/StationeryService";
+import jwtDecode from "jwt-decode";
 
 const Home = (props) => {
   const { classes } = props;
@@ -26,14 +27,33 @@ const Home = (props) => {
 
   useEffect(() => {
     console.log("---handling login in Home-----");
-    let token = localStorage.getItem("token");
-    console.log(token);
+    // let token = localStorage.getItem("token");
+    // console.log(token);
+    // if (token) {
+    //   props.handleLogin(true);
+    //   // navigate("/home");
+    // } else {
+    //   props.handleLogin(false);
+    //   // navigate("/home");
+    // }
+
+    const token = localStorage.getItem("token");
     if (token) {
-      props.handleLogin(true);
-      // navigate("/home");
+      const decodedToken = jwtDecode(token);
+      let user_role = decodedToken.user_role;
+
+      if (user_role === "Admin") {
+        console.log("-------is Admin in Home------");
+        props.handleLogin(true, user_role);
+        // navigate("/admin/panel");
+      } else {
+        console.log("-------is Customer in Home------");
+        props.handleLogin(true, user_role);
+        // navigate("/home");
+      }
     } else {
-      props.handleLogin(false);
-      // navigate("/home");
+      console.log("-------Both in Home------");
+      props.handleLogin(false, "Both");
     }
   });
 

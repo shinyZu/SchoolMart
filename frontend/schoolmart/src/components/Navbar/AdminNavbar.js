@@ -30,18 +30,28 @@ import logo from "../../assets/images/logo_4.png";
 import { styleSheet } from "./styles";
 import { withStyles } from "@mui/styles";
 
+import LoginService from "../../services/LoginService";
+import jwtDecode from "jwt-decode";
+
 const footer_bg_texture =
   "https://www.transparenttextures.com/patterns/nistri.png";
 
 const pages = ["Home", "Shop", "About Us", "Contact Us", "Cart"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Account", "Admin Panel", "Logout"];
 
 const AdminNavbar = (props) => {
   const { classes } = props;
+  const navigate = useNavigate();
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [isLogged, setIsLoggedUser] = useState(true);
   const [value, setValue] = useState("");
+
+  // const [isLogged, setIsLoggedUser] = useState(true);
+  const [isLogged, setIsLogged] = useState(() => {
+    const token = localStorage.getItem("token");
+    return token ? true : false;
+  });
 
   useEffect(() => {
     if (isLogged) {
@@ -50,6 +60,12 @@ const AdminNavbar = (props) => {
       settings[3] = "Login";
     }
   });
+
+  const navLinkStyle = ({ isActive }) => {
+    return {
+      color: isActive ? "#D25380" : "normal",
+    };
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -70,10 +86,31 @@ const AdminNavbar = (props) => {
     setValue(e.target.innerText);
   }
 
-  const navLinkStyle = ({ isActive }) => {
-    return {
-      color: isActive ? "#D25380" : "normal",
-    };
+  const handleLogout = () => {
+    let token = localStorage.getItem("token");
+    const decodedToken = jwtDecode(token);
+    console.log(decodedToken.username);
+    logoutUser(decodedToken.username);
+  };
+
+  const logoutUser = async (username) => {
+    let res = await LoginService.logout(username);
+    console.log(res);
+
+    if (res.status === 200) {
+      if (res.data.data) {
+        // remove tokn from LS
+        localStorage.removeItem("token");
+        alert(res.data.message);
+
+        console.log("------right before returning false from Navbar------");
+        handleCloseUserMenu();
+        setIsLogged(false);
+        navigate("/home");
+      }
+    } else {
+      alert(res.response.data.message);
+    }
   };
 
   return (
@@ -219,16 +256,37 @@ const AdminNavbar = (props) => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
+                {settings.map((setting) =>
+                  setting === "Admin Panel" ? (
+                    <>
+                      <MenuItem
+                        key={setting}
+                        onClick={() => {
+                          navigate("/admin/panel");
+                        }}
+                      >
+                        <Typography textAlign="center">{setting}</Typography>
+                      </MenuItem>
+                    </>
+                  ) : setting === "Logout" ? (
+                    <MenuItem key={setting} onClick={handleLogout}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  )
+                )}
               </Menu>
             </Box>
           ) : (
             <Button
-              onClick={handleCloseNavMenu}
+              className={classes.nav_btn_login}
+              onClick={() => {
+                console.log("clciked login btn in admin navbar");
+                navigate("/login");
+              }}
               sx={{ my: 2, color: "white", display: "block" }}
             >
               Login
