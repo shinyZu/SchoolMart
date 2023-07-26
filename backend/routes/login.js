@@ -51,46 +51,6 @@ router.post("/", cors(), async (req, res) => {
         .status(400)
         .send({ status: 400, message: "Invalid password." });
 
-    // ------------------------------------------------------
-    // //create and assign a token
-    // let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    // let jwtRefreshKey = process.env.JWT_REFRESH_KEY;
-
-    // let data = {
-    //   time: Date(),
-    //   user_id: userExist.user_id,
-    //   username: req.body.username,
-    //   password: userExist.password,
-    //   user_role: userExist.user_role,
-    // };
-
-    // // const accessToken = jwt.sign(data, jwtSecretKey, { expiresIn: "1800s" });
-    // // const refreshToken = jwt.sign(data, jwtRefreshKey, { expiresIn: "3600s" });
-
-    // const accessToken = jwt.sign(data, jwtSecretKey);
-    // const refreshToken = jwt.sign(data, jwtRefreshKey);
-
-    // // Format the tokens as Bearer token
-    // const bearer_accessToken = `Bearer ${accessToken}`;
-    // const bearer_refreshToken = `Bearer ${refreshToken}`;
-
-    // const login = new Login({
-    //   email: req.body.username,
-    //   password: userExist.password,
-    //   user_role: userExist.user_role,
-    // });
-
-    // // Save the user to the database
-    // const loggedInUser = await login.save();
-    // ------------------------------------------------------
-
-    // Create a new user instance
-    // const reqDetails = new User({
-    //   email: body.email,
-    //   password: req.body.password,
-    //   user_role: userExist.user_role,
-    // });
-
     const tokenData = await generateToken(
       userExist.user_id,
       req.body.username,
@@ -149,11 +109,6 @@ router.get("/test/login", cors(), async (req, res) => {
   try {
     let data = myFunction();
     return res.json(data);
-
-    // return res.status(200).send({
-    //   status: 200,
-    //   message: "Called test API in Login",
-    // });
   } catch (err) {
     return res.status(400).send({ status: 400, message: err.message });
   }
@@ -175,13 +130,6 @@ const generateToken = async (
   res
 ) => {
   try {
-    // const validPassword = await bcrypt.compare(body.password, userExist.password);
-
-    // if (!validPassword)
-    //   return res
-    //     .status(400)
-    //     .send({ status: 400, message: "Invalid password." });
-
     //create and assign a token
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
     let jwtRefreshKey = process.env.JWT_REFRESH_KEY;
@@ -225,17 +173,6 @@ const generateToken = async (
       // expires_in: "2m",
     };
     return tokenObj;
-
-    // return res.status(200).send({
-    //   status: 200,
-    //   message: "User signed in successfully!",
-    // user_id: userExist.user_id,
-    // user_role: userExist.user_role,
-    // access_token: bearer_accessToken,
-    // // expires_in: 3600 / 60 + " min",
-    // // expires_in: "2m",
-    // refresh_token: bearer_refreshToken,
-    // });
   } catch (err) {
     return res.status(400).send({ status: 400, message: err.message });
   }

@@ -13,6 +13,8 @@ const router = express.Router();
 const Orders = require("../models/orders.models");
 const OrderDetails = require("../models/orderdetail.models");
 
+const stationery = require("./stationery");
+
 // Get all orders - Admin
 router.get("/getAll", cors(), authenticateAdminToken, async (req, res) => {
   try {
@@ -114,6 +116,19 @@ router.post("/", cors(), authenticateCustomerToken, async (req, res) => {
 
       // Save the order details
       const savedOrderDetail = await newOrderDetail.save();
+      console.log(savedOrderDetail);
+
+      // Update product qtyOnHand
+      if (savedOrderDetail) {
+        let stationeryExist = await stationery.checkStationeryExist(od.st_code);
+        stationeryExist.qty_on_hand -= od.order_qty;
+        // Update the stationery qty in the database
+        // let updatedStationery = await stationery.updateQtyOnHand(
+        //   stationeryExist,
+        //   res
+        // );
+        const updatedStationery = await stationeryExist.save();
+      }
     }
 
     // Save the order to the database

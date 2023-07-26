@@ -114,7 +114,6 @@ router.post("/", cors(), authenticateCustomerToken, async (req, res) => {
 router.put("/", cors(), authenticateCustomerToken, async (req, res) => {
   try {
     const body = req.body;
-    console.log(body.user_id);
 
     if (!body.user_id) {
       return res.status(400).send({

@@ -27,7 +27,7 @@ app.use(`${baseURL}token`, token);
 // app.use(`${baseURL}login`, login);
 app.use(`${baseURL}login`, login.router);
 app.use(`${baseURL}user`, user);
-app.use(`${baseURL}stationery`, stationery);
+app.use(`${baseURL}stationery`, stationery.router);
 app.use(`${baseURL}category`, category);
 app.use(`${baseURL}orders`, orders);
 app.use(`${baseURL}orderdetails`, orderDetails);

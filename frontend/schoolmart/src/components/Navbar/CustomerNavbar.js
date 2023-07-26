@@ -50,7 +50,7 @@ const CustomerNavbar = (props) => {
   const [settings, setSettings] = useState([
     "Profile",
     "Account",
-    "Dashboard",
+    "Order History",
     "Logout",
   ]);
 
@@ -127,10 +127,10 @@ const CustomerNavbar = (props) => {
         });
       } else {
         // setIsCustomer(true);
-        console.log("--------update with Dashboard-------------");
+        console.log("--------update with Order History-------------");
         setSettings((prevSettings) => {
           const updatedSettings = [...prevSettings];
-          updatedSettings[2] = "Dashboard";
+          updatedSettings[2] = "Order History";
           return updatedSettings;
         });
       }
@@ -159,9 +159,10 @@ const CustomerNavbar = (props) => {
     setAnchorElUser(null);
   };
 
-  const goToDashboard = () => {
+  const goToOrderHistory = () => {
     //  navigate("/dashboard");
-    navigate("/home");
+    // navigate("/home");
+    navigate("/order/history");
   };
 
   function changePage(e) {
@@ -407,9 +408,9 @@ const CustomerNavbar = (props) => {
                 {/* If a Customer is logged in */}
 
                 {settings.map((setting) =>
-                  isCustomer && setting === "Dashboard" ? (
+                  isCustomer && setting === "Order History" ? (
                     <>
-                      <MenuItem key={setting} onClick={goToDashboard}>
+                      <MenuItem key={setting} onClick={goToOrderHistory}>
                         <Typography textAlign="center">{setting}</Typography>
                       </MenuItem>
                     </>

@@ -224,15 +224,21 @@ const Checkout = (props) => {
         console.log("---------2-----------");
         console.log("Billing details updated successfully!");
         // alert(res1.data.message);
+        // setOpenAlert({
+        //   open: true,
+        //   alert: res1.data.message,
+        //   severity: "success",
+        //   variant: "standard",
+        // });
       } else {
         console.log("---------3-----------");
         // alert(res1.response.data.message);
-        setOpenAlert({
-          open: true,
-          alert: res1.response.data.message,
-          severity: "error",
-          variant: "standard",
-        });
+        // setOpenAlert({
+        //   open: true,
+        //   alert: res1.response.data.message,
+        //   severity: "error",
+        //   variant: "standard",
+        // });
         return;
       }
     } else if (!billingDetailsFound && areAllValuesFilled()) {
@@ -244,6 +250,12 @@ const Checkout = (props) => {
         console.log("---------5-----------");
         console.log("Billing details saved successfully!");
         // alert(res2.data.message);
+        setOpenAlert({
+          open: true,
+          alert: res2.data.message,
+          severity: "success",
+          variant: "standard",
+        });
       } else {
         console.log("---------6-----------");
         // alert(res2.response.data.message);

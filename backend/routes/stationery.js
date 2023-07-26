@@ -486,17 +486,32 @@ router.put(
       stationeryExist.qty_on_hand = req.params.qty;
 
       // Update the stationery qty in the database
-      const updatedStationery = await stationeryExist.save();
-      return res.send({
-        status: 200,
-        user: updatedStationery,
-        message: "Quantity updated successfully!",
-      });
+      updateQtyOnHand(stationeryExist, res);
+      //   const updatedStationery = await stationeryExist.save();
+      //   return res.send({
+      //     status: 200,
+      //     user: updatedStationery,
+      //     message: "Quantity updated successfully!",
+      //   });
     } catch (err) {
-      return res.status(400).send({ status: 400, message: err.message });
+      //   return res.status(400).send({ status: 400, message: err.message });
     }
   }
 );
+
+const updateQtyOnHand = async (stationeryExist, res) => {
+  try {
+    // Update the stationery qty in the database
+    const updatedStationery = await stationeryExist.save();
+    return res.send({
+      status: 200,
+      user: updatedStationery,
+      message: "Quantity updated successfully!",
+    });
+  } catch (err) {
+    return res.status(400).send({ status: 400, message: err.message });
+  }
+};
 
 // Delete Stationery
 // Authorized only for Admin
@@ -992,4 +1007,4 @@ router.get("/generate/public/url/:id", async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = { checkStationeryExist, updateQtyOnHand, router };
