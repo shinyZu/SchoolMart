@@ -25,6 +25,7 @@
 ## Screenshots :
 
 <img src = "frontend/schoolmart/src/assets/images/screenshots/0.png">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/14.png">
 <img src = "frontend/schoolmart/src/assets/images/screenshots/1.png">
 <!-- <img src = "frontend/schoolmart/src/assets/images/screenshots/2.png" width="400px"> -->
 <img src = "frontend/schoolmart/src/assets/images/screenshots/3.png">
