@@ -118,7 +118,5 @@ dist
 .pnp.*
 
 # credentials google drive
-/credentials.json
-.credentials.json
 credentials.json
-
+important.txt
