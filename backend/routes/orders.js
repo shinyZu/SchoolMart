@@ -10,6 +10,7 @@ const cors = require("cors");
 const router = express.Router();
 // app.use(express.json());
 
+const Stationery = require("../models/stationery.models");
 const Orders = require("../models/orders.models");
 const OrderDetails = require("../models/orderdetail.models");
 
@@ -72,6 +73,77 @@ router.get(
     }
   }
 );
+
+// Get Last 8 Orders of Customer - Customer
+router.get("/latest", cors(), authenticateCustomerToken, async (req, res) => {
+  try {
+    const verified = verifyToken(req.headers.authorization, res);
+    const user_id = verified.user_id;
+    const lastEightRecords = await Orders.find({ user_id })
+      .sort({ order_id: -1 })
+      .limit(8);
+
+    let lastEightOrdersWithDetails = [];
+    let lastEightOrderDetailsWithImages = [];
+    let historyRecord = null;
+
+    for (let i = 0; i < lastEightRecords.length; i++) {
+      const order = lastEightRecords[i];
+
+      // Get order details of order
+      let orderDetails = await OrderDetails.find({
+        order_id: lastEightRecords[i].order_id,
+      });
+
+      const stationeryPromises = [];
+      for (let j = 0; j < orderDetails.length; j++) {
+        // Get the promise for Stationery.findOne call
+        const promise = Stationery.findOne({
+          st_code: orderDetails[j].st_code,
+        });
+
+        // Push the promise to the array
+        stationeryPromises.push(promise);
+      }
+
+      // Await all the Stationery.findOne calls simultaneously
+      const stationeryItems = await Promise.all(stationeryPromises);
+      orderDetails = orderDetails.map((obj, index) => ({
+        ...obj,
+        st_name: stationeryItems[index].st_name,
+        image_url: stationeryItems[index].image_url,
+        unit_price: stationeryItems[index].unit_price,
+      }));
+
+      lastEightOrderDetailsWithImages = [];
+      for (let k = 0; k < orderDetails.length; k++) {
+        if (orderDetails[k]._doc.order_id == lastEightRecords[i].order_id) {
+          let details = {
+            order_details: orderDetails[k]._doc,
+            st_name: orderDetails[k].st_name,
+            image_url: orderDetails[k].image_url,
+            unit_price: orderDetails[k].unit_price,
+          };
+          lastEightOrderDetailsWithImages.push(details);
+        }
+      }
+
+      historyRecord = {
+        order: lastEightRecords[i],
+        details: lastEightOrderDetailsWithImages,
+      };
+
+      lastEightOrdersWithDetails.push(historyRecord);
+    }
+
+    return res.status(200).send({
+      status: 200,
+      data: lastEightOrdersWithDetails,
+    });
+  } catch (err) {
+    return res.status(400).send({ status: 400, message: err.message });
+  }
+});
 
 // Place Order - Customer
 // Saves both order & orderDetails

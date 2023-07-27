@@ -49,4 +49,8 @@ export const styleSheet = {
       cursor: "pointer",
     },
   },
+
+  btn_done: {
+    color: "#AC7088 !important",
+  },
 };

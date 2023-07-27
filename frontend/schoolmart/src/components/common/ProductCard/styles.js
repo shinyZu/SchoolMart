@@ -29,6 +29,13 @@ export const styleSheet = {
     backgroundImage: `url(${footer_bg_texture})`,
   },
 
+  history_card_description: {
+    // border: "2px solid red",
+    height: "8vh !important",
+    padding: "10px",
+    backgroundImage: `url(${footer_bg_texture})`,
+  },
+
   txt_prod_ctg: {
     fontSize: "0.8rem",
     color: "#535c68",
@@ -38,7 +45,15 @@ export const styleSheet = {
   txt_prod_name: {
     fontSize: "1.2em",
     marginBottom: "5px !important",
+    color: "#484747 !important",
   },
 
-  txt_prod_price: {},
+  txt_prod_price: {
+    color: "red !important",
+  },
+
+  txt_order_details: {
+    color: "#484747 !important",
+    marginTop: "5px !important",
+  },
 };

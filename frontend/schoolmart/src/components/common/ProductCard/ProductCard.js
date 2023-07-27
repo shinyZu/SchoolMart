@@ -9,7 +9,10 @@ import { withStyles } from "@mui/styles";
 
 const ProductCard = (props) => {
   const { classes } = props;
-  const { category, st_name, unit_price, image_url } = props.product;
+  // const { category, st_name, unit_price, image_url } = props.product;
+  const data = props.data;
+  console.log(data);
+
   return (
     <>
       <Grid
@@ -29,7 +32,11 @@ const ProductCard = (props) => {
           md={12}
           sm={12}
           xs={12}
-          style={{ backgroundImage: `url(${image_url})` }}
+          style={
+            props.page !== "history"
+              ? { backgroundImage: `url(${data.image_url})` }
+              : { backgroundImage: `url(${data.details[0].image_url})` }
+          }
           className={classes.card_img}
         ></Grid>
         <Grid
@@ -39,19 +46,39 @@ const ProductCard = (props) => {
           md={12}
           sm={12}
           xs={12}
-          className={classes.card_description}
+          className={
+            props.page == "history"
+              ? classes.history_card_description
+              : classes.card_description
+          }
           display="flex"
           flexDirection="column"
         >
-          <Typography variant="h8" className={classes.txt_prod_ctg}>
-            {category}
-          </Typography>
-          <Typography variant="h7" className={classes.txt_prod_name}>
-            {st_name}
-          </Typography>
-          <Typography variant="h7" className={classes.txt_prod_price}>
-            LKR {unit_price}.00
-          </Typography>
+          {props.page == "history" ? (
+            <>
+              <Typography variant="h7" className={classes.txt_order_details}>
+                Order: {data.order._id}
+              </Typography>
+              <Typography variant="h7" className={classes.txt_order_details}>
+                Date: {data.order.order_date.split("T")[0]}
+              </Typography>
+              {/* <Typography variant="h7" className={classes.txt_prod_price}>
+                Total: {data.order.order_cost}
+              </Typography> */}
+            </>
+          ) : (
+            <>
+              <Typography variant="h8" className={classes.txt_prod_ctg}>
+                {data.category}
+              </Typography>
+              <Typography variant="h7" className={classes.txt_prod_name}>
+                {data.st_name}
+              </Typography>
+              <Typography variant="h7" className={classes.txt_prod_price}>
+                LKR {data.unit_price}.00
+              </Typography>
+            </>
+          )}
         </Grid>
       </Grid>
     </>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 import QtyChanger from "../QtyChanger/QtyChanger";
@@ -149,14 +150,18 @@ const CartItem = (props) => {
           justifyContent="center"
           alignItems="center"
         >
-          <CancelIcon
-            className={classes.btn_cancel}
-            onClick={(e, v) => {
-              console.log("Delete clicked");
-              console.log(props.index);
-              props.onDelete(props.index);
-            }}
-          />
+          {props.mode !== "view" ? (
+            <CancelIcon
+              className={classes.btn_cancel}
+              onClick={(e, v) => {
+                console.log("Delete clicked");
+                console.log(props.index);
+                props.onDelete(props.index);
+              }}
+            />
+          ) : (
+            <CheckCircleIcon className={classes.btn_done} />
+          )}
         </Grid>
       </Grid>
     </>

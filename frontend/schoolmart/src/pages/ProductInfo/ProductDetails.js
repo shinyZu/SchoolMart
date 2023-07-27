@@ -321,7 +321,7 @@ const ProductDetails = (props) => {
               xs={12}
               className={classes.card_container}
               display="flex"
-              justifyContent="space-between"
+              // justifyContent="space-between"
             >
               {/* -------Product Card------------ */}
               {relatedProducts.map((product, index) => {
@@ -330,7 +330,7 @@ const ProductDetails = (props) => {
                     <>
                       <ProductCard
                         key={index}
-                        product={product}
+                        data={product}
                         onClick={(e) => {
                           console.log(product);
                           navigate("/product-details", {

@@ -433,7 +433,7 @@ const Shop = (props) => {
               // item
               container
               rowGap={3}
-              columnGap={5}
+              columnGap={9}
               xl={12}
               lg={12}
               md={12}
@@ -441,7 +441,7 @@ const Shop = (props) => {
               xs={12}
               className={classes.card_container}
               display="flex"
-              justifyContent="space-between"
+              // justifyContent="space-between"
             >
               {/* -------Product Card------------ */}
               {/* {selectedSortType == "Ascending"
@@ -455,7 +455,7 @@ const Shop = (props) => {
                   <>
                     <ProductCard
                       key={index}
-                      product={product}
+                      data={product}
                       onClick={(e) => {
                         navigate("/product-details", {
                           state: { product: product },

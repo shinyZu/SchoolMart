@@ -19,6 +19,7 @@ import Contact from "./pages/Contact/Contact";
 import Cart from "./pages/Cart/Cart";
 import Checkout from "./pages/Checkout/Checkout";
 import OrderHistory from "./pages/OrderHistory/OrderHistory";
+import OrderHistoryDetails from "./pages/OrderHistoryDetails/OrderHistoryDetails";
 import ProductDetails from "./pages/ProductInfo/ProductDetails";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
 import NotFound from "./pages/Session/NotFound";
@@ -140,6 +141,10 @@ const App = () => {
         {/* <Route path="/cart" element={<CartTest1 />} /> */}
         <Route path="/cart" element={<Cart />} />
         <Route path="/order/history" element={<OrderHistory />} />
+        <Route
+          path="/order/history/details"
+          element={<OrderHistoryDetails />}
+        />
         <Route path="/cart/checkout" element={<Checkout />} />
         <Route path="/product-details" element={<ProductDetails />} />
         <Route path="/admin" element={<Navigate replace to="/login" />} />
@@ -178,6 +183,18 @@ const App = () => {
             // loggedIn ? (
             isAdmin && !isCustomer ? (
               <AdminPanel /* handleLogin={handleLogin} */ />
+            ) : (
+              <Navigate replace to="/home" />
+            )
+          }
+        />
+
+        <Route
+          path="/order/history"
+          element={
+            // loggedIn ? (
+            isCustomer && !isAdmin ? (
+              <OrderHistory />
             ) : (
               <Navigate replace to="/home" />
             )

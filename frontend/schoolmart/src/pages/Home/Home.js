@@ -297,7 +297,7 @@ const Home = (props) => {
                       <>
                         <ProductCard
                           key={index}
-                          product={product}
+                          data={product}
                           onClick={(e) => {
                             navigate("/product-details", {
                               state: { product: product },

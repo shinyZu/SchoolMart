@@ -46,25 +46,27 @@ const CartTotals = (props) => {
           </Typography>
         </Grid>
 
-        <Grid
-          container
-          xl={12}
-          lg={12}
-          md={12}
-          sm={12}
-          xs={12}
-          className={classes.coupon_container}
-          display="flex"
-          justifyContent="space-between"
-        >
-          <Typography variant="h7" className={classes.cart_total_title}>
-            Coupon
-          </Typography>
+        {props.mode !== "history" ? (
+          <Grid
+            container
+            xl={12}
+            lg={12}
+            md={12}
+            sm={12}
+            xs={12}
+            className={classes.coupon_container}
+            display="flex"
+            justifyContent="space-between"
+          >
+            <Typography variant="h7" className={classes.cart_total_title}>
+              Coupon
+            </Typography>
 
-          <Typography variant="h7" className={classes.cart_total_title}>
-            LKR {props.coupon}.00
-          </Typography>
-        </Grid>
+            <Typography variant="h7" className={classes.cart_total_title}>
+              LKR {props.coupon}.00
+            </Typography>
+          </Grid>
+        ) : null}
 
         <Grid
           container

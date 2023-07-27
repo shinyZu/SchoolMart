@@ -661,7 +661,7 @@ router.post(
   "/drive/upload",
   cors(),
   googleUpload.single("product_image"),
-  // authenticateAdminToken,
+  authenticateAdminToken,
   async (req, res) => {
     try {
       const { body, file } = req;
@@ -788,7 +788,7 @@ router.put(
   "/image/details/:id",
   cors(),
   // upload.single("product_image"),
-  // authenticateAdminToken,
+  authenticateAdminToken,
   async (req, res) => {
     try {
       const stationeryExist = await checkStationeryExist(req.params.id, res);
@@ -899,26 +899,31 @@ router.put(
 //------------------------------------
 
 // Delete image from Google Drive - Admin
-router.delete("/drive/image/:id", async (req, res) => {
-  try {
-    const fileId = req.params.id;
+router.delete(
+  "/drive/image/:id",
+  cors(),
+  authenticateAdminToken,
+  async (req, res) => {
+    try {
+      const fileId = req.params.id;
 
-    const response = await deleteFile(fileId);
+      const response = await deleteFile(fileId);
 
-    return res.send({
-      status: 200,
-      message: "File deleted successfully!",
-      data: {
-        status: response.status,
-        data: response.data,
-      },
-      // data: response,
-    });
-  } catch (error) {
-    console.error("Error deleting file:", error.message);
-    return res.status(500).send({ status: 500, message: error.message });
+      return res.send({
+        status: 200,
+        message: "File deleted successfully!",
+        data: {
+          status: response.status,
+          data: response.data,
+        },
+        // data: response,
+      });
+    } catch (error) {
+      console.error("Error deleting file:", error.message);
+      return res.status(500).send({ status: 500, message: error.message });
+    }
   }
-});
+);
 
 // Delete Stationery (with image in drive)- Admin - in use
 router.delete(
