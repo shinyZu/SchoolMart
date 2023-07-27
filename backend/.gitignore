@@ -118,4 +118,4 @@ dist
 .pnp.*
 
 # credentials google drive
-credentials.json
+/credentials.json
