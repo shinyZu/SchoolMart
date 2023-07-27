@@ -119,3 +119,6 @@ dist
 
 # credentials google drive
 /credentials.json
+.credentials.json
+credentials.json
+
