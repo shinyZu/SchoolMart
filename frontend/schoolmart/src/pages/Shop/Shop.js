@@ -309,7 +309,7 @@ const Shop = (props) => {
 
               <Autocomplete
                 className={classes.sort_dropdown}
-                disablePortal
+                keepMounted={true}
                 id="role"
                 options={sortTypes}
                 sx={{ width: 200 }}

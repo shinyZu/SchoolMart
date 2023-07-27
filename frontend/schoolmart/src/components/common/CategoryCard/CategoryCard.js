@@ -20,6 +20,7 @@ const CategoryCard = (props) => {
         xs={12}
         className={classes.card}
         onClick={props.onClick}
+        key={props.index}
       >
         <Typography variant="h6" className={classes.txt_category}>
           {props.title}

@@ -24,9 +24,9 @@ const LoginForm = (props) => {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const [openAlert, setOpenAlert] = useState({
-    open: "",
+    open: false,
     alert: "",
-    severity: "",
+    severity: "warning",
     variant: "",
   });
 

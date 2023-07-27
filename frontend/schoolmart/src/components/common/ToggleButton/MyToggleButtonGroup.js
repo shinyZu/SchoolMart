@@ -34,6 +34,7 @@ const MyToggleButtonGroup = (props) => {
       {categories.map((category, index) => {
         return (
           <ToggleButton
+            key={index}
             value={++index}
             onClick={(e, n) => {
               props.onClick(e, n);

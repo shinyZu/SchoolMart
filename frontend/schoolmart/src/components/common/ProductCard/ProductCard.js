@@ -24,6 +24,7 @@ const ProductCard = (props) => {
         xs={12}
         className={classes.card}
         onClick={props.onClick}
+        key={props.index}
       >
         <Grid
           item

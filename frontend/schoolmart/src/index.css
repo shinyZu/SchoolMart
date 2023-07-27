@@ -197,7 +197,28 @@ input[type="text"]:not(#f_login):not(#f_pwd) {
 }
 
 /* .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused {
-.css-1u3bzj6-MuiFormControl-root-MuiTextField-root.Mui-focused {
-  border: 2px solid red !important;
-  border-color: red !important;
+  .css-1u3bzj6-MuiFormControl-root-MuiTextField-root.Mui-focused {
+    border: 2px solid red !important;
+    border-color: red !important;
+  } */
+
+/* .MuiAutocomplete-root
+  .Mui-expanded
+  .MuiAutocomplete-hasPopupIcon
+  .css-8jsjs0-MuiAutocomplete-root {
+  font-family: "Acme", sans-serif !important;
 } */
+
+.MuiAutocomplete-popper .MuiPopper-root {
+  font-family: "Acme", sans-serif !important;
+}
+
+.css-gdh49b-MuiAutocomplete-listbox .MuiAutocomplete-option {
+  font-family: "Acme", sans-serif !important;
+}
+
+.css-gdh49b-MuiAutocomplete-listbox .MuiAutocomplete-option.Mui-focused {
+  font-family: "Acme", sans-serif !important;
+  background-color: #ac7088 !important;
+  color: white !important;
+}

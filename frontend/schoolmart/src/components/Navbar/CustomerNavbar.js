@@ -45,7 +45,7 @@ const CustomerNavbar = (props) => {
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("0");
 
   const [settings, setSettings] = useState([
     "Profile",
@@ -163,9 +163,11 @@ const CustomerNavbar = (props) => {
     navigate("/order/history");
   };
 
-  function changePage(e) {
-    setValue(e.target.innerText);
-  }
+  const changePage = (e, v) => {
+    console.log(v);
+    // setValue(e.target.innerText);
+    setValue(v);
+  };
 
   const handleLogout = () => {
     let token = localStorage.getItem("token");
@@ -292,6 +294,9 @@ const CustomerNavbar = (props) => {
               value={value}
               onChange={changePage}
               className={classes.nav__tabs}
+              // textColor="secondary"
+              // indicatorColor="secondary"
+              // aria-label="secondary tabs example"
             >
               {/* <Link to="/home" className={classes.nav__text}>
                 <Tab
@@ -308,6 +313,7 @@ const CustomerNavbar = (props) => {
                 style={navLinkStyle}
               >
                 <Tab
+                  value="1"
                   icon={<HomeIcon />}
                   className={classes.nav__text}
                   label="Home"
@@ -321,6 +327,7 @@ const CustomerNavbar = (props) => {
                 style={navLinkStyle}
               >
                 <Tab
+                  value="2"
                   icon={<StoreIcon />}
                   className={classes.nav__text}
                   label="Shop"
@@ -334,6 +341,7 @@ const CustomerNavbar = (props) => {
                 style={navLinkStyle}
               >
                 <Tab
+                  value="3"
                   icon={<LightbulbIcon />}
                   className={classes.nav__text}
                   label="About Us"
@@ -347,6 +355,7 @@ const CustomerNavbar = (props) => {
                 style={navLinkStyle}
               >
                 <Tab
+                  value="4"
                   icon={<ContactIcon />}
                   className={classes.nav__text}
                   label="Contact Us"
@@ -361,6 +370,7 @@ const CustomerNavbar = (props) => {
                   style={navLinkStyle}
                 >
                   <Tab
+                    value="5"
                     icon={<ShoppingCartIcon />}
                     className={classes.nav__text}
                     label="Cart"
@@ -407,11 +417,9 @@ const CustomerNavbar = (props) => {
 
                 {settings.map((setting) =>
                   isCustomer && setting === "Order History" ? (
-                    <>
-                      <MenuItem key={setting} onClick={goToOrderHistory}>
-                        <Typography textAlign="center">{setting}</Typography>
-                      </MenuItem>
-                    </>
+                    <MenuItem key={setting} onClick={goToOrderHistory}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
                   ) : isAdmin && setting === "Admin Panel" ? (
                     <MenuItem
                       key={setting}
