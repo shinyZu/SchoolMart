@@ -5,12 +5,14 @@ import { withStyles } from "@mui/styles";
 import LoginForm from "../../components/Login/LoginForm";
 import RegisterForm from "../../components/Register/RegisterForm";
 
-const Login = (props) => {
+const Register = (props) => {
   const { classes, onLogin } = props;
+
   return (
     <div className={classes.login_container_1}>
-      <LoginForm onLogin={onLogin} />
+      <RegisterForm onLogin={onLogin} />
     </div>
   );
 };
-export default withStyles(styleSheet)(Login);
+
+export default withStyles(styleSheet)(Register);

@@ -77,7 +77,7 @@ router.post("/register", cors(), async (req, res) => {
 
     if (tokenData) {
       // send response after registering & login
-      return res.send({
+      return res.status(201).send({
         status: 201,
         message: "User registered successfully!",
         data: tokenData,

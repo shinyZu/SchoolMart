@@ -13,7 +13,7 @@ export const styleSheet = {
     color: "#2c3e50",
   },
 
-  btn_login: {
+  btn_register: {
     backgroundColor: "#2c3e50",
     "&:hover": {
       cursor: "pointer",
@@ -21,18 +21,26 @@ export const styleSheet = {
     },
   },
 
-  login_footer: {
+  btn_register_disabled: {
+    backgroundColor: "#7f8c8d !important",
+    "&:hover": {
+      cursor: "default",
+      backgroundColor: "#7f8c8d !important",
+    },
+  },
+
+  register_footer: {
     // border: "6px solid red",
     display: "flex",
     flexDirection: "column",
   },
 
-  login_footer_text: {
+  register_footer_text: {
     textAlign: "center",
     paddingTop: "10px",
   },
 
-  txt_register: {
+  txt_login: {
     "&:hover": {
       cursor: "pointer",
     },

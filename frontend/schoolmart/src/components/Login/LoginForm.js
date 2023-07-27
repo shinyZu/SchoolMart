@@ -156,7 +156,7 @@ const LoginForm = (props) => {
           <small className={classes.login_footer_text}>
             Not a member?{" "}
             <u>
-              <Link to="#register" className={classes.txt_register}>
+              <Link to="/register" className={classes.txt_register}>
                 Register
               </Link>
             </u>

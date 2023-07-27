@@ -222,3 +222,7 @@ input[type="text"]:not(#f_login):not(#f_pwd) {
   background-color: #ac7088 !important;
   color: white !important;
 }
+
+.css-k4qjio-MuiFormHelperText-root.Mui-error {
+  font-family: "Acme", sans-serif !important;
+}

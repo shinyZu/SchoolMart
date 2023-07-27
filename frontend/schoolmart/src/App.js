@@ -11,6 +11,7 @@ import {
 import jwtDecode from "jwt-decode";
 
 import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
 import Home from "./pages/Home/Home";
 import Shop from "./pages/Shop/Shop";
 import About from "./pages/About/About";
@@ -120,6 +121,18 @@ const App = () => {
             )
           }
         />
+
+        <Route
+          path="/register"
+          element={
+            isCustomer || isAdmin ? (
+              <Navigate replace to="/home" />
+            ) : (
+              <Register onLogin={handleLogin} />
+            )
+          }
+        />
+
         <Route
           path="/home"
           element={
