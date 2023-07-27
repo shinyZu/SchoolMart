@@ -24,17 +24,17 @@
 
 ## Screenshots :
 
-<img src = "frontend/schoolmart/src/assets/images/screenshots/0.png" width="400px">
-<img src = "frontend/schoolmart/src/assets/images/screenshots/1.png" width="400px">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/0.png">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/1.png">
 <!-- <img src = "frontend/schoolmart/src/assets/images/screenshots/2.png" width="400px"> -->
-<img src = "frontend/schoolmart/src/assets/images/screenshots/3.png" width="400px">
-<img src = "frontend/schoolmart/src/assets/images/screenshots/4.png" width="400px">
-<img src = "frontend/schoolmart/src/assets/images/screenshots/5.png" width="400px">
-<img src = "frontend/schoolmart/src/assets/images/screenshots/6.png" width="400px">
-<img src = "frontend/schoolmart/src/assets/images/screenshots/7.png" width="400px">
-<img src = "frontend/schoolmart/src/assets/images/screenshots/8.png" width="400px">
-<img src = "frontend/schoolmart/src/assets/images/screenshots/9.png" width="400px">
-<img src = "frontend/schoolmart/src/assets/images/screenshots/10.png" width="400px">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/3.png">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/4.png">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/5.png">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/6.png">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/7.png">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/8.png">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/9.png">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/10.png">
 <!-- <img src = "frontend/schoolmart/src/assets/images/screenshots/11.png" width="400px"> -->
-<img src = "frontend/schoolmart/src/assets/images/screenshots/12.png" width="400px">
-<img src = "frontend/schoolmart/src/assets/images/screenshots/13.png" width="400px">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/12.png">
+<img src = "frontend/schoolmart/src/assets/images/screenshots/13.png">
