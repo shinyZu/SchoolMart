@@ -19,8 +19,6 @@ const OrderHistoryDetails = (props) => {
   const location = useLocation();
   let data = location.state;
 
-  console.log(data);
-
   const [receivedData, setReceivedData] = useState(null);
 
   const [qty, setQty] = useState(0);
@@ -121,86 +119,8 @@ const OrderHistoryDetails = (props) => {
     <>
       <Header />
 
-      <Box sx={{ flexGrow: 1 }} className={classes.box_container}>
-        <Grid
-          container
-          xl={12}
-          lg={12}
-          md={12}
-          sm={6}
-          xs={6}
-          className={classes.main_container}
-          display="flex"
-          // justifyContent="center"
-        >
-          <Grid
-            item
-            xl={12}
-            lg={12}
-            md={12}
-            sm={12}
-            xs={12}
-            className={classes.title_container}
-            display="flex"
-            justifyContent="center"
-          >
-            <Typography variant="h3" className={classes.txt_title}>
-              Order ID : {data.data.order._id}
-            </Typography>
-          </Grid>
-
-          {/* --------Cart List ------------------- */}
-
-          <Grid
-            container
-            xl={12}
-            lg={12}
-            md={12}
-            sm={12}
-            xs={12}
-            className={classes.cart_container}
-            display="flex"
-            justifyContent="center"
-          >
-            <Grid
-              container
-              xl={12}
-              lg={12}
-              md={12}
-              sm={12}
-              xs={12}
-              className={classes.tbl_headers_container}
-              display="flex"
-              justifyContent="space-around"
-            >
-              <Typography variant="h5" className={classes.tbl_headers}>
-                Product
-              </Typography>
-
-              <Typography variant="h5" className={classes.tbl_headers}>
-                Price
-              </Typography>
-
-              <Typography variant="h5" className={classes.tbl_headers}>
-                Quantity
-              </Typography>
-
-              <Typography variant="h5" className={classes.tbl_headers}>
-                Subtotal
-              </Typography>
-            </Grid>
-
-            {/* ----------------------------Table items--------------------------- */}
-
-            {orderDetailsList.map((item, index) => {
-              while (index < orderDetailsList.length) {
-                return <CartItem index={index} item={item} mode="view" />;
-              }
-            })}
-          </Grid>
-
-          {/* ----------------------Coupon Info & Cart Total Info -------------------- */}
-
+      {data != null ? (
+        <Box sx={{ flexGrow: 1 }} className={classes.box_container}>
           <Grid
             container
             xl={12}
@@ -208,20 +128,38 @@ const OrderHistoryDetails = (props) => {
             md={12}
             sm={6}
             xs={6}
-            className={classes.cart_totals_container}
+            className={classes.main_container}
             display="flex"
-            justifyContent="end"
+            // justifyContent="center"
           >
-            {/* ------------ Cart Totals Info --------------- */}
+            <Grid
+              item
+              xl={12}
+              lg={12}
+              md={12}
+              sm={12}
+              xs={12}
+              className={classes.title_container}
+              display="flex"
+              justifyContent="center"
+            >
+              <Typography variant="h3" className={classes.txt_title}>
+                Order ID : {data.data.order._id}
+              </Typography>
+            </Grid>
+
+            {/* --------Cart List ------------------- */}
+
             <Grid
               container
-              xl={5.8}
-              lg={5.8}
-              md={5.8}
-              sm={5.8}
-              xs={5.8}
-              className={classes.total_info_container}
+              xl={12}
+              lg={12}
+              md={12}
+              sm={12}
+              xs={12}
+              className={classes.cart_container}
               display="flex"
+              justifyContent="center"
             >
               <Grid
                 container
@@ -230,25 +168,87 @@ const OrderHistoryDetails = (props) => {
                 md={12}
                 sm={12}
                 xs={12}
-                className={classes.total_title_container}
+                className={classes.tbl_headers_container}
                 display="flex"
+                justifyContent="space-around"
               >
-                <Typography variant="h5" className={classes.cart_total_title}>
-                  Order Totals
+                <Typography variant="h5" className={classes.tbl_headers}>
+                  Product
+                </Typography>
+
+                <Typography variant="h5" className={classes.tbl_headers}>
+                  Price
+                </Typography>
+
+                <Typography variant="h5" className={classes.tbl_headers}>
+                  Quantity
+                </Typography>
+
+                <Typography variant="h5" className={classes.tbl_headers}>
+                  Subtotal
                 </Typography>
               </Grid>
 
-              <CartTotals
-                mode="history"
-                subtotal={finalSubtotal}
-                coupon={couponValue}
-                shipping={0.0}
-                discount={0.0}
-              />
+              {/* ----------------------------Table items--------------------------- */}
+
+              {orderDetailsList.map((item, index) => {
+                while (index < orderDetailsList.length) {
+                  return <CartItem index={index} item={item} mode="view" />;
+                }
+              })}
+            </Grid>
+
+            {/* ----------------------Coupon Info & Cart Total Info -------------------- */}
+
+            <Grid
+              container
+              xl={12}
+              lg={12}
+              md={12}
+              sm={6}
+              xs={6}
+              className={classes.cart_totals_container}
+              display="flex"
+              justifyContent="end"
+            >
+              {/* ------------ Cart Totals Info --------------- */}
+              <Grid
+                container
+                xl={5.8}
+                lg={5.8}
+                md={5.8}
+                sm={5.8}
+                xs={5.8}
+                className={classes.total_info_container}
+                display="flex"
+              >
+                <Grid
+                  container
+                  xl={12}
+                  lg={12}
+                  md={12}
+                  sm={12}
+                  xs={12}
+                  className={classes.total_title_container}
+                  display="flex"
+                >
+                  <Typography variant="h5" className={classes.cart_total_title}>
+                    Order Totals
+                  </Typography>
+                </Grid>
+
+                <CartTotals
+                  mode="history"
+                  subtotal={finalSubtotal}
+                  coupon={couponValue}
+                  shipping={0.0}
+                  discount={0.0}
+                />
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      ) : null}
 
       {/* ------------- Footer -------------- */}
       <Footer />

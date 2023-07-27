@@ -28,26 +28,18 @@ const App = () => {
   // const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(false);
 
-  // const [isAdmin, setIsAdmin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const isAdmin = jwtDecode(token).user_role === "Admin";
-      // return isAdmin
-      //   ? jwtDecode(token).user_role === "Admin"
-      //   : jwtDecode(token).user_role === "Admin";
       return isAdmin ? true : false;
     }
   });
 
-  // const [isCustomer, setIsCustomer] = useState(false);
   const [isCustomer, setIsCustomer] = useState(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const isCustomer = jwtDecode(token).user_role === "Customer";
-      // return isCustomer
-      //   ? jwtDecode(token).user_role === "Customer"
-      //   : jwtDecode(token).user_role === "Customer";
       return isCustomer ? true : false;
     }
   });
@@ -64,8 +56,6 @@ const App = () => {
 
   useEffect(() => {
     console.log("-useEffect 1 in App js-----");
-    // console.log(loggedIn);
-    // console.log(tokenAvailable);
     console.log("isAdmin : " + isAdmin);
     console.log("isCustomer : " + isCustomer);
   });
@@ -81,37 +71,6 @@ const App = () => {
       handleLogin(isCustomer, "Customer");
     }
   }, [isAdmin, isCustomer]);
-
-  // const handleLogin = (isSuccess) => {
-  //   console.log("handleLogin");
-  //   console.log("App.js : " + isSuccess);
-
-  //   let user_role = "Customer";
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     setTokenAvailable(true);
-  //     const decodedToken = jwtDecode(token);
-  //     user_role = decodedToken.user_role;
-
-  //     if (user_role === "Admin") {
-  //       console.log("-------is Admin------");
-  //       setIsAdmin(true);
-  //     } else {
-  //       console.log("-------is Customer------");
-  //       setIsAdmin(false);
-  //     }
-  //   }
-
-  //   if (isSuccess) {
-  //     console.log("-------is Logged in------");
-  //     setLoggedIn(true);
-  //     // setLoggedOut(false);
-  //   } else {
-  //     console.log("-------is Logged out------");
-  //     setLoggedIn(false);
-  //     // setLoggedOut(true);
-  //   }
-  // };
 
   const handleLogin = (isSuccess, userRole) => {
     console.log("handleLogin");
@@ -140,18 +99,14 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         {/* <Route path="/cart" element={<CartTest1 />} /> */}
         <Route path="/cart" element={<Cart />} />
-        <Route path="/order/history" element={<OrderHistory />} />
-        <Route
+        {/* <Route path="/order/history" element={<OrderHistory />} /> */}
+        {/* <Route
           path="/order/history/details"
           element={<OrderHistoryDetails />}
-        />
+        /> */}
         <Route path="/cart/checkout" element={<Checkout />} />
         <Route path="/product-details" element={<ProductDetails />} />
         <Route path="/admin" element={<Navigate replace to="/login" />} />
-        {/* <Route
-          path="/admin/panel"
-          element={<AdminPanel/>}
-        /> */}
         <Route path="*" element={<NotFound />} />
 
         <Route
@@ -182,7 +137,7 @@ const App = () => {
           element={
             // loggedIn ? (
             isAdmin && !isCustomer ? (
-              <AdminPanel /* handleLogin={handleLogin} */ />
+              <AdminPanel />
             ) : (
               <Navigate replace to="/home" />
             )
@@ -192,9 +147,19 @@ const App = () => {
         <Route
           path="/order/history"
           element={
-            // loggedIn ? (
             isCustomer && !isAdmin ? (
               <OrderHistory />
+            ) : (
+              <Navigate replace to="/home" />
+            )
+          }
+        />
+
+        <Route
+          path="/order/history/details"
+          element={
+            isCustomer && !isAdmin ? (
+              <OrderHistoryDetails />
             ) : (
               <Navigate replace to="/home" />
             )

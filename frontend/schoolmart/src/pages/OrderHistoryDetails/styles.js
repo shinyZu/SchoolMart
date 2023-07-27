@@ -3,7 +3,7 @@ export const styleSheet = {
     // border: "2px solid green",
     maxWidth: "1300px",
     margin: "auto",
-    // height: "90vh",
+    // height: "70vh !important",
   },
 
   main_container: {

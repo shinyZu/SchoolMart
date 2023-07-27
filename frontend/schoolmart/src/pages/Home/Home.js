@@ -228,17 +228,19 @@ const Home = (props) => {
                 >
                   {/* -------Category Card------------ */}
                   {categories.map((category, index) => {
-                    return (
-                      <>
-                        <CategoryCard
-                          key={index}
-                          title={category.categoryTitle}
-                          onClick={(e) => {
-                            navigate("/shop");
-                          }}
-                        />
-                      </>
-                    );
+                    while (index < 6) {
+                      return (
+                        <>
+                          <CategoryCard
+                            key={index}
+                            title={category.categoryTitle}
+                            onClick={(e) => {
+                              navigate("/shop");
+                            }}
+                          />
+                        </>
+                      );
+                    }
                   })}
                 </Grid>
               </Grid>

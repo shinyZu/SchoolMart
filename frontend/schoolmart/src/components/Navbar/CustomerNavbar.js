@@ -160,8 +160,6 @@ const CustomerNavbar = (props) => {
   };
 
   const goToOrderHistory = () => {
-    //  navigate("/dashboard");
-    // navigate("/home");
     navigate("/order/history");
   };
 
